@@ -1,6 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Features;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+
+use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
+use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
+use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +20,77 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Configuraciones de fortify
+$limiter = config('fortify.limiters.login');
+$enableViews = config('fortify.views', true);
+$verificationLimiter = config('fortify.limiters.verification', '6,1');
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/login', [LoginController::class, 'create'])
+    ->middleware(['guest:'.config('fortify.guard')])
+    ->name('login');
+
+
+Route::post('/login', [LoginController::class, 'store'])
+    ->middleware(
+        array_filter(
+            [
+                'guest:'.config('fortify.guard'),
+                $limiter ? 'throttle:'.$limiter : null,
+            ]
+        )
+    );
+
+Route::post('/logout', [LoginController::class, 'destroy'])
+        ->name('logout');
+
+
+// Registration...
+if (Features::enabled(Features::registration())) {
+    if ($enableViews) {
+        Route::get('/register', [RegisterController::class, 'create'])
+            ->middleware(
+                [
+                    'guest:'.config('fortify.guard')
+                ]
+            )
+            ->name('register');
+    }
+
+    Route::post('/register', [RegisterController::class, 'store'])
+        ->middleware(
+            [
+                'guest:'.config('fortify.guard')
+            ]
+        );
+}
+
+// Email Verification...
+if (Features::enabled(Features::emailVerification())) {
+    if ($enableViews) {
+        Route::get('/email/verify', [EmailVerificationPromptController::class, '__invoke'])
+            ->middleware([config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])
+            ->name('verification.notice');
+    }
+
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+        ->middleware([config('fortify.auth_middleware', 'auth').':'.config('fortify.guard'), 'signed', 'throttle:'.$verificationLimiter])
+        ->name('verification.verify');
+
+    Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+        ->middleware([config('fortify.auth_middleware', 'auth').':'.config('fortify.guard'), 'throttle:'.$verificationLimiter])
+        ->name('verification.send');
+
+}
+
+//Estas rutas de aca en adelante requiren que la cuenta este verificada
+// Esto genera las rutas de login y verificacion
+
+Route::get('/home',function(){
+    echo 'Hola esto es home';
+    echo "<form method='post' action='".route('logout')."'><input type='submit' value='Salir'>".csrf_field() ."</form>";
+
+})->middleware(['auth','verified']);

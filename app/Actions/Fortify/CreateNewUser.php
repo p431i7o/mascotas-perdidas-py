@@ -28,6 +28,7 @@ class CreateNewUser implements CreatesNewUsers
                 'max:255',
                 Rule::unique(User::class),
             ],
+            'accept_term_conditions'=>['accepted'],
             'password' => $this->passwordRules(),
         ])->validate();
 

@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="Formulario Login, mascotas Perdidas">
         <meta name="author" content="Login,Mascotas Perdidas">
-        <title>Signin Template · Bootstrap v5.3</title>
+        <title>Register</title>
 
         @vite('resources/js/app.js')
 
@@ -109,11 +109,12 @@
         <link href="sign-in.css" rel="stylesheet">
     </head>
     <body class="text-center">
+        
         <main class="form-signin w-100 m-auto">
-            <form method="POST" action="{{route('login')}}">
+            <form method="POST" action="{{route('register')}}">
                 @csrf
                 {{-- <img class="mb-4" src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> --}}
-                <h1 class="h3 mb-3 fw-normal">Iniciar Sesion</h1>
+                <h1 class="h3 mb-3 fw-normal">Registro</h1>
                 @if(Session::has('result'))
                     @if(Session::get('result'))
                         
@@ -130,6 +131,10 @@
                     @endif
                 @endif
                 <div class="form-floating">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="john doe" value="{{old('email')}}" name="name">
+                    <label for="floatingInput">Name</label>
+                </div>
+                <div class="form-floating">
                     <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{old('email')}}" name="email">
                     <label for="floatingInput">Email address</label>
                 </div>
@@ -137,14 +142,27 @@
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
                     <label for="floatingPassword">Password</label>
                 </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password Confirmation" name="password_confirmation">
+                    <label for="floatingPassword">Password Confirmation</label>
+                </div>
 
-                <div class="checkbox mb-3">
+                <div class="form-check mb-3">
                     <label>
-                        <input type="checkbox" value="remember-me"> Remember me
+                        <input type="checkbox" class="form-check-input" name="accept_term_conditions" >I Accept the <a href="#">Terms and conditions</a>
                     </label>
                 </div>
-                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
                 <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </form>
         </main>
     </body>
