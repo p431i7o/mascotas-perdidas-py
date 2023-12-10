@@ -14,7 +14,11 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap')
+            '~jquery': path.resolve(__dirname, 'node_modules/jquery'),
+            '~jquery.easing':path.resolve(__dirname,'node_modules/jquery.easing'),
+            '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+            '~fontawesome':path.resolve(__dirname,'node_modules/@fortawesome/fontawesome-free'),
+            '~chart.js':path.resolve(__dirname,'node_modules/chart.js')
         }
     },
 });
