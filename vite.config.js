@@ -7,7 +7,11 @@ export default defineConfig({
         laravel({
             input: [
                 // 'resources/css/app.css', 
-                'resources/js/app.js'
+                'resources/js/app.js',
+                'resources/js/sb-admin-2.js',
+                'resources/js/chart-area-demo.js',
+                'resources/js/chart-bar-demo.js',
+                'resources/js/chart-pie-demo.js'
             ],
             refresh: true,
         }),

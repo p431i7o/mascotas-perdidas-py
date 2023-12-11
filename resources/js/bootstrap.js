@@ -36,5 +36,5 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // Import our custom CSS
 
-import '../sass/app.scss'
-import '../css/app.css'
+// import '../sass/app.scss'
+// import '../css/app.css'

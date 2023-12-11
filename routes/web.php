@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
 
+use App\Http\Controllers\Auth\RegisterController;
+use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
-use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,8 +90,4 @@ if (Features::enabled(Features::emailVerification())) {
 //Estas rutas de aca en adelante requiren que la cuenta este verificada
 // Esto genera las rutas de login y verificacion
 
-Route::get('/home',function(){
-    echo 'Hola esto es home';
-    echo "<form method='post' action='".route('logout')."'><input type='submit' value='Salir'>".csrf_field() ."</form>";
-
-})->middleware(['auth','verified']);
+Route::get('/home',[HomeController::class,'index'])->middleware(['auth','verified']);
