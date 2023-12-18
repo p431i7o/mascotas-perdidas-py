@@ -89,5 +89,7 @@ if (Features::enabled(Features::emailVerification())) {
 
 //Estas rutas de aca en adelante requiren que la cuenta este verificada
 // Esto genera las rutas de login y verificacion
-
-Route::get('/home',[HomeController::class,'index'])->middleware(['auth','verified']);
+Route::middleware(['auth','verified'])->group(function(){
+    Route::get('/home',[HomeController::class,'index'])->name('home');
+    Route::get('/dashboard',[HomeController::class,'index'])->name('dashboard');
+});
