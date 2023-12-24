@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ReportsController;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
@@ -87,9 +88,16 @@ if (Features::enabled(Features::emailVerification())) {
 
 }
 
+
 //Estas rutas de aca en adelante requiren que la cuenta este verificada
 // Esto genera las rutas de login y verificacion
 Route::middleware(['auth','verified'])->group(function(){
     Route::get('/home',[HomeController::class,'index'])->name('home');
     Route::get('/dashboard',[HomeController::class,'index'])->name('dashboard');
+    
+    Route::get('/reports',[ReportsController::class,'index'])->name('reports.index');
+    Route::get('/report/new',[ReportsController::class,'create'])->name('reports.create');
+    Route::post('/report/save',[ReportsController::class,'store'])->name('reports.store');
+    Route::put('/report/{Report}/edit',[ReportsController::class,'edit'])->name('reports.edit');
+    Route::put('/report/{Report}/update',[ReportsController::class,'update'])->name('reports.update');
 });

@@ -29,7 +29,15 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            <a class="nav-link collapsed" href="{{route('reports.create')}}" >
+                <i class="fas fa-plus"></i>
+                <span>Nuevo</span>
+            </a>
+            <a class="nav-link collapsed" href="{{route('reports.index')}}" >
+                <i class="fas fa-list"></i>
+                <span>Mis reportes</span>
+            </a>
+            {{-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                 aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-cog"></i>
                 <span>Ultimos</span>
@@ -42,9 +50,9 @@
                     <a class="collapse-item" href="cards.html">Por barrio</a>
                     <a class="collapse-item" href="cards.html">Por departamento</a>
                 </div>
-            </div>
+            </div> --}}
         </li>
-        <hr class="sidebar-divider">
+        {{-- <hr class="sidebar-divider">
 
         <!-- Heading -->
         <div class="sidebar-heading">
@@ -65,7 +73,7 @@
                     <a class="collapse-item" href="utilities-color.html">Usuarios</a>
                     <a class="collapse-item" href="utilities-border.html">Ubicaciones</a>
                     <a class="collapse-item" href="utilities-animation.html">Mensajes</a>
-                    {{-- <a class="collapse-item" href="utilities-other.html">Other</a> --}}
+                    
                 </div>
             </div>
         </li>
@@ -92,7 +100,7 @@
             <a class="nav-link" href="tables.html">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Quienes somos</span></a>
-        </li>
+        </li> --}}
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">

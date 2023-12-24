@@ -41,15 +41,15 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    @include('layouts.parts.page-heading')
+                    @yield('content')
+                    {{-- @include('layouts.parts.page-heading')
 
                     @include('layouts.parts.card-rows')
 
                     
                     @include('layouts.parts.chart-rows')
 
-                    @include('layouts.parts.projects-ilustrations-cols')
+                    @include('layouts.parts.projects-ilustrations-cols') --}}
 
                 </div>
                 <!-- /.container-fluid -->
