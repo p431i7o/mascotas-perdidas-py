@@ -1,4 +1,7 @@
 import './bootstrap';
+import 'leaflet';
+import './utilities';
+import './map';
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
@@ -29,3 +32,4 @@ import '../sass/app.scss'
 import '../css/app.css'
 import '../css/sb-admin-2.css'
 import '../css/sb-admin-2.min.css'
+

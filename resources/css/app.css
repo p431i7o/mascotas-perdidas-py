@@ -1,3 +1,5 @@
 @import '~fontawesome/css/all.css';
 @import 'sb-admin-2';
 @import 'sb-admin-2.min';
+
+@import 'leaflet.css'

@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('animal_kinds', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('Nombre de la especie');
-            $table->string('examples')->comment('Ejemplos de la especie');
+            $table->string('example')->comment('Ejemplos de la especie');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnimalKind;
 use App\Models\Report;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,9 @@ class ReportsController extends Controller
     public function create()
     {
     
-        return view('reports.form')->with('record',new Report());
+        return view('reports.form')
+            ->with('record',new Report())
+            ->with('kinds',AnimalKind::get());
     }
 
     /**

@@ -11,7 +11,7 @@ export default defineConfig({
                 'resources/js/sb-admin-2.js',
                 'resources/js/chart-area-demo.js',
                 'resources/js/chart-bar-demo.js',
-                'resources/js/chart-pie-demo.js'
+                'resources/js/chart-pie-demo.js',
             ],
             refresh: true,
         }),
@@ -22,7 +22,8 @@ export default defineConfig({
             '~jquery.easing':path.resolve(__dirname,'node_modules/jquery.easing'),
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
             '~fontawesome':path.resolve(__dirname,'node_modules/@fortawesome/fontawesome-free'),
-            '~chart.js':path.resolve(__dirname,'node_modules/chart.js')
+            '~chart.js':path.resolve(__dirname,'node_modules/chart.js'),
+            '~leaflet':path.resolve(__dirname,'node_modules/leaflet')
         }
     },
 });

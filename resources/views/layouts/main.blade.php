@@ -11,6 +11,8 @@
     <meta name="author" content="">
 
     <title>SB Admin 2 - Dashboard</title>
+    @stack('pre-scripts')
+    @stack('styles')
 
     <!-- Custom fonts for this template-->
     {{-- <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"> --}}
@@ -74,9 +76,11 @@
 
     
     @vite('resources/js/sb-admin-2.js')
-    <script type="module" src="{{Vite::asset('resources/js/chart-area-demo.js')}}"></script>
-    <script type="module" src="{{Vite::asset('resources/js/chart-pie-demo.js')}}"></script>
-
+    {{-- 
+        <script type="module" src="{{Vite::asset('resources/js/chart-area-demo.js')}}"></script>
+        <script type="module" src="{{Vite::asset('resources/js/chart-pie-demo.js')}}"></script> 
+    --}}
+    @stack('scripts')
 </body>
 
 </html>
