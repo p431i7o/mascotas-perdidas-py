@@ -213,4 +213,8 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'mail_support'=>env('MAIL_SUPPORT','-completar-'),
+    'captcha_public'=>env('CAPTCHA_PUBLIC','--'),
+    'captcha_secret'=>env('CAPTCHA_SECRET','--')
+
 ];

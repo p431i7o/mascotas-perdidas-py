@@ -20,11 +20,11 @@ class HomeController extends Controller
 
     public function help()
     {
-        echo "help";
+        return view('help');
     }
 
     public function legal()
     {
-        echo "legal";
+        return view('legal');
     }
 }

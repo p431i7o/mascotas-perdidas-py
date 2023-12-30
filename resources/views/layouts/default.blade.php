@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Mascotas Perdidas</title>
+    @stack('pre-scripts')
+    @stack('styles')
     <!-- CSS only -->
     {{-- <link rel="stylesheet" href="<?= base_url('/assets/dist/css/bootstrap.css') ?>"> --}}
     @vite('resources/js/app.js')
