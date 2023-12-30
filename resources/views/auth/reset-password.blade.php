@@ -4,50 +4,37 @@
     <div class="container">
         <div class="row text-center">
             <h4 class="display-3 text-center">Recuperar Cuenta</h4>
-            <p>Si ha olvidado la contraseña con la que se registró, no hay problema, le enviaremos un email con un enlace para poder cambiarla</p>
         </div>
-        @if (session('status'))
-          <div class="alert alert-info">{{session('status')}}</div>
-        @endif
     </div>
     <div class="container">
         <div class="row">
 
-            <form id="demo-form" method="POST" class="form-signin needs-validation accordion" action="<?=route('password.email');?>" >
+            <form id="demo-form" method="POST" class="form-signin needs-validation accordion" action="<?=route('password.update');?>" >
 
                 @csrf
-                {{-- <input type="hidden" name="token" value="{{ $token }}">  --}}
-                    <!-- <div class="">
-                        <label for="firstName">Nombre Completo:</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
-                            <div class="invalid-feedback">
-                            Valid first name is required.
-                        </div>
-                    </div> -->
-                <?php if(session('error')){
-                    ?>
-                    <div class="alert alert-warning"><?=session('message') ?></div>
-
-                    <?php
-                } ?>
-
-                <?php
-                    if(isset($success)){
-                        if($success){
-                            ?><div class="alert alert-info">Se ha activado correctamente su cuenta!</div><?php
-                        }else{
-                            ?><div class="alert alert-warning">Se ha producido un error al activar su cuenta sus datos.
-                                Favor escribanos un email a <?=env('email_soporte');?> con sus datos para revisar el errror.</div><?php
-                        }
-                    }
-                ?>
+                <input type="hidden" name="token" value="{{ $token }}">
                 <div class="form-label-group">
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Direcci&oacute;n de correo" required autofocus>
-                    <label for="inputEmail">Correo electr&oacute;nico</label>
+                    <input type="email" id="email" name="email" class="form-control"  required autofocus value="{{$request->email}}">
+                    <label for="inputemail">Email</label>
                     @error('email')
                         <div class="invalid-feedback d-block">{{$message}}</div>
                     @enderror
-                  </div>
+                </div>
+                <div class="form-label-group">
+                    <input type="password" id="password" name="password" class="form-control"  required autofocus>
+                    <label for="inputpassword">Contraseña</label>
+                    @error('password')
+                        <div class="invalid-feedback d-block">{{$message}}</div>
+                    @enderror
+                </div>
+
+                <div class="form-label-group">
+                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"  required autofocus>
+                    <label for="inputpassword_confirmation">Repetir Contraseña</label>
+                    @error('password_confirmation')
+                        <div class="invalid-feedback d-block">{{$message}}</div>
+                    @enderror
+                </div>
 
                 <button class="g-recaptcha btn btn-lg btn-primary btn-block"
                 data-sitekey="<?=env('captcha_public');?>"

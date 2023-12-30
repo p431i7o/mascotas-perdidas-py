@@ -8,20 +8,8 @@
                 @csrf
                 {{-- <img class="mb-4" src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> --}}
                 <h1 class="h3 mb-3 fw-normal">Iniciar Sesion</h1>
-                @if(Session::has('result'))
-                    @if(Session::get('result'))
-                        
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ nl2br(Session::get('message')) }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @else
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ nl2br(Session::get('message')) }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        
-                    @endif
+                @if (session('status'))
+                    <div class="alert alert-info">{{session('status')}}</div>
                 @endif
                 <div class="form-floating">
                     <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{old('email')}}" name="email">
@@ -38,6 +26,7 @@
                     </label>
                 </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                <a href="{{route('password.request')}}">Olvide mi contraseña</a>
                 <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
             </form>
         </main>
