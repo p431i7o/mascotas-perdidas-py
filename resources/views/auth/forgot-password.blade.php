@@ -24,12 +24,11 @@
                             Valid first name is required.
                         </div>
                     </div> -->
-                <?php if(session('error')){
-                    ?>
-                    <div class="alert alert-warning"><?=session('message') ?></div>
+                @if(session('error'))
 
-                    <?php
-                } ?>
+                    <div class="alert alert-warning"><?=session('message') ?></div>
+                @endif
+
 
                 <?php
                     if(isset($success)){
