@@ -2,7 +2,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('root') }}">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-paw"></i>
             </div>
@@ -73,7 +73,7 @@
                     <a class="collapse-item" href="utilities-color.html">Usuarios</a>
                     <a class="collapse-item" href="utilities-border.html">Ubicaciones</a>
                     <a class="collapse-item" href="utilities-animation.html">Mensajes</a>
-                    
+
                 </div>
             </div>
         </li>
@@ -86,7 +86,7 @@
             Contenido Estatico
         </div>
 
-        
+
 
         <!-- Nav Item - Charts -->
         <li class="nav-item">

@@ -1,6 +1,63 @@
 @extends('layouts.default')
 
 @section('content')
+    <div class="container">
+        <div class="row text-center">
+            <h4 class="display-3 text-center">Inicio de Sesi&oacute;n</h4>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+
+            <form id="demo-form" method="POST" class="form-signin needs-validation accordion" action="<?=route('login');?>" >
+                @csrf
+
+                <div class="form-label-group">
+                    <input type="email" id="user" name="user" class="form-control" placeholder="Direcci&oacute;n de correo" required autofocus>
+                    <label for="inputEmail">Correo electr&oacute;nico</label>
+                    <?php
+                        if (isset($validation) && $validation->hasError('user'))
+                        {
+                            echo '<div class="alert alert-danger">'.$validation->getError('user').'</div>';
+                        }
+                    ?>
+                </div>
+
+                <div class="form-label-group">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Contrase&ntilde;" required>
+                    <label for="password">Contrase&ntilde;a</label>
+                    <?php
+                        if (isset($validation) && $validation->hasError('password'))
+                        {
+                            echo '<div class="alert alert-danger">'.$validation->getError('password').'</div>';
+                        }
+                    ?>
+                </div>
+                <?php
+                        if (isset($validation) && $validation->hasError('g-recaptcha-response'))
+                        {
+                            echo '<div class="alert alert-danger">'.$validation->getError('g-recaptcha-response').'</div>';
+                        }
+                    ?>
+                <!-- <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="validarYEnviar();">Registrarme</button> -->
+                <a href="<?=route('password.request');?>">Olvid&eacute; mi contrase&ntilde;a</a>
+                <button class="g-recaptcha btn btn-lg btn-primary btn-block"
+                data-sitekey="<?=config('app.captcha_public');?>"
+                data-callback='onSubmit'
+                data-action='submit'>Iniciar Sesi&oacute;n</button>
+
+            </form>
+        </div>
+    </div>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+       function onSubmit(token) {
+         document.getElementById("demo-form").submit();
+       }
+     </script>
+@endsection
+
+@push('styles')
 <style type="text/css">
 
     .form-signin {
@@ -91,82 +148,4 @@
       }
     }
     </style>
-    <div class="container">
-        <div class="row text-center">
-            <h4 class="display-3 text-center">Inicio de Sesi&oacute;n</h4>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-
-            <form id="demo-form" method="POST" class="form-signin needs-validation accordion" action="<?=route('login');?>" >
-
-                @csrf
-                    <!-- <div class="">
-                        <label for="firstName">Nombre Completo:</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
-                            <div class="invalid-feedback">
-                            Valid first name is required.
-                        </div>
-                    </div> -->
-                <?php if(session('error')){
-                    ?>
-                    <div class="alert alert-warning"><?= session('message') ?></div>
-
-                    <?php
-                } ?>
-
-                <?php
-                    if(isset($success)){
-                        if($success){
-                            ?><div class="alert alert-info">Se ha activado correctamente su cuenta!</div><?php
-                        }else{
-                            ?><div class="alert alert-warning">Se ha producido un error al activar su cuenta sus datos.
-                                Favor escribanos un email a <?=config('app.mail_support');?> con sus datos para revisar el errror.</div><?php
-                        }
-                    }
-                ?>
-                <div class="form-label-group">
-                    <input type="email" id="user" name="user" class="form-control" placeholder="Direcci&oacute;n de correo" required autofocus>
-                    <label for="inputEmail">Correo electr&oacute;nico</label>
-                    <?php
-                        if (isset($validation) && $validation->hasError('user'))
-                        {
-                            echo '<div class="alert alert-danger">'.$validation->getError('user').'</div>';
-                        }
-                    ?>
-                  </div>
-
-                <div class="form-label-group">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Contrase&ntilde;" required>
-                    <label for="password">Contrase&ntilde;a</label>
-                    <?php
-                        if (isset($validation) && $validation->hasError('password'))
-                        {
-                            echo '<div class="alert alert-danger">'.$validation->getError('password').'</div>';
-                        }
-                    ?>
-                </div>
-                <?php
-                        if (isset($validation) && $validation->hasError('g-recaptcha-response'))
-                        {
-                            echo '<div class="alert alert-danger">'.$validation->getError('g-recaptcha-response').'</div>';
-                        }
-                    ?>
-                <!-- <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="validarYEnviar();">Registrarme</button> -->
-                <a href="<?=route('password.request');?>">Olvid&eacute; mi contrase&ntilde;a</a>
-                <button class="g-recaptcha btn btn-lg btn-primary btn-block"
-                data-sitekey="<?=config('app.captcha_public');?>"
-                data-callback='onSubmit'
-                data-action='submit'>Iniciar Sesi&oacute;n</button>
-
-            </form>
-        </div>
-    </div>
-    <script src="https://www.google.com/recaptcha/api.js"></script>
-    <script>
-       function onSubmit(token) {
-         document.getElementById("demo-form").submit();
-       }
-     </script>
-@endsection
+@endpush

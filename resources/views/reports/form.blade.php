@@ -1,12 +1,19 @@
-@extends('layouts.main')
+@extends('layouts.default')
 @section('content')
+<div class="container">
+    <div class="row text-center">
+        {{-- <h4 class="display-3 text-center">Inicio de Sesi&oacute;n</h4> --}}
+        <h4 class="display-3 text-center">@if(empty($record->id)) {{__("New Report")}} @else {{__("Edit Report")}} @endif</h4>
+    </div>
+</div>
+<div class="container">
     <div class="row">
         <div class="col-xl-12 col-lg-12">
             <div class="card shadow mb-4">
-                
+
                 <div class="card-body">
-                    <h5 class="card-tile">@if(empty($record->id)) {{__("New Report")}} @else {{__("Edit Report")}} @endif</h5>
-                    
+
+
                     {{-- <div class="container"> --}}
                         <form method="POST" action="{{ empty($record->id)?route('reports.store'):route('reports.update',$record->id)}}">
                             @csrf
@@ -19,8 +26,8 @@
                                 @foreach (['Lost','Found'] as  $option)
                                     <option value="{{$option}}" @if(old('type',$record->type)==$option) @selected(true) @endif>{{__($option)}}</option>))
                                 @endforeach
-                                
-                                
+
+
                               </select>
                             </div>
                             <div class="form-group">
@@ -47,9 +54,9 @@
 
                             <div class="form-group">
                               <label for="description">Descripción</label>
-                              <textarea class="form-control" 
-                                name="description" 
-                                id="description" 
+                              <textarea class="form-control"
+                                name="description"
+                                id="description"
                                 rows="3" placeholder="Describa datos del animal, caracteristicas únicas, donde se perdió/encontró"></textarea>
                             </div>
 
@@ -59,12 +66,12 @@
                                 </button>
                                 <div id="map-container"></div>
                                 <label for="latitude">Ubicación <small>(Latitud/Longitud)</small></label>
-                              <input type="text" class="form-control col-6" name="latitude" id="latitude" aria-describedby="latitudHelpId" placeholder="Latitud">
+                              <input type="text" class="form-control col-12" name="latitude" id="latitude" aria-describedby="latitudHelpId" placeholder="Latitud">
                               <small id="latitudHelpId" class="form-text text-muted">Haga click en el mapa</small>
-                              <input type="text" class="form-control col-6" name="longitude" id="longitude" aria-describedby="longitudHelpId" placeholder="Longitud">
+                              <input type="text" class="form-control col-12" name="longitude" id="longitude" aria-describedby="longitudHelpId" placeholder="Longitud">
                               <small id="longitudHelpId" class="form-text text-muted">Haga click en el mapa</small>
-                              
-                              
+
+
                             </div>
 
                             <div class="form-group">
@@ -80,7 +87,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <div class="offset-sm-2 col-sm-10">
+                                <div class="btn btn-primary btn-lg btn-block mb-1">
                                     <button type="submit" class="btn btn-primary">{{__("Save") }}</button>
                                 </div>
                             </div>
@@ -90,6 +97,7 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('pre-scripts')
@@ -124,10 +132,10 @@
         }
     </script>
     <script>
-        
+
     </script>
 
-    
+
 @endpush
 
 @push('styles')

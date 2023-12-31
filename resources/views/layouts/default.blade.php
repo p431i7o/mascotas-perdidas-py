@@ -9,7 +9,7 @@
     @stack('styles')
     <!-- CSS only -->
     {{-- <link rel="stylesheet" href="<?= base_url('/assets/dist/css/bootstrap.css') ?>"> --}}
-    @vite('resources/js/app.js')
+    @vite('resources/js/app.js')]
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -30,6 +30,7 @@
     </footer>
     {{-- <script src="<?= base_url('/assets/jquery-3.5.1.min.js') ?>"></script>
         <script src="<?= base_url('/assets/dist/js/bootstrap.min.js') ?>" ></script> --}}
+        @stack('scripts')
 </body>
 
 </html>
