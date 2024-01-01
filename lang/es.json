@@ -395,6 +395,7 @@
     "Constant": "Constante",
     "Decrease": "Disminución",
     "Reset Password Notification": "Notificación de restablecimiento de contraseña",
+    "This password reset link will expire in :count minutes.":"Este enlace de restablecimiento de contraseña va a expirar en :count minutos.",
     "Nova User": "Usuario Nova",
     "of": "de",
     "no file selected": "ningún archivo seleccionado",
@@ -478,7 +479,10 @@
     "Before proceeding, please check your email for a verification link.":"Antes de continuar, por favor revisa tu correo electrónico por el enlace de verificación",
     "If you did not receive the email":"Si no recibiste el correo",
     "click here to request another":"haz clic aquí para solicitar otro",
-    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n":"Si tiene problemas haciendo click en el boton \":actionText\", copie y pegue la URL de abajo\n",
-    "into your web browser:":"en su navegador:",
-    "Verify Email Address":"Verificación de dirección de correo"
+    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:":"Si tiene problemas haciendo click en el boton \":actionText\", copie y pegue la URL de abajo\nen su navegador:",
+    "Verify Email Address":"Verificación de dirección de correo",
+    "Hello!":"Hola!",
+    "Please click the button below to verify your email address.":"Por favor haz clic en el boton de abajo para verificar tu cuenta de correo electrónico",
+    "If you did not create an account, no further action is required.":"Si no creaste una cuenta, ninguna acción es requerida.",
+    "Regards":"Saludos cordiales"
 }
