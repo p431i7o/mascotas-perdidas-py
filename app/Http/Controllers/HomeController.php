@@ -27,4 +27,8 @@ class HomeController extends Controller
     {
         return view('legal');
     }
+
+    public function search(Request $request){
+        echo "Hola esto es search";
+    }
 }
