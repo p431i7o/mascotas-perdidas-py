@@ -477,5 +477,8 @@
     "Verify Your Email Address":"Verifica tu Dirección de Correo",
     "Before proceeding, please check your email for a verification link.":"Antes de continuar, por favor revisa tu correo electrónico por el enlace de verificación",
     "If you did not receive the email":"Si no recibiste el correo",
-    "click here to request another":"haz clic aquí para solicitar otro"
+    "click here to request another":"haz clic aquí para solicitar otro",
+    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n":"Si tiene problemas haciendo click en el boton \":actionText\", copie y pegue la URL de abajo\n",
+    "into your web browser:":"en su navegador:",
+    "Verify Email Address":"Verificación de dirección de correo"
 }
