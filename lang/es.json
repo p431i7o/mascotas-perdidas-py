@@ -473,5 +473,9 @@
     "Uploading files... (:current/:total)": "Subiendo archivos... (:current de :total)",
     "Remove": "Eliminar",
     "Uploading": "Subiendo",
-    "The image could not be loaded.": "No se pudo cargar la imagen."
+    "The image could not be loaded.": "No se pudo cargar la imagen.",
+    "Verify Your Email Address":"Verifica tu Dirección de Correo",
+    "Before proceeding, please check your email for a verification link.":"Antes de continuar, por favor revisa tu correo electrónico por el enlace de verificación",
+    "If you did not receive the email":"Si no recibiste el correo",
+    "click here to request another":"haz clic aquí para solicitar otro"
 }
