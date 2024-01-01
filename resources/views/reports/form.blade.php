@@ -15,7 +15,7 @@
 
 
                     {{-- <div class="container"> --}}
-                        <form method="POST" action="{{ empty($record->id)?route('reports.store'):route('reports.update',$record->id)}}">
+                        <form id="form-report" method="POST" action="{{ empty($record->id)?route('reports.store'):route('reports.update',$record->id)}}">
                             @csrf
                             @if(!empty($record->id))
                                 @method('PUT')
@@ -87,9 +87,9 @@
                             </div>
 
                             <div class="form-group row">
-                                <div class="btn btn-primary btn-lg btn-block mb-1">
-                                    <button type="submit" class="btn btn-primary">{{__("Save") }}</button>
-                                </div>
+                                    <div class="alert alert-warning d-none" id="errores"></div>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block mb-1" onclick="validarYGuardar();">{{__("Save") }}</button>
+                                
                             </div>
                         </form>
                     {{-- </div> --}}
@@ -132,7 +132,59 @@
         }
     </script>
     <script>
+        function validarYGuardar(){
+            var esValido = true;
+            var tipo_reporte = $('#type').val();
+            var tipo_animal = $('#animal_kind_id').val();
+            // var reporte_mascota_nombre = $('#reporte_mascota_nombre').val();
+            var reporte_descripcion = $('#description').val();
+            var latitud = $('#latitude').val();
+            var longitud = $('#longitude').val();
 
+            var reporte_fecha = $('#date').val();
+
+            var errores = []
+            if(tipo_reporte==null || tipo_reporte ==""){
+                esValido = false;
+                errores.push('<li>Debe elegir un tipo de reporte</li>');
+            }
+
+            if(tipo_animal==null || tipo_animal ==""){
+                esValido = false;
+                errores.push('<li>Debe elegir un tipo de animal</li>');
+            }
+
+            if(reporte_descripcion==null || reporte_descripcion ==""){
+                esValido = false;
+                errores.push('<li>Debe cargar una descripción</li>');
+            }
+
+            if(reporte_fecha==null || reporte_fecha ==""){
+                esValido = false;
+                errores.push('<li>Debe cargar la fecha en la que se encontró/perdió el animal</li>');
+            }
+
+            if(latitud==null || latitud == "" || longitud == null || longitud == ""){
+                esValido = false;
+                errores.push("<li>Debe elegir un punto en el mapa</li>");
+            }
+
+            var $fileUpload = $("input[type='file']");
+            if (parseInt($fileUpload.get(0).files.length)>3){
+                esValido = false;
+                errores.push("<li>3 Imágenes es el límite de imágenes a subir</li>");
+            }
+
+            if(!esValido){
+                $('#errores').html('<ul>'+(errores.join(' '))+'</ul>');
+                $('#errores').removeClass('d-none');
+            }else{
+                $('#errores').addClass('d-none');
+                $('#form-report').submit();
+            }
+
+
+        }
     </script>
 
 
