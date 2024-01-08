@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('departments', function (Blueprint $table) {
             $table->id('id');
             $table->string('name');
-            $table->string('capital_name');
+            $table->string('capital');
             $table->geometry('geom');
             $table->timestamps();
             $table->softDeletes();
