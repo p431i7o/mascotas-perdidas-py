@@ -42,7 +42,15 @@ class ReportsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        /*SELECT dep.name, dep.capital, dis.name, ciu.name,ba.name,
+        dep.id, dis.id, ciu.id, ba.id
+  FROM departments dep 
+  LEFT JOIN districts dis   ON ST_Contains(dis.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045  )',0))
+  LEFT JOIN cities ciu ON ST_Contains(ciu.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0))
+  LEFT JOIN neighborhoods ba ON ST_Contains(ba.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0))
+  WHERE ST_Contains(dep.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0)) 
+  AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0))
+  AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0)) */
     }
 
     
