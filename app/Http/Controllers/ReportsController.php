@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReportStoreRequest;
 use App\Models\AnimalKind;
 use App\Models\Report;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class ReportsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ReportStoreRequest $request)
     {
         /*SELECT dep.name, dep.capital, dis.name, ciu.name,ba.name,
         dep.id, dis.id, ciu.id, ba.id
