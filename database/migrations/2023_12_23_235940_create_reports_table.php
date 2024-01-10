@@ -27,17 +27,17 @@ return new class extends Migration
             $table->string('address',200)->comment('Direccin aprox de donde fue perdido/encontrado');
             $table->string('latitude',20)->comment('Latitud del reporte');
             $table->string('longitude',20)->comment('Longitud del reporte');
-            $table->enum('status',['Active','Inactive']);
+            $table->enum('status',['Pending','Active','Inactive']);
 
-            $table->bigInteger('departamento_id')->unsigned()->nullable();
-            $table->bigInteger('ciudad_id')->unsigned()->nullable();
-            $table->bigInteger('distrito_id')->unsigned()->nullable();
-            $table->bigInteger('barrio_id')->unsigned()->nullable();
+            $table->bigInteger('department_id')->unsigned()->nullable();
+            $table->bigInteger('city_id')->unsigned()->nullable();
+            $table->bigInteger('district_id')->unsigned()->nullable();
+            $table->bigInteger('neighborhood_id')->unsigned()->nullable();
 
-            $table->foreign('departamento_id')->references('id')->on('departments');
-            $table->foreign('ciudad_id')->references('id')->on('cities');
-            $table->foreign('distrito_id')->references('id')->on('districts');
-            $table->foreign('barrio_id')->references('id')->on('neighborhoods');
+            $table->foreign('department_id')->references('id')->on('departments');
+            $table->foreign('city_id')->references('id')->on('cities');
+            $table->foreign('district_id')->references('id')->on('districts');
+            $table->foreign('neighborhood_id')->references('id')->on('neighborhoods');
             $table->timestamps();
             $table->softDeletes();
         });
