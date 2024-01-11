@@ -44,39 +44,42 @@ class ReportsController extends Controller
      */
     public function store(ReportStoreRequest $request)
     {
-        $record = new Report($request->validated());
+        $validated = $request->validated();
+
+        $record = new Report($validated);
         $record->status = 'Pending';
 
-        $lat = $request->latitude;
-        $long= $request->longitude;
 
-        // $result = DB::table('departments as dep')
-        //     ->selectRaw('dep.name, dep.capital')
-        //     ->leftJoin('districts as dis', function($join)use($request){
-        //         $join->whereRaw("ST_Contains(dis.geom, ST_GeomFromText('POINT( ? ? )',0))",['long'=>$request->longitude, $request->latitude]);
-        //     })
-            // ->leftJoin('cities as ciu',function($join)use($request){
-            //     $join->whereRaw("ST_Contains(ciu.geom, ST_GeomFromText('POINT( ? ? )',0))",[$request->longitude, $request->latitude]);
-            // })
-            // ->leftJoin('neighborhoods as ba',function($join)use($lat,$long){
-            //     $join->whereRaw("ST_Contains(ba.geom, ST_GeomFromText('POINT( ? ? )',0))",[$long, $lat]);
-            // })
-            // ->whereRaw("ST_Contains(dep.geom, ST_GeomFromText('POINT( ? ? )',0))",[$request->longitude, $request->latitude])
-            // ->whereRaw("ST_Contains(ciu.geom, ST_GeomFromText('POINT( ? ? )',0))",[$request->longitude, $request->latitude])
-            // ->whereRaw("ST_Contains(dis.geom, ST_GeomFromText('POINT( ? ? )',0))",[$request->longitude, $request->latitude])
+        $lat = $validated['latitude'];
+        $long= $validated['longitude'];
+
+        $result = DB::table('departments as dep')
+            ->selectRaw('dep.name as department_name, dep.capital, dep.id as department_id, dis.name as district_name, dis.id as district_id, ciu.id as city_id, ciu.name as city_name, ba.id as neighborhood_id, ba.name as neighborhood_name')
+            ->leftJoin('districts as dis', function($join)use($lat,$long){
+                $join->whereRaw("ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat )',0))");
+            })
+            ->leftJoin('cities as ciu',function($join)use($lat,$long){
+                $join->whereRaw("ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat)',0))");
+            })
+            ->leftJoin('neighborhoods as ba',function($join)use($lat,$long){
+                $join->whereRaw("ST_Contains(ba.geom, ST_GeomFromText('POINT( $long $lat)',0))");
+            })
+            ->whereRaw("ST_Contains(dep.geom, ST_GeomFromText('POINT( $long $lat)',0))")
+            ->whereRaw("ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat)',0))")
+            ->whereRaw("ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat)',0))")
             ;
-            // dd($result->get());
+            dd($result->get());
 
-        $result = DB::raw("SELECT dep.name, dep.capital, dis.name as district_name, ciu.name as city_name,ba.name as neighborhood_name,
-        dep.id as department_id, dis.id as district_id, ciu.id as city_id, ba.id as neighborhood_id
-  FROM departments dep
-  LEFT JOIN districts dis   ON ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat  )',0))
-  LEFT JOIN cities ciu ON ST_Contains(ciu.geom, ST_GeomFromText('POINT($long $lat )',0))
-  LEFT JOIN neighborhoods ba ON ST_Contains(ba.geom, ST_GeomFromText('POINT( $long $lat )',0))
-  WHERE ST_Contains(dep.geom, ST_GeomFromText('POINT( $long $lat )',0))
-  AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat )',0))
-  AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat )',0))");
-  $result->get();
+//         $result = DB::raw("SELECT dep.name, dep.capital, dis.name as district_name, ciu.name as city_name,ba.name as neighborhood_name,
+//         dep.id as department_id, dis.id as district_id, ciu.id as city_id, ba.id as neighborhood_id
+//   FROM departments dep
+//   LEFT JOIN districts dis   ON ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat  )',0))
+//   LEFT JOIN cities ciu ON ST_Contains(ciu.geom, ST_GeomFromText('POINT($long $lat )',0))
+//   LEFT JOIN neighborhoods ba ON ST_Contains(ba.geom, ST_GeomFromText('POINT( $long $lat )',0))
+//   WHERE ST_Contains(dep.geom, ST_GeomFromText('POINT( $long $lat )',0))
+//   AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat )',0))
+//   AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat )',0))");
+//   $result->get();
         /*SELECT dep.name, dep.capital, dis.name, ciu.name,ba.name,
         dep.id, dis.id, ciu.id, ba.id
   FROM departments dep
