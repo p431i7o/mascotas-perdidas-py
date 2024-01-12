@@ -7,6 +7,7 @@ use App\Models\AnimalKind;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ReportStoreRequest;
+use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
@@ -20,7 +21,8 @@ class ReportsController extends Controller
         if($request->wantsJson()){
             dd('es datatable');
         }
-        dd('request normal');
+        // dd('request normal');
+        return view('reports.index');
     }
 
     /**
@@ -53,7 +55,7 @@ class ReportsController extends Controller
         $lat = $validated['latitude'];
         $long= $validated['longitude'];
 
-        $result = DB::table('departments as dep')
+        $query = DB::table('departments as dep')
             ->selectRaw('dep.name as department_name, dep.capital, dep.id as department_id, dis.name as district_name, dis.id as district_id, ciu.id as city_id, ciu.name as city_name, ba.id as neighborhood_id, ba.name as neighborhood_name')
             ->leftJoin('districts as dis', function($join)use($lat,$long){
                 $join->whereRaw("ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat )',0))");
@@ -68,27 +70,17 @@ class ReportsController extends Controller
             ->whereRaw("ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat)',0))")
             ->whereRaw("ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat)',0))")
             ;
-            dd($result->get());
-
-//         $result = DB::raw("SELECT dep.name, dep.capital, dis.name as district_name, ciu.name as city_name,ba.name as neighborhood_name,
-//         dep.id as department_id, dis.id as district_id, ciu.id as city_id, ba.id as neighborhood_id
-//   FROM departments dep
-//   LEFT JOIN districts dis   ON ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat  )',0))
-//   LEFT JOIN cities ciu ON ST_Contains(ciu.geom, ST_GeomFromText('POINT($long $lat )',0))
-//   LEFT JOIN neighborhoods ba ON ST_Contains(ba.geom, ST_GeomFromText('POINT( $long $lat )',0))
-//   WHERE ST_Contains(dep.geom, ST_GeomFromText('POINT( $long $lat )',0))
-//   AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat )',0))
-//   AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat )',0))");
-//   $result->get();
-        /*SELECT dep.name, dep.capital, dis.name, ciu.name,ba.name,
-        dep.id, dis.id, ciu.id, ba.id
-  FROM departments dep
-  LEFT JOIN districts dis   ON ST_Contains(dis.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045  )',0))
-  LEFT JOIN cities ciu ON ST_Contains(ciu.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0))
-  LEFT JOIN neighborhoods ba ON ST_Contains(ba.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0))
-  WHERE ST_Contains(dep.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0))
-  AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0))
-  AND ST_Contains(ciu.geom, ST_GeomFromText('POINT( -57.54522800445557 -25.376407092431045 )',0)) */
+        $result = $query->get();
+        if($result->count()>0){
+            $record->department_id = $result[0]->department_id;
+            $record->city_id = $result[0]->city_id;
+            $record->district_id = $result[0]->district_id;
+            $record->neighborhood_id = $result[0]->neighborhood_id;
+        }
+        $record->expiration = Carbon::now()->addDays(7);
+        if($record->save()){
+            return  redirect()->route('reports.index')->with('success', 'true')->with('message',__('Saved correctly'));
+        }
     }
 
 
