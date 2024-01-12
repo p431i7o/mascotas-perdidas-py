@@ -24,9 +24,12 @@
             <p>Luego de que completes el formulario de registro, te enviaremos un email con un enlace para que confirmes que
                 la dirección de correo es efectivamente tuya, una vez que confirmes tu email
                 ya podras iniciar una sesión y estarás listo para hacer tu primer reporte.</p>
+            @guest
+
             <p>Listo quiero <a class="btn btn-primary btn-sm" href="<?= route('register') ?>" role="button">crear una
                     cuenta ahora</a> o si ya tienes una tal vez quieras <a class="btn btn-primary btn-sm "
                     href="<?= route('login') ?>" role="button">Iniciar Sesi&oacute;n</a></p>
+            @endguest
         </div>
     </div>
 
@@ -36,14 +39,14 @@
             <?php
             foreach ($reportes as $fila) {
                 echo "<div class='col-md-4'>";
-                echo (!empty($fila->reporte_mascota_nombre) ? "<h2>$fila->reporte_mascota_nombre</h2>" : "<h2>$fila->tipo_reporte</h2>") . '<br/>';
-            
-                foreach ($fila->imagenes_reporte as $imagen) {
-                    echo "<img style='margin-left:10px;' class='img-thumbnail' src='" . base_url('reporte/getImagen/' . $imagen->imagen_miniatura) . "/thumb'/>";
-                    break;
-                }
-                echo "<p>$fila->reporte_descripcion</p>";
-                echo '<p>Departamento: ' . $fila->departamento_nombre . '<br/>';
+                echo (!empty($fila->name) ? "<h2>$fila->name</h2>" : "<h2>$fila->type</h2>") . '<br/>';
+
+                // foreach ($fila->imagenes_reporte as $imagen) {
+                //     echo "<img style='margin-left:10px;' class='img-thumbnail' src='" . base_url('reporte/getImagen/' . $imagen->imagen_miniatura) . "/thumb'/>";
+                //     break;
+                // }
+                echo "<p>$fila->description</p>";
+                echo '<p>Departamento: ' . $fila->department_name . '<br/>';
                 // echo "Ciudad: ".$fila->ciudad_nombre."<br/>";
                 // echo "Distrito: ".$fila->distrito_nombre."<br/>";
                 // echo "Barrio: ".$fila->barrio_nombre."<br/>";
