@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+
             $table->string('name')->nullable()->comment('Nombre de la mascota');
 
             $table->bigInteger('animal_kind_id')->unsigned()->comment('Tipo de animal');
@@ -24,10 +25,10 @@ return new class extends Migration
             $table->dateTime('date')->comment('Fecha hora del reporte');
             $table->string('description',1000)->nullable()->comment('Descripcion del reporte');
             $table->dateTime('expiration')->comment('Fecha de expiracion del posteo');
-            $table->string('address',200)->comment('Direccin aprox de donde fue perdido/encontrado');
+            $table->string('address',200)->comment('Direccion aprox de donde fue perdido/encontrado');
             $table->string('latitude',20)->comment('Latitud del reporte');
             $table->string('longitude',20)->comment('Longitud del reporte');
-            $table->enum('status',['Pending','Active','Inactive']);
+            $table->enum('status',['Pending','Active','Inactive','Rejected']);
 
             $table->bigInteger('department_id')->unsigned()->nullable();
             $table->bigInteger('city_id')->unsigned()->nullable();
@@ -38,6 +39,17 @@ return new class extends Migration
             $table->foreign('city_id')->references('id')->on('cities');
             $table->foreign('district_id')->references('id')->on('districts');
             $table->foreign('neighborhood_id')->references('id')->on('neighborhoods');
+
+            $table->bigInteger('user_id')->unsigned()->comment('Usuario que reporta');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->bigInteger('approved_by')->unsigned()->nullable()->comment('Usuario que aprueba');
+            $table->foreign('approved_by')->references('id')->on('users');
+            $table->dateTime('approved_date')->nullable();
+            $table->string('observations',500)->nullable()->comment('Observaciones internas, por ej Razon por la que se rechaza');
+            $table->json('attachments')->comment('JSON conteniendo informacion de los adjuntos subidos');
+
+            $table->integer('views')->default(0)->comment('Cantidad de visualizaciones');
+            $table->integer('renewed')->default(0)->comment('Veces que se renovó');
             $table->timestamps();
             $table->softDeletes();
         });
