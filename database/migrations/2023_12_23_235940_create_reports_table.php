@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('address',200)->comment('Direccion aprox de donde fue perdido/encontrado');
             $table->string('latitude',20)->comment('Latitud del reporte');
             $table->string('longitude',20)->comment('Longitud del reporte');
-            $table->enum('status',['Pending','Active','Inactive','Rejected']);
+            $table->enum('status',['Pending','Active','Inactive','Rejected','Resolved'])->comment('Pending: Pendiente de moderacion, Active: En busqueda, Inactive: Dado de baja por el user, Rejected: Moderacion determino no valido, Resolved: volvio a casa');
 
             $table->bigInteger('department_id')->unsigned()->nullable();
             $table->bigInteger('city_id')->unsigned()->nullable();
