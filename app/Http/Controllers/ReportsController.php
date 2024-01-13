@@ -7,6 +7,7 @@ use App\Models\AnimalKind;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ReportStoreRequest;
+use Auth;
 use Carbon\Carbon;
 
 class ReportsController extends Controller
@@ -78,6 +79,8 @@ class ReportsController extends Controller
             $record->neighborhood_id = $result[0]->neighborhood_id;
         }
         $record->expiration = Carbon::now()->addDays(7);
+        $record->user_id = Auth::user()->id;
+        $record->attachments = json_encode([]);
         if($record->save()){
             return  redirect()->route('reports.index')->with('success', 'true')->with('message',__('Saved correctly'));
         }
@@ -93,7 +96,9 @@ class ReportsController extends Controller
      */
     public function edit(Report $report)
     {
-        //
+        return view('reports.form')
+            ->with('record', $report)
+            ->with('kinds',AnimalKind::get());
     }
 
     /**

@@ -109,20 +109,20 @@ if(Features::enabled(Features::resetPasswords())){
             'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
         ]);
-     
+
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password)
                 ])->setRememberToken(Str::random(60));
-     
+
                 $user->save();
-     
+
                 event(new PasswordReset($user));
             }
         );
-     
+
         return $status === Password::PASSWORD_RESET
                     ? redirect()->route('login')->with('status', __($status))
                     : back()->withErrors(['email' => [__($status)]]);
@@ -140,6 +140,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
     Route::get('/report/new', [ReportsController::class, 'create'])->name('reports.create');
     Route::post('/report/save', [ReportsController::class, 'store'])->name('reports.store');
-    Route::put('/report/{Report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
-    Route::put('/report/{Report}/update', [ReportsController::class, 'update'])->name('reports.update');
+    Route::get('/report/{report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
+    Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
 });

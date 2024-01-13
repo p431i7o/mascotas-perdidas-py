@@ -34,20 +34,20 @@
                               <label for="animal_kind_id">Tipo de Animal</label>
                               <select class="form-control" name="animal_kind_id" id="animal_kind_id">
                                 @foreach ($kinds as $kind)
-                                    <option value="{{$kind->id}}">{{$kind->name}}</option>
+                                    <option value="{{$kind->id}}"  @if(old('type',$record->animal_kind_id)==$kind->id) @selected(true) @endif>{{$kind->name}}</option>
 
                                 @endforeach
                               </select>
                             </div>
                             <div class="form-group">
                               <label for="date">Fecha *</label>
-                              <input required type="datetime-local" class="form-control" name="date" id="date" aria-describedby="helpId" placeholder="Fecha en la que ocurrio">
+                              <input required value="{{ old('date',$record->date) }}" type="datetime-local" class="form-control" name="date" id="date" aria-describedby="helpId" placeholder="Fecha en la que ocurrio">
                               <small id="helpId" class="form-text text-muted">Fecha en la que se perdio/encontró</small>
                             </div>
                             <div class="form-group ">
                                 <label for="inputName" class="col-sm-12 col-form-label">{{__("Name")}} <small>({{__("Optional")}})</small></label>
                                 {{-- <div class="col-12"> --}}
-                                    <input type="text" class="form-control" name="name" id="name" placeholder="{{__("Name")}} ">
+                                    <input type="text" value="{{ old('name',$record->name) }}" class="form-control" name="name" id="name" placeholder="{{__("Name")}} ">
                                 {{-- </div> --}}
                                 <small id="helpId" class="form-text text-muted">Si es una mascota perdida, a que nombre responde</small>
                             </div>
@@ -57,7 +57,7 @@
                               <textarea class="form-control"
                                 name="description"
                                 id="description"
-                                rows="3" placeholder="Describa datos del animal, caracteristicas únicas, donde se perdió/encontró"></textarea>
+                                rows="3" placeholder="Describa datos del animal, caracteristicas únicas, donde se perdió/encontró">{{ old('description',$record->description) }}</textarea>
                             </div>
 
                             <div class="form-group">
@@ -66,9 +66,9 @@
                                 </button>
                                 <div id="map-container"></div>
                                 <label for="latitude">Ubicación <small>(Latitud/Longitud)</small></label>
-                              <input type="text" class="form-control col-12" name="latitude" id="latitude" aria-describedby="latitudHelpId" placeholder="Latitud">
+                              <input type="text" value="{{ old('latitude',$record->latitude) }}" class="form-control col-12" name="latitude" id="latitude" aria-describedby="latitudHelpId" placeholder="Latitud">
                               <small id="latitudHelpId" class="form-text text-muted">Haga click en el mapa</small>
-                              <input type="text" class="form-control col-12" name="longitude" id="longitude" aria-describedby="longitudHelpId" placeholder="Longitud">
+                              <input type="text" value="{{ old('longitude',$record->longitude) }}" class="form-control col-12" name="longitude" id="longitude" aria-describedby="longitudHelpId" placeholder="Longitud">
                               <small id="longitudHelpId" class="form-text text-muted">Haga click en el mapa</small>
 
 
@@ -76,7 +76,7 @@
 
                             <div class="form-group">
                               <label for="address" class="col-sm-12 col-form-label">{{__("Address")}} <small>({{__("Optional")}})</small></label>
-                              <input type="text" class="form-control" name="address" id="address" aria-describedby="helpId" placeholder="{{__("Address")}}">
+                              <input type="text" value="{{ old('address',$record->address) }}" class="form-control" name="address" id="address" aria-describedby="helpId" placeholder="{{__("Address")}}">
                               <small id="helpId" class="form-text text-muted">Direccion aproximada</small>
                             </div>
 
@@ -89,7 +89,7 @@
                             <div class="form-group row">
                                     <div class="alert alert-warning d-none" id="errores"></div>
                                     <button type="submit" class="btn btn-primary btn-lg btn-block mb-1" onclick="validarYGuardar();">{{__("Save") }}</button>
-                                
+
                             </div>
                         </form>
                     {{-- </div> --}}
