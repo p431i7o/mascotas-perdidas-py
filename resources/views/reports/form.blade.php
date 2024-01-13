@@ -119,14 +119,29 @@
     window.onload = function()
         {
             var action = document.getElementById("loadMap").getAttribute("data_load_map");
-
+            // debugger;
             localization(action);
+            
+            
         };
 </script>
 @endpush
 
 @push('scripts')
+
     <script type="text/javascript">
+        function clickZoom(e) {
+            map.map.setView(e.target.getLatLng(),DEFAULT_ZOOM_MARKER);
+            // map.map.setZoom(15);
+        }
+        @if(!empty($record->id))
+            //@TODO: ENCONTRAR EL EVENTO CORRECTO DE LEAFTLET PARA SETEAR el marcador
+           setTimeout(function(){
+            var marker = L.marker([{{$record->latitude }}, {{$record->longitude}} ]).addTo(map.map).bindPopup("{{$record->name??__($record->type)}}").on('click', clickZoom);
+           },1500)
+            
+        @endif
+
         function send_marker (){
             marker_point_map(event, ((gps_active)? DEFAULT_ZOOM_MARKER : DEFAULT_ZOOM_MAP))
         }
