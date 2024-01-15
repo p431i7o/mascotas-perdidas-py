@@ -31,7 +31,8 @@ class Report extends Model
         'observations',
         'attachments',
         'views',
-        'renewed_times'
+        'renewed_times',
+        'logs'
     ];
 
     public function Author(){
@@ -41,4 +42,6 @@ class Report extends Model
     public function Approved_by(){
         return $this->hasOne('User','id','approved_by');
     }
+
+    
 }

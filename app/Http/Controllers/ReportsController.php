@@ -7,6 +7,7 @@ use App\Models\AnimalKind;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ReportStoreRequest;
+use App\Http\Requests\ReportUpdateRequest;
 use Auth;
 use Carbon\Carbon;
 
@@ -81,8 +82,15 @@ class ReportsController extends Controller
         $record->expiration = Carbon::now()->addDays(7);
         $record->user_id = Auth::user()->id;
         $record->attachments = json_encode([]);
-        if($record->save()){
-            return  redirect()->route('reports.index')->with('success', 'true')->with('message',__('Saved correctly'));
+        $save_result = $record->save();
+
+        // dd($request->pictures);
+        $picture_storage = $this->storeFiles($request,$record);
+
+        if($save_result){
+            return  redirect()->route('reports.index')->with('success', true)->with('message',__('Saved correctly'));
+        }else{
+            return redirect()->back()->withInput()->with('success',false)->with('message',__('Error saving'));
         }
     }
 
@@ -108,9 +116,82 @@ class ReportsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Report $report)
+    public function update(ReportUpdateRequest $request, Report $report)
     {
-        //
+        $validated = $request->validated();
+        // $validated = $report->update($request->validated());
+        $record = $report;
+        $lat = $validated['latitude'];
+        $long= $validated['longitude'];
+
+        $query = DB::table('departments as dep')
+            ->selectRaw('dep.name as department_name, dep.capital, dep.id as department_id, dis.name as district_name, dis.id as district_id, ciu.id as city_id, ciu.name as city_name, ba.id as neighborhood_id, ba.name as neighborhood_name')
+            ->leftJoin('districts as dis', function($join)use($lat,$long){
+                $join->whereRaw("ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat )',0))");
+            })
+            ->leftJoin('cities as ciu',function($join)use($lat,$long){
+                $join->whereRaw("ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat)',0))");
+            })
+            ->leftJoin('neighborhoods as ba',function($join)use($lat,$long){
+                $join->whereRaw("ST_Contains(ba.geom, ST_GeomFromText('POINT( $long $lat)',0))");
+            })
+            ->whereRaw("ST_Contains(dep.geom, ST_GeomFromText('POINT( $long $lat)',0))")
+            ->whereRaw("ST_Contains(ciu.geom, ST_GeomFromText('POINT( $long $lat)',0))")
+            ->whereRaw("ST_Contains(dis.geom, ST_GeomFromText('POINT( $long $lat)',0))")
+            ;
+        $result = $query->get();
+        if($result->count()>0){
+            $record->department_id = $result[0]->department_id;
+            $record->city_id = $result[0]->city_id;
+            $record->district_id = $result[0]->district_id;
+            $record->neighborhood_id = $result[0]->neighborhood_id;
+        }
+        $this->storeFiles($request,$record);
+
+
+        $save_result = $record->update($validated);
+        // dd($save_result);
+        if($save_result){
+            return  redirect()->route('reports.index')->with('success', true)->with('message',__('Saved correctly'));
+        }else{
+            return redirect()->back()->withInput()->with('success',false)->with('message',__('Error saving'));
+        }
+    }
+
+    private function storeFiles(Request $request, Report $report){
+        $data = [];
+        foreach($request->pictures as $index=> $current_picture){
+           $path = $current_picture->store('report_uploads');
+
+            $fileInfo = pathinfo($path);
+            $sha1_file = sha1_file($current_picture->getRealPath());
+            $extension = $current_picture->getClientOriginalExtension();
+            $tmpProperties = [
+                'file_name' => $fileInfo['basename'],
+                'original_name'=>$current_picture->getClientOriginalName(),
+                'extension'=>$extension,
+                'mime' => $current_picture->getClientMimeType(),
+                'file_size'=>$current_picture->getSize(),
+                'sha1_content'=>$sha1_file
+            ];
+            if($extension == 'jpg' || $extension == 'png'){
+
+                // dd($tmpProperties);
+                $imageSize = getimagesize($current_picture->getRealPath());
+                if(@is_array($imageSize)){
+
+                    $tmpProperties['width'] = $imageSize[0];
+                    $tmpProperties['height'] = $imageSize[1];
+                }
+            }
+
+            $properties = $tmpProperties;
+
+            $data[] = $properties;
+
+        }
+        $report->attachments= json_encode($data);
+        return $report->save();
     }
 
     /**
@@ -121,6 +202,12 @@ class ReportsController extends Controller
      */
     public function destroy(Report $report)
     {
-        //
+        $current_user_id = Auth::user()->id;
+        if($report->user_id != $current_user_id){
+            abort(400);
+        }
+
+        $result= $report->delete();
+        return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Erased'));
     }
 }

@@ -13,8 +13,8 @@ window.Map = function  (p_coordinates, p_zoom, p_action)
     let lng = p_coordinates['lng'];
 
     // Add 1.65 to center Paraguay;
-    let lat = (action === 'list')? p_coordinates['lat'] + 1.65 : p_coordinates['lat'];  
-    
+    let lat = (action === 'list')? p_coordinates['lat'] + 1.65 : p_coordinates['lat'];
+
     let minZoom = DEFAULT_MIN_ZOOM_MAP;
     let maxZoom = DEFAULT_MAX_ZOOM_MAP;
 
@@ -31,7 +31,7 @@ window.Map = function  (p_coordinates, p_zoom, p_action)
             position: 'topleft'
         }
     });
-    
+
     // Do not repeat the map.
     //map.setMaxBounds([[-90, -180], [90, 180]]);
 
@@ -56,7 +56,7 @@ window.Map = function  (p_coordinates, p_zoom, p_action)
 // Map.prototype.get_vendors = function()
 // {
 // 	let map = this.map;
-	
+
 // 	this.geojsonLayer = new L.GeoJSON();
 
 // 	let v_geo_json_url = HOSTNAME_API + "vendors";
@@ -74,7 +74,7 @@ window.Map = function  (p_coordinates, p_zoom, p_action)
 //     {
 //         iconUrl: urlIcon + 'vendor_32.png'
 //     });
-    
+
 //     let layer_vendors;
 
 //     $.getJSON(v_geo_json_url, function(p_data)
@@ -88,7 +88,7 @@ window.Map = function  (p_coordinates, p_zoom, p_action)
 
 //                 return L.marker(latlng,
 //                 {
-//                     title: feature.properties.nombre, 
+//                     title: feature.properties.nombre,
 //                     icon: icon
 //                 });
 // 			}
@@ -142,7 +142,7 @@ window.Map = function  (p_coordinates, p_zoom, p_action)
 //                 let bounds = cluster_markers.getBounds();
 //                 map.fitBounds(bounds);
 //                 if (count == 1)
-//                 {   
+//                 {
 //                     map.setZoom(DEFAULT_ZOOM_MARKER);
 //                 }
 //             }
@@ -167,10 +167,10 @@ Map.prototype.marker_point = function (p_zoom)
     let coordinates = get_coordinates_center_map(map);
 
     clean_marker();
-	
+
     marker_point = new L.marker(coordinates,
     {
-		id: 'vendor', 
+		id: 'vendor',
         draggable: 'true',
         title: 'Mi ubicación'
     });
@@ -178,25 +178,31 @@ Map.prototype.marker_point = function (p_zoom)
     map.addLayer(marker_point);
     map.setView(coordinates, p_zoom);
 
-    marker_point.on("dragend", function(e) {
-        let marker = e.target;
-        let position = marker.getLatLng();
-        let lat = position.lat;
-        let lng = position.lng;
-        let lat_lng = new L.LatLng(lat, lng);
-
-        marker.setLatLng(lat_lng,
-        {
-            draggable: 'true'
-        });
-        map.panTo(lat_lng);
-
-        document.getElementById('latitude').value = lat;
-        document.getElementById('longitude').value = lng;
-    });
+    marker_point.on("dragend", ondragend);
 
     //addSearcher(map);
 }
+
+window.ondragend = function(e) {
+    let marker = e.target;
+    let position = marker.getLatLng();
+    let lat = position.lat;
+    let lng = position.lng;
+    let lat_lng = new L.LatLng(lat, lng);
+
+    marker.setLatLng(lat_lng,
+    {
+        draggable: 'true'
+    });
+    if(map.panTo==undefined){
+        map.map.panTo(lat_lng);
+    }else{
+        map.panTo(lat_lng);
+    }
+
+    document.getElementById('latitude').value = lat;
+    document.getElementById('longitude').value = lng;
+};
 
 
 /////////////////////////
@@ -263,7 +269,7 @@ Map.prototype.marker_point = function (p_zoom)
 //                         product_name = value[index]['product_name'];
 //                         product_type = value[index]['product_type'];
 //                         product += '<li>' + capitalize(product_name) + '</li>';
-                       
+
 //                     }
 //                     product += '</ul>';
 //                     v_popupString += '<b>' + capitalize(propertie) + '</b>: ' + product;
@@ -273,7 +279,7 @@ Map.prototype.marker_point = function (p_zoom)
 //                     v_popupString += '<b>' + capitalize(propertie) + '</b>: ' + value + '<br />';
 //                 }
 //             }
-//         }        
+//         }
 //         v_popupString += '</div>';
 //         p_layer.bindPopup(v_popupString);
 //     }
@@ -305,7 +311,7 @@ Map.prototype.marker_point = function (p_zoom)
 //         marker_point.setLatLng(center);
 //         map.setView(center, 18);
 //     })
-//     .addTo(map); 
+//     .addTo(map);
 // }
 
 window.clean_marker = function  ()
@@ -332,7 +338,7 @@ window.clean_marker = function  ()
 
 //         products = propertie.productos;
 //         product = '';
-        
+
 //         for (index_tmp in products)
 //         {
 //             product += products[index_tmp].product_name + ', ';

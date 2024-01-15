@@ -4,8 +4,23 @@
     <div class="row text-center">
         {{-- <h4 class="display-3 text-center">Inicio de Sesi&oacute;n</h4> --}}
         <h4 class="display-3 text-center">@if(empty($record->id)) {{__("New Report")}} @else {{__("Edit Report")}} @endif</h4>
+
     </div>
 </div>
+@if ($errors->any())
+<div class="container">
+    <div class="row">
+        <div class="alert alert-danger">
+            <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+            </ul>
+        </div>
+    </div>
+</div>
+
+@endif
 <div class="container">
     <div class="row">
         <div class="col-xl-12 col-lg-12">
@@ -15,9 +30,10 @@
 
 
                     {{-- <div class="container"> --}}
-                        <form id="form-report" method="POST" action="{{ empty($record->id)?route('reports.store'):route('reports.update',$record->id)}}">
+                        <form enctype="multipart/form-data" id="form-report" method="POST" action="{{ empty($record->id)?route('reports.store'):route('reports.update',$record->id)}}">
                             @csrf
                             @if(!empty($record->id))
+                                <input type="hidden" name="id" value="{{ $record->id }}"/>
                                 @method('PUT')
                             @endif
                             <div class="form-group">
@@ -121,8 +137,8 @@
             var action = document.getElementById("loadMap").getAttribute("data_load_map");
             // debugger;
             localization(action);
-            
-            
+
+
         };
 </script>
 @endpush
@@ -137,9 +153,12 @@
         @if(!empty($record->id))
             //@TODO: ENCONTRAR EL EVENTO CORRECTO DE LEAFTLET PARA SETEAR el marcador
            setTimeout(function(){
-            var marker = L.marker([{{$record->latitude }}, {{$record->longitude}} ]).addTo(map.map).bindPopup("{{$record->name??__($record->type)}}").on('click', clickZoom);
+            var marker = L.marker([{{$record->latitude }}, {{$record->longitude}} ],{
+                id:{{ $record->id }},
+                draggable: 'true',
+            }).addTo(map.map).bindPopup("{{$record->name??__($record->type)}}").on('dragend',ondragend);
            },1500)
-            
+
         @endif
 
         function send_marker (){
