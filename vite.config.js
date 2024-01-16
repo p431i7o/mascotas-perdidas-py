@@ -6,7 +6,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                // 'resources/css/app.css', 
+                // 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/sb-admin-2.js',
                 'resources/js/chart-area-demo.js',
@@ -23,7 +23,9 @@ export default defineConfig({
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
             '~fontawesome':path.resolve(__dirname,'node_modules/@fortawesome/fontawesome-free'),
             '~chart.js':path.resolve(__dirname,'node_modules/chart.js'),
-            '~leaflet':path.resolve(__dirname,'node_modules/leaflet')
+            '~leaflet':path.resolve(__dirname,'node_modules/leaflet'),
+            '~datatables.net-bs4':path.resolve(__dirname,'node_modules/datatables.net-bs4'),
+            '~datatables.net-responsive-bs4':path.resolve(__dirname,'node_modules/datatables.net-responsive-bs4')
         }
     },
 });
