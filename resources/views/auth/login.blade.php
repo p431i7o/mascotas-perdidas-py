@@ -25,7 +25,7 @@
 
             <div class="checkbox mb-3">
                 <label>
-                    <input type="checkbox" value="remember-me" name="remember"> {{ __("Remember me") }}
+                    <input type="checkbox" value="1" name="remember"> {{ __("Remember me") }}
                 </label>
             </div>
             <button class="w-100 btn btn-lg btn-primary" type="submit">{{ __('Sign in') }}</button>
