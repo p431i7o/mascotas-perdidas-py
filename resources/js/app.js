@@ -33,3 +33,13 @@ import '../css/app.css'
 import '../css/sb-admin-2.css'
 import '../css/sb-admin-2.min.css'
 
+import  DataTable from 'datatables.net-bs4';
+import 'datatables.net-responsive-bs4'
+window.Datatable = DataTable;
+// DataTable(window, window.$);
+
+let lang = import.meta.globEager('./es-MX.json');
+let messages_es_mx = lang['./es-MX.json'];
+// window.lang = lang;
+window.messages_es_mx = messages_es_mx;
+
