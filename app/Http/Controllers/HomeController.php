@@ -7,15 +7,14 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    public function root(Request $request)
+    {
+        return view('welcome')->with('reportes', Report::get());
+    }
+
     public function index(Request $request)
     {
         return view('users.home');
-    }
-
-    public function root(Request $request)
-    {
-
-        return view('welcome')->with('reportes', Report::get());
     }
 
     public function help()

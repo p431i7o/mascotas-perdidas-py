@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::create(
+        $user = User::create(
             [
                 'name'=>'admin',
                 'email'=>'admin@gmail.com',
@@ -25,5 +25,6 @@ class UserSeeder extends Seeder
                 'email_verified_at'=>Carbon::now()
             ]
         );
+        $user->assignRole('Admin');
     }
 }
