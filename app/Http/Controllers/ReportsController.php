@@ -21,7 +21,41 @@ class ReportsController extends Controller
     public function index(Request $request)
     {
         if($request->wantsJson()){
-            dd('es datatable');
+            $query = Report::where('user_id',auth()->user()->id)
+                ->select(DB::raw('reports.*, departments.name as department_name, cities.name as city_name, districts.name as district_name, neighborhoods.name as neighborhood_name '))
+                ->leftJoin('departments','departments.id','reports.department_id')
+                ->leftJoin('cities','cities.id','reports.city_id')
+                ->leftJoin('districts','districts.id','reports.district_id')
+                ->leftJoin('neighborhoods','neighborhoods.id','reports.neighborhood_id');
+            if (!empty($request->search['value'])) {
+                $query->where('id', 'ilike', '%' . $request->search['value'] . '%');
+                $query->orWhere('type', 'ilike', '%' . $request->search['value'] . '%');
+            }
+
+            $count = $query->count();
+            if (isset($request->order)) {
+                foreach ($request->order as $order) {
+                    $query->orderBy(DB::raw($order['column']+1), $order['dir']);
+                }
+            } else {
+                $query->orderBy('id', 'asc');
+            }
+
+            $query->limit($request->length)->offset($request->start);
+            $data_result_set = $query->get();
+
+            foreach ($data_result_set as $indice => $fila) {
+                // $data_result_set[$indice]->roles = User::find($fila->id)->getRoleNames()->map(function($item,$key){return __($item);});
+            }
+
+            return response()->json([
+                'data' => $data_result_set,
+                'recordsFiltered' => $count,
+                'recordsTotal' => $count,
+                'success' => true,
+                'params' => $_GET,
+                'draw' => (int)$request->draw
+            ]);
         }
         // dd('request normal');
         return view('reports.index');

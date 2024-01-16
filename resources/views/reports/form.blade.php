@@ -7,6 +7,7 @@
 
     </div>
 </div>
+
 @if ($errors->any())
 <div class="container">
     <div class="row">
@@ -19,8 +20,8 @@
         </div>
     </div>
 </div>
-
 @endif
+
 <div class="container">
     <div class="row">
         <div class="col-xl-12 col-lg-12">
