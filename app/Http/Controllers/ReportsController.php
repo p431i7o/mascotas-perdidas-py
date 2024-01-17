@@ -82,6 +82,7 @@ class ReportsController extends Controller
      */
     public function store(ReportStoreRequest $request)
     {
+        $now = Carbon::now();
         $validated = $request->validated();
 
         $record = new Report($validated);
@@ -116,6 +117,7 @@ class ReportsController extends Controller
         $record->expiration = Carbon::now()->addDays(7);
         $record->user_id = Auth::user()->id;
         $record->attachments = json_encode([]);
+        $record->log= json_encode([$now->toISOString()=>['type'=>'created','user_id'=>auth()->user()->id]]);
         $save_result = $record->save();
 
         // dd($request->pictures);

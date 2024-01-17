@@ -27,7 +27,7 @@ class ReportStoreRequest extends FormRequest
             'type'=>['required','in:Lost,Found'],
             'animal_kind_id'=>['required','exists:animal_kinds,id'],
             'date'=>['required','date'],
-            'name'=>['required','string','max:50'],
+            'name'=>['nullable','string','max:50'],
             'description'=>['required','string'],
             'latitude'=>['required','decimal:3,17'],
             'longitude'=>['required','decimal:3,17'],
