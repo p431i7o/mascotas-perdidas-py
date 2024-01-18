@@ -34,6 +34,11 @@
                             echo 'active';
                     } ?>" href="<?= route('reports.create') ?>">Nuevo reporte</a>
                     </li>
+                    @if(auth()->user()->can(\App\Repositories\Permissions::MODERATE_REPORTS))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('moderation.index')}}">Moderar</a>
+                        </li>
+                    @endif
                 @else
                 <li class="nav-item">
                     <a class="nav-link <?php if (Route::has('login')) {
