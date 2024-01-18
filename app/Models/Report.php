@@ -32,8 +32,9 @@ class Report extends Model
         'observations',
         'attachments',
         'views',
-        'renewed_times',
-        'logs'
+        'renewed',
+        'reported',
+        'log'
     ];
 
     protected function type(): Attribute
