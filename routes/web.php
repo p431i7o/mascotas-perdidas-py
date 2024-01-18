@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ModerationController;
 use App\Http\Controllers\ReportsController;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
@@ -143,4 +144,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/report/{report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
     Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
     Route::delete('/report/{report}/delete',[ReportsController::class, 'delete'])->name('reports.delete');
+
+    Route::get('/moderate-reports',[ModerationController::class,'index'])->name('moderation.index');
 });
