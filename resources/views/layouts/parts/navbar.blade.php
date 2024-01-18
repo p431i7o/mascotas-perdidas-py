@@ -56,7 +56,11 @@
             </li> --}}
             @auth
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= route('logout') ?>">Cerrar Sesi&oacute;n</a>
+                    <form method="POST" action="{{ route('logout') }}" id="logout_form">
+                        @csrf
+                        <a href="javascript:;" class="clear nav-link" onclick="$('#logout_form').submit();">Cerrar Sesion</a>
+                    </form>
+                    {{-- <a class="nav-link" href="<?= route('logout') ?>">Cerrar Sesi&oacute;n</a> --}}
                     <!-- tabindex="-1"  disabled aria-disabled="true" -->
                 </li>
             @endauth

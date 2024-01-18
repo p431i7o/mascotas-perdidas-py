@@ -33,79 +33,38 @@
         </div>
     </div>
 
-    <div class="container">
-        <h1 class="display-4">&Uacute;ltimos Reportes:</h1>
-        <div class="row">
-            <?php
-            foreach ($reportes as $fila) {
-                echo "<div class='col-md-4'>";
-                echo (!empty($fila->name) ? "<h2>$fila->name</h2>" : "<h2>$fila->type</h2>") . '<br/>';
+    @if($reportes->count() > 0)
+        <div class="container">
+            <h1 class="display-4">&Uacute;ltimos Reportes:</h1>
+            <div class="row">
+                <?php
+                foreach ($reportes as $fila) {
+                    echo "<div class='col-md-4'>";
+                    echo (!empty($fila->name) ? "<h2>$fila->name</h2>" : "<h2>$fila->type</h2>") . '<br/>';
 
-                // foreach ($fila->imagenes_reporte as $imagen) {
-                //     echo "<img style='margin-left:10px;' class='img-thumbnail' src='" . base_url('reporte/getImagen/' . $imagen->imagen_miniatura) . "/thumb'/>";
-                //     break;
-                // }
-                echo "<p>$fila->description</p>";
-                echo '<p>Departamento: ' . $fila->department_name . '<br/>';
-                // echo "Ciudad: ".$fila->ciudad_nombre."<br/>";
-                // echo "Distrito: ".$fila->distrito_nombre."<br/>";
-                // echo "Barrio: ".$fila->barrio_nombre."<br/>";
-                // echo "Direcci&oacute;n: ".$fila->reporte_direccion."</p>";
-                // echo "<hr/>";
-                echo '</div>';
-                //@todo paginador
-            }
-            ?>
-            <!-- <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                </div>
+                    // foreach ($fila->imagenes_reporte as $imagen) {
+                    //     echo "<img style='margin-left:10px;' class='img-thumbnail' src='" . base_url('reporte/getImagen/' . $imagen->imagen_miniatura) . "/thumb'/>";
+                    //     break;
+                    // }
+                    echo "<p>$fila->description</p>";
+                    echo '<p>Departamento: ' . $fila->department_name . '<br/>';
+                    // echo "Ciudad: ".$fila->ciudad_nombre."<br/>";
+                    // echo "Distrito: ".$fila->distrito_nombre."<br/>";
+                    // echo "Barrio: ".$fila->barrio_nombre."<br/>";
+                    // echo "Direcci&oacute;n: ".$fila->reporte_direccion."</p>";
+                    // echo "<hr/>";
+                    echo '</div>';
+                    //@todo paginador
+                }
+                ?>
 
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                </div>
-
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                </div> -->
-
+            </div>
         </div>
-    </div>
+    @else
+        <div class="container">
+            <h1 class="display-4">Sin Reportes</h1>
+        </div>
+    @endif
 @endsection
 {{-- <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">

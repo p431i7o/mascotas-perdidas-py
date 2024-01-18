@@ -5,20 +5,21 @@ namespace App\Repositories;
 interface PermissionInterface
 {
     // referenciales
-    const VIEW_USERS = 'Ver usuarios';
-    const VIEW_ROLES = 'Ver roles';
+    const MODERATE_REPORTS = 'Moderar reportes';
+    // const VIEW_USERS = 'Ver usuarios';
+    // const VIEW_ROLES = 'Ver roles';
 
-    // referenciales
-    const CREATE_USERS = 'Crear usuarios';
-    const CREATE_ROLES = 'Crear roles';
+    // // referenciales
+    // const CREATE_USERS = 'Crear usuarios';
+    // const CREATE_ROLES = 'Crear roles';
 
-    // referenciales
-    const EDIT_USERS = 'Editar usuarios';
-    const EDIT_ROLES = 'Editar roles';
+    // // referenciales
+    // const EDIT_USERS = 'Editar usuarios';
+    // const EDIT_ROLES = 'Editar roles';
 
-    // referenciales
-    const DESTROY_USERS = 'Borrar usuarios';
-    const DESTROY_ROLES = 'Borrar roles';
+    // // referenciales
+    // const DESTROY_USERS = 'Borrar usuarios';
+    // const DESTROY_ROLES = 'Borrar roles';
 }
 
 class Permissions implements PermissionInterface

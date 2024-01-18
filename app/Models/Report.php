@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Report extends Model
 {
@@ -35,6 +36,20 @@ class Report extends Model
         'logs'
     ];
 
+    protected function type(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string|null $value) => __($value??"")
+        );
+    }
+
+    protected function status(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => __($value??"")
+        );
+    }
+
     public function Author(){
         return $this->hasOne('User','id','user_id');
     }
@@ -43,5 +58,5 @@ class Report extends Model
         return $this->hasOne('User','id','approved_by');
     }
 
-    
+
 }
