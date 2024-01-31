@@ -11,11 +11,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ModerationController;
 use App\Http\Controllers\ReportsController;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
+use phpDocumentor\Reflection\Types\Resource_;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,4 +148,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/report/{report}/delete',[ReportsController::class, 'delete'])->name('reports.delete');
 
     Route::get('/moderate-reports',[ModerationController::class,'index'])->name('moderation.index');
+
+    Route::resource('/messages',MessageController::class);
 });

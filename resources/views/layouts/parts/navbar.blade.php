@@ -6,10 +6,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item <?php if (Route::current()->getName() == 'root') {
+            <li class="nav-item <?php if (Route::current()->getName() == 'home') {
                 echo 'active';
             } ?>">
-                <a class="nav-link" href="<?= route('root') ?>">Inicio <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="<?= route('home') ?>">Inicio <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php if (Route::current()->getName() == 'help') {
