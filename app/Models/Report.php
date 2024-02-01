@@ -59,5 +59,21 @@ class Report extends Model
         return $this->hasOne('User','id','approved_by');
     }
 
+    public function Department(){
+        return $this->hasOne(Department::class,'id','department_id');
+    }
+
+    public function City(){
+        return $this->hasOne(City::class,'id','city_id');
+    }
+
+    public function District(){
+        return $this->hasOne(District::class,'id','district_id');
+    }
+
+    public function Neighborhood(){
+        return $this->hasOne(Neighborhood::class,'id','neighborhood_id');
+    }
+
 
 }

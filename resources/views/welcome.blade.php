@@ -47,10 +47,11 @@
                     //     break;
                     // }
                     echo "<p>$fila->description</p>";
-                    echo '<p>Departamento: ' . $fila->department_name . '<br/>';
-                    // echo "Ciudad: ".$fila->ciudad_nombre."<br/>";
-                    // echo "Distrito: ".$fila->distrito_nombre."<br/>";
-                    // echo "Barrio: ".$fila->barrio_nombre."<br/>";
+
+                    echo '<p>Departamento: ' . $fila->Department()->first()->name. '<br/>';
+                    echo "Ciudad: ".$fila->City()->first()->name."<br/>";
+                    echo "Distrito: ".$fila->District()->first()->name."<br/>";
+                    echo "Barrio: ".$fila->Neighborhood()->first()->name."<br/>";
                     // echo "Direcci&oacute;n: ".$fila->reporte_direccion."</p>";
                     // echo "<hr/>";
                     echo '</div>';
