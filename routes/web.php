@@ -143,4 +143,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/report/{report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
     Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
     Route::delete('/report/{report}/delete',[ReportsController::class, 'delete'])->name('reports.delete');
+
+    Route::get('/moderate/reports',[ReportsController::class,'moderateIndex'])->name('reports.moderate.index');
 });
