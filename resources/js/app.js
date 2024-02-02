@@ -43,3 +43,8 @@ let messages_es_mx = lang['./es-MX.json'];
 // window.lang = lang;
 window.messages_es_mx = messages_es_mx;
 
+// ES6 Modules or TypeScript
+import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2/dist/sweetalert2.all.js';
+window.Swal = Swal;
+
