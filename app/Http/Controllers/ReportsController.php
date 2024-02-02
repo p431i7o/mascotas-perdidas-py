@@ -246,4 +246,9 @@ class ReportsController extends Controller
         $result= $report->delete();
         return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Erased'));
     }
+
+    public function moderateIndex(Request $request){
+
+
+    }
 }

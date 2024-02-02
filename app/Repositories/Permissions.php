@@ -6,6 +6,7 @@ interface PermissionInterface
 {
     // referenciales
     const MODERATE_REPORTS = 'Moderar reportes';
+    const MANAGE_USERS = 'Gestion de Usuarios';
     // const VIEW_USERS = 'Ver usuarios';
     // const VIEW_ROLES = 'Ver roles';
 

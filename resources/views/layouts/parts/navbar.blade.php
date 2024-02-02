@@ -6,10 +6,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item <?php if (Route::current()->getName() == 'root') {
+            <li class="nav-item <?php if (Route::current()->getName() == 'home') {
                 echo 'active';
             } ?>">
-                <a class="nav-link" href="<?= route('root') ?>">Inicio <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="<?= route('home') ?>">Inicio <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php if (Route::current()->getName() == 'help') {
@@ -34,11 +34,11 @@
                             echo 'active';
                     } ?>" href="<?= route('reports.create') ?>">Nuevo reporte</a>
                     </li>
-                    @if( Auth::user()->can(\App\Repositories\Permissions::MODERATE_REPORTS))
+                    @if(auth()->user()->can(\App\Repositories\Permissions::MODERATE_REPORTS))
                         <li class="nav-item">
-                            <a class="nav-link <?php if (Route::current()->getName() == 'reports.moderate.index') {
+                            <a class="nav-link <?php if (Route::current()->getName() == 'moderation.index'){
                                 echo 'active';
-                            } ?>" href="<?= route('reports.moderate.index') ?>">Moderar</a>
+                            }?>"   href="{{ route('moderation.index')}}">Moderar</a>
                         </li>
                     @endif
                 @else

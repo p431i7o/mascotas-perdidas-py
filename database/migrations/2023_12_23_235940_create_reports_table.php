@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('address',200)->comment('Direccion aprox de donde fue perdido/encontrado');
             $table->string('latitude',20)->comment('Latitud del reporte');
             $table->string('longitude',20)->comment('Longitud del reporte');
-            $table->enum('status',['Pending','Active','Inactive','Rejected','Resolved'])->comment('Pending: Pendiente de moderacion, Active: En busqueda, Inactive: Dado de baja por el user, Rejected: Moderacion determino no valido, Resolved: volvio a casa');
+            $table->enum('status',['Pending','Active','Inactive','Rejected','Resolved','Reported'])->comment('Pending: Pendiente de moderacion, Active: En busqueda, Inactive: Dado de baja por el user, Rejected: Moderacion determino no valido, Resolved: volvio a casa, Reported: Fue denunciado');
 
             $table->bigInteger('department_id')->unsigned()->nullable();
             $table->bigInteger('city_id')->unsigned()->nullable();
@@ -50,6 +50,7 @@ return new class extends Migration
 
             $table->integer('views')->default(0)->comment('Cantidad de visualizaciones');
             $table->integer('renewed')->default(0)->comment('Veces que se renovó');
+            $table->integer('reported')->default(0)->comment('Veces que se denunció');
             $table->json('log')->comment('Cambios que sufre el registro');
             $table->timestamps();
             $table->softDeletes();

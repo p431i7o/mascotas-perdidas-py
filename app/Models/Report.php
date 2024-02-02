@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+// use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Report extends Model
 {
-    use HasFactory;
+    // use HasFactory;
 
     protected $fillable = [
         'name',
@@ -32,8 +32,9 @@ class Report extends Model
         'observations',
         'attachments',
         'views',
-        'renewed_times',
-        'logs'
+        'renewed',
+        'reported',
+        'log'
     ];
 
     protected function type(): Attribute
@@ -56,6 +57,22 @@ class Report extends Model
 
     public function Approved_by(){
         return $this->hasOne('User','id','approved_by');
+    }
+
+    public function Department(){
+        return $this->hasOne(Department::class,'id','department_id');
+    }
+
+    public function City(){
+        return $this->hasOne(City::class,'id','city_id');
+    }
+
+    public function District(){
+        return $this->hasOne(District::class,'id','district_id');
+    }
+
+    public function Neighborhood(){
+        return $this->hasOne(Neighborhood::class,'id','neighborhood_id');
     }
 
 
