@@ -147,6 +147,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
     Route::delete('/report/{report}/delete',[ReportsController::class, 'delete'])->name('reports.delete');
 
+    Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
+
     Route::get('/moderate-reports',[ModerationController::class,'index'])->name('moderation.index');
 
     Route::resource('/messages',MessageController::class);

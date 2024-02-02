@@ -40,7 +40,10 @@
                 <?php
                 foreach ($reportes as $fila) {
                     echo "<div class='col-md-4'>";
-                    echo (!empty($fila->name) ? "<h2>$fila->name</h2>" : "<h2>$fila->type</h2>") . '<br/>';
+                    echo "<a href='".route('reports.show',$fila->id)."' target='_blank'>".
+                        (!empty($fila->name) ? "<h2>$fila->name</h2>" : "<h2>$fila->type</h2>") .
+                        "</a>".
+                        '<br/>';
 
                     // foreach ($fila->imagenes_reporte as $imagen) {
                     //     echo "<img style='margin-left:10px;' class='img-thumbnail' src='" . base_url('reporte/getImagen/' . $imagen->imagen_miniatura) . "/thumb'/>";
@@ -54,6 +57,7 @@
                     echo "Barrio: ".$fila->Neighborhood()->first()->name."<br/>";
                     // echo "Direcci&oacute;n: ".$fila->reporte_direccion."</p>";
                     // echo "<hr/>";
+                    echo "<a href='".route('reports.show',$fila->id)."' target='_blank'>Ver</a>";
                     echo '</div>';
                     //@todo paginador
                 }

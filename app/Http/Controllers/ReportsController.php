@@ -247,8 +247,12 @@ class ReportsController extends Controller
         return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Erased'));
     }
 
-    public function moderateIndex(Request $request){
+    public function show(Report $report){
+        $report->views++;
+        $report->save();
 
-
+        dd($report);
     }
+
+
 }
