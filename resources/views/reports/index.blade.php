@@ -42,7 +42,7 @@
 
 @push('scripts')
     <script type="module">
-        record_table = new Datatable('#theTable',{
+        window.record_table = new Datatable('#theTable',{
             responsive: {
                 details: {
                     type: 'column',
@@ -77,7 +77,14 @@
                 { data: 'type',width:'2%' },
                 { data: 'name',width:'18%' },
                 { data: 'expiration',width:'5%'},
-                { data: 'status'},
+                { data: 'status',
+                    render:function(data,type,row){
+                        if(data=="{{ __('Rejected') }}"){
+                            return data + ` (${row.observations})`;
+                        }
+                        return data;
+                    }
+                },
                 { data: 'department_name'},
                 { data: 'district_name'},
                 { data: 'city_name'},

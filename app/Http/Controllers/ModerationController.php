@@ -67,6 +67,39 @@ class ModerationController extends Controller
 
     }
 
+    public function approve(Request $request){
+        if(!Auth::user()->can(Permissions::MODERATE_REPORTS)){
+            abort(401,'No permitido');
+        }
+        $report = Report::find($request->id);
+        $report->approved_by = Auth::user()->id;
+        $report->approved_date = Carbon::now();
+        $report->status = 'Active';
+        $report->expiration = Carbon::now()->addDays(7);
+
+        // $result =$report->save();
+        return response()->json([
+            'success'=>$report->save()
+        ]);
+    }
+
+    public function reject(Request $request){
+        if(!Auth::user()->can(Permissions::MODERATE_REPORTS)){
+            abort(401,'No permitido');
+        }
+        $report = Report::find($request->id);
+        $report->approved_by = Auth::user()->id;
+        $report->approved_date = Carbon::now();
+        $report->status = 'Rejected';
+        $report->observations = $request->reason;
+
+
+        // $result =$report->save();
+        return response()->json([
+            'success'=>$report->save()
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      *

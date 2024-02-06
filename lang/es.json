@@ -486,5 +486,8 @@
     "If you did not create an account, no further action is required.":"Si no creaste una cuenta, ninguna acción es requerida.",
     "Regards":"Saludos cordiales",
     "Saved correctly":"Guardado correctamente",
-    "Pending":"Pendiente"
+    "Pending":"Pendiente",
+    "Rejected":"Rechazado",
+    "Active":"Activo",
+    "Status":"Estado"
 }

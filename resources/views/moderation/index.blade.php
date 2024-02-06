@@ -27,7 +27,7 @@
                 <th>Tipo</th>
                 <th>Nombre</th>
                 <th>Expira</th>
-                <th>Status</th>
+                <th>Estado</th>
                 <th>Departamento</th>
                 <th>Distrito</th>
                 <th>Ciudad</th>
@@ -43,7 +43,7 @@
 
 @push('scripts')
     <script type="module">
-        var record_table = new Datatable('#theTable',{
+        window.record_table = new Datatable('#theTable',{
             responsive: {
                 details: {
                     type: 'column',
@@ -86,9 +86,9 @@
                 { data: null,
                     width:'20%',
                     render:function(data,type,row){
-                        return '<button data-row=\''+JSON.stringify(row)+'\' data-action="aprobe" class="btn btn-success btn-sm"><i class="fa-solid fa-check"></i></button>'
-                        +' <button data-row=\''+JSON.stringify(row)+'\' data-action="view" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></button>'
-                        +' <button data-row=\''+JSON.stringify(row)+'\' data-action="reject" class="btn btn-danger btn-sm"><i class="fa-solid fa-xmark"></i></button>';
+                        return '<button data-row=\''+JSON.stringify(row)+'\' title="Aprobar" data-action="approve" class="btn btn-success btn-sm"><i class="fa-solid fa-check"></i></button>'
+                        +' <button data-row=\''+JSON.stringify(row)+'\' title="Ver" data-action="view" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></button>'
+                        +' <button data-row=\''+JSON.stringify(row)+'\' title="Rechazar" data-action="reject" class="btn btn-danger btn-sm"><i class="fa-solid fa-xmark"></i></button>';
                     }
 
                 }
@@ -122,9 +122,134 @@
             var data = $(e.currentTarget).data();
             var row = data.row;
             var action = data.action;
-            console.log(row,action);
+            // console.log(row,action);
+            switch(action){
+                case "approve":
+                    approve(row);
+                break;
+
+                case "reject":
+                    reject(row);
+                break;
+
+                case "view":
+                    view(row);
+                break;
+            }
 
         });
+
+        function approve(row){
+            console.log('aprobado',row);
+            Swal.fire({
+                title: "Confirmación",
+                text: "Desea aprobar",
+                icon: "warning",
+                showCancelButton: true,
+                cancelButtonText:"Cancelar",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Si, aprobar!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: "{{ route('moderation.approve') }}",
+                        dataType:"json",
+                        data: {
+                            id: row.id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success:function(data, textStatus, jqXHR){
+
+                            if(data.success){
+                                Swal.fire({
+                                title: "Se ha aprobado!",
+                                text: "El reporte ha sido aprobado para aparecer en la red!",
+                                icon: "success"
+                                });
+                                window.record_table.ajax.reload();
+                            }else{
+                                Swal.fire({
+                                    title:'Error',
+                                    text:'No se ha podido actualizar el registro',
+                                    icon:'error'
+                                });
+                            }
+                        },
+                        error:function(jqXHR, textStatus, errorThrown){
+                            Swal.fire({
+                                    title:'Error',
+                                    text:'Error al comunicarse con el servidor',
+                                    icon:'error'
+                                });
+                        }
+
+                    })
+                }
+            });
+        }
+
+        function reject(row){
+            console.log('rejecting',row);
+            Swal.fire({
+                title: "Rechazar",
+                text:"Ingrese la razón del rechazo",
+                input: "text",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Rechazar",
+                cancelButtonText:"Cancelar",
+                showLoaderOnConfirm: true,
+                // preConfirm: async (reason) => {
+
+                // },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: "{{ route('moderation.reject') }}",
+                        dataType:"json",
+                        data: {
+                            id: row.id,
+                            reason:result.value,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success:function(data, textStatus, jqXHR){
+
+                            if(data.success){
+                                Swal.fire({
+                                title: "Se ha rechazado!",
+                                text: "El reporte ha sido rechazado correctamente!",
+                                icon: "success"
+                                });
+                                window.record_table.ajax.reload();
+                            }else{
+                                Swal.fire({
+                                    title:'Error',
+                                    text:'No se ha podido actualizar el registro',
+                                    icon:'error'
+                                });
+                            }
+                        },
+                        error:function(jqXHR, textStatus, errorThrown){
+                            Swal.fire({
+                                    title:'Error',
+                                    text:'Error al comunicarse con el servidor',
+                                    icon:'error'
+                                });
+                        }
+
+                    })
+                }
+            });
+
+        }
+
+        function view(row){
+            console.log('view',row);
+        }
     </script>
 @endpush
 

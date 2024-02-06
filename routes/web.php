@@ -150,6 +150,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
 
     Route::get('/moderate-reports',[ModerationController::class,'index'])->name('moderation.index');
+    Route::post('/moderate-report/approve',[ModerationController::class, 'approve'])->name('moderation.approve');
+    Route::post('/moderate-report/reject',[ModerationController::class, 'reject'])->name('moderation.reject');
 
     Route::resource('/messages',MessageController::class);
 });
