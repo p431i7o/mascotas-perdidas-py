@@ -39,6 +39,27 @@
         </thead>
     </table>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ver reporte</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modal_body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @push('scripts')
@@ -87,7 +108,7 @@
                     width:'20%',
                     render:function(data,type,row){
                         return '<button data-row=\''+JSON.stringify(row)+'\' title="Aprobar" data-action="approve" class="btn btn-success btn-sm"><i class="fa-solid fa-check"></i></button>'
-                        +' <button data-row=\''+JSON.stringify(row)+'\' title="Ver" data-action="view" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></button>'
+                        +' <button data-row=\''+JSON.stringify(row)+'\' title="Ver" data-action="view" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>'
                         +' <button data-row=\''+JSON.stringify(row)+'\' title="Rechazar" data-action="reject" class="btn btn-danger btn-sm"><i class="fa-solid fa-xmark"></i></button>';
                     }
 
@@ -249,6 +270,15 @@
 
         function view(row){
             console.log('view',row);
+            var attachments = JSON.parse(row.attachments);
+            var imgs = '';
+            for(var index in attachments){
+                imgs += `<img src="{{ route('report.image.show') }}"`;
+            }
+            $('#modal_body').html( `Tipo: ${row.type} <br/>
+            Nombre: ${row.name}<br/>
+            `);
+            debugger;
         }
     </script>
 @endpush
