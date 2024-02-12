@@ -43,7 +43,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Ver reporte</h5>
@@ -55,6 +55,8 @@
 
         </div>
         <div class="modal-footer">
+           <button type="button" class="btn btn-success" id="modal_aprove" data-dismiss="modal" onclick="approve(JSON.parse( $(this).data().row ))">Aprobar</button> |
+           <button type="button" class="btn btn-danger" id="modal_reject" data-dismiss="modal" onclick="reject(JSON.parse( $(this).data().row ))">Rechazar</button> |
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
@@ -160,7 +162,8 @@
 
         });
 
-        function approve(row){
+        window.approve = function (row){
+            debugger;
             console.log('aprobado',row);
             Swal.fire({
                 title: "Confirmación",
@@ -211,7 +214,7 @@
             });
         }
 
-        function reject(row){
+        window.reject = function (row){
             console.log('rejecting',row);
             Swal.fire({
                 title: "Rechazar",
@@ -271,14 +274,18 @@
         function view(row){
             console.log('view',row);
             var attachments = JSON.parse(row.attachments);
-            var imgs = '';
+            var imgs = '<div class="row">';
             for(var index in attachments){
-                imgs += `<img src="{{ route('report.image.show') }}"`;
+                imgs += `<img class="col-md-4" src="{{ route('report.image.show',['xx','yy']) }}"/>`.replace('xx',row.id).replace('yy',index);
             }
+            imgs += '</div>'
             $('#modal_body').html( `Tipo: ${row.type} <br/>
-            Nombre: ${row.name}<br/>
+            Nombre: ${row.name??'--'}<br/>
+            ${imgs}
             `);
-            debugger;
+            $('#modal_aprove').data('row',JSON.stringify(row));
+            $('#modal_reject').data('row',JSON.stringify(row));
+            // debugger;
         }
     </script>
 @endpush

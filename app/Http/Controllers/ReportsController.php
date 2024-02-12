@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use Carbon\Carbon;
 use App\Models\Report;
 use App\Models\AnimalKind;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ReportStoreRequest;
 use App\Http\Requests\ReportUpdateRequest;
-use Auth;
-use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
@@ -252,6 +253,20 @@ class ReportsController extends Controller
         $report->save();
 
         dd($report);
+    }
+
+    public function showImage(Request $request, Report $report, $index){
+        if($report->expiration < Carbon::now()){
+            abort(404);
+        }
+        $attachments = json_decode($report->attachments);
+        if(!isset($attachments[$index])){
+            abort(400);
+        }
+        // dd($attachments[$index]->file_name);
+        $file = Storage::get('report_uploads/'.$attachments[$index]->file_name);
+        header('Content-type:'.$attachments[$index]->mime);
+        echo($file);
     }
 
 
