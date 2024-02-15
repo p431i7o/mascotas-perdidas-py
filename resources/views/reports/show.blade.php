@@ -9,6 +9,9 @@
     </div>
     <div class="container">
         <div class="row">
+            <a href="#" class="btn btn-primary"><i class="fa-regular fa-envelope"></i> Contactar por este reporte</a>
+        </div>
+        <div class="row">
             @foreach (json_decode($report->attachments) as $index => $value)
                 <div class="col-sm-3">
                     <img src="{{ route('report.image.show', [$report->id, $index]) }}" />
@@ -43,6 +46,9 @@
         <hr />
         <div class="row">
             <div id="map-container"></div>
+        </div>
+        <div class="row mt-5">
+            <a href="{{ route('report.denounce',[$report->id])}}" class="btn btn-danger"><i class="fa-solid fa-flag"></i> Denunciar este reporte</a>
         </div>
     </div>
 @endsection

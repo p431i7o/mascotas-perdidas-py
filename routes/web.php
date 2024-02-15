@@ -149,6 +149,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
     Route::get('/report/{report}/image/{index}/show',[ReportsController::class,'showImage'])->name('report.image.show');
+    Route::get('/report/{report}/denounce',[ReportsController::class,'denounce'])->name('report.denounce');
 
     Route::get('/moderate-reports',[ModerationController::class,'index'])->name('moderation.index');
     Route::post('/moderate-report/approve',[ModerationController::class, 'approve'])->name('moderation.approve');
