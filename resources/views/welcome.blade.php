@@ -39,7 +39,7 @@
             <div class="row">
                 <?php
                 foreach ($reportes as $fila) {
-                    echo "<div class='col-md-4'>";
+                    echo "<div class='col-md-4 mb-5'>";
                     echo "<a href='".route('reports.show',$fila->id)."' target='_blank'>".
                         (!empty($fila->name) ? "<h2>$fila->name</h2>" : "<h2>$fila->type</h2>") .
                         "</a>".
