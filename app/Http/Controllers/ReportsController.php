@@ -237,7 +237,7 @@ class ReportsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Report $report)
+    public function destroy(Request $request, Report $report)
     {
         $current_user_id = Auth::user()->id;
         if($report->user_id != $current_user_id){
@@ -245,7 +245,11 @@ class ReportsController extends Controller
         }
 
         $result= $report->delete();
-        return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Erased'));
+        if($request->wantsJson()){
+            return response()->json(['success'=>$result]);
+        }else{
+            return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Erased'));
+        }
     }
 
     public function show(Report $report){

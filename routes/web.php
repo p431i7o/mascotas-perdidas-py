@@ -145,7 +145,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/report/save', [ReportsController::class, 'store'])->name('reports.store');
     Route::get('/report/{report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
     Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
-    Route::delete('/report/{report}/delete',[ReportsController::class, 'delete'])->name('reports.delete');
+    Route::delete('/report/{report}/delete',[ReportsController::class, 'destroy'])->name('reports.delete');
 
     Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
     Route::get('/report/{report}/image/{index}/show',[ReportsController::class,'showImage'])->name('report.image.show');
