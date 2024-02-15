@@ -27,17 +27,36 @@
                 <th>Tipo</th>
                 <th>Nombre</th>
                 <th>Expira</th>
-                <th>Status</th>
+                <th>Estado</th>
                 <th>Departamento</th>
                 <th>Distrito</th>
                 <th>Ciudad</th>
                 <th>Barrio</th>
+                <th></th>
 
             </tr>
 
         </thead>
     </table>
 </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ver reporte</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modal_body">
+
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @push('scripts')
@@ -76,7 +95,11 @@
                 { data: 'id',width:'2%' },
                 { data: 'type',width:'2%' },
                 { data: 'name',width:'18%' },
-                { data: 'expiration',width:'5%'},
+                { data: 'expiration',width:'25%',
+                    render:function(data, type, row){
+                        return new Date(data).toLocaleString('es-PY', { day: '2-digit', month: '2-digit', year: 'numeric', hour:'2-digit',minute:'2-digit' })
+                    }
+                },
                 { data: 'status',
                     render:function(data,type,row){
                         if(data=="{{ __('Rejected') }}"){
@@ -88,7 +111,15 @@
                 { data: 'department_name'},
                 { data: 'district_name'},
                 { data: 'city_name'},
-                { data: 'neighborhood_name'}
+                { data: 'neighborhood_name'},
+                { data: null,
+                    width:'20%',
+                    render:function(data,type,row){
+                        return ' <button data-row=\''+JSON.stringify(row)+'\' title="Ver" data-action="view" class="btn btn-primary btn-sm"'
+                            +' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>';
+                    }
+
+                }
             ],
             processing: true,
             serverSide: true,
@@ -114,6 +145,34 @@
 
             ],
         });
+
+        $('#theTable tbody').on('click','td > button',function(e){
+            var data = $(e.currentTarget).data();
+            var row = data.row;
+            var action = data.action;
+            // console.log(row,action);
+            switch(action){
+                case "view":
+                    view(row);
+                break;
+            }
+
+        });
+
+        function view(row){
+            // console.log('view',row);
+            var attachments = JSON.parse(row.attachments);
+            var imgs = '<div class="row">';
+            for(var index in attachments){
+                imgs += `<img class="col-md-4" src="{{ route('report.image.show',['xx','yy']) }}"/>`.replace('xx',row.id).replace('yy',index);
+            }
+            imgs += '</div>'
+            $('#modal_body').html( `Tipo: ${row.type} <br/>
+            Nombre: ${row.name??'--'}<br/>
+            ${imgs}
+            `);
+            // debugger;
+        }
     </script>
 @endpush
 
