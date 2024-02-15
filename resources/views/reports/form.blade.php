@@ -158,6 +158,7 @@
                 id:{{ $record->id }},
                 draggable: 'true',
             }).addTo(map.map).bindPopup("{{$record->name??__($record->type)}}").on('dragend',ondragend);
+            map.map.setZoom(15)
            },1500)
 
         @endif

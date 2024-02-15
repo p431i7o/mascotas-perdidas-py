@@ -37,6 +37,10 @@ class Report extends Model
         'log'
     ];
 
+    protected $casts = [
+        'date'=>'datetime'
+    ];
+
     protected function type(): Attribute
     {
         return Attribute::make(

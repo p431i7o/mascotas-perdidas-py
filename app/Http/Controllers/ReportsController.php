@@ -252,11 +252,16 @@ class ReportsController extends Controller
         }
     }
 
-    public function show(Report $report){
+    public function show(Request $request, Report $report){
+        if($report->expiration< Carbon::now()){
+            abort(404);
+        }
         $report->views++;
         $report->save();
 
-        dd($report);
+        return view('reports.show')->with('report',$report);
+        //dd($report);
+
     }
 
     public function showImage(Request $request, Report $report, $index){
