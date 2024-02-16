@@ -1,23 +1,24 @@
 <?php
 
-use Laravel\Fortify\Features;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\ModerationController;
 use App\Http\Controllers\ReportsController;
+use phpDocumentor\Reflection\Types\Resource_;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ModerationController;
+use App\Http\Controllers\Auth\RegisterController;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
-use phpDocumentor\Reflection\Types\Resource_;
 
 /*
 |--------------------------------------------------------------------------
@@ -156,4 +157,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/moderate-report/reject',[ModerationController::class, 'reject'])->name('moderation.reject');
 
     Route::resource('/messages',MessageController::class);
+
+    Route::resource('/user',UserController::class);
 });

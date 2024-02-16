@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Repositories\Permissions;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,8 @@ class RolesAndPermissionsSeeder extends Seeder
         if(Role::where('name','Admin')->count()<=0){
 
             $admin = Role::create(['name' => 'Admin']);
+        }else{
+            $admin = Role::where('name','Admin')->first();
         }
 
         $permissions = Permissions::all();
@@ -39,5 +42,6 @@ class RolesAndPermissionsSeeder extends Seeder
         if($admin){
             $admin->givePermissionTo(Permission::all());
         }
+        User::find(1)->assignRole('Admin');
     }
 }

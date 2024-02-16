@@ -6,39 +6,30 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item <?php if (Route::current()->getName() == 'home') {
-                echo 'active';
-            } ?>">
-                <a class="nav-link" href="<?= route('home') ?>">Inicio <span class="sr-only">(current)</span></a>
+            <li class="nav-item @if(Route::current()->getName() == 'home') active @endif">
+                <a class="nav-link" href="{{ route('home') }}">Inicio <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?php if (Route::current()->getName() == 'help') {
-                    echo 'active';
-                } ?>" href="<?= route('help') ?>">Ayuda</a>
+                <a class="nav-link @if (Route::current()->getName() == 'help') active @endif" href="{{ route('help')}}">Ayuda</a>
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link <?php if ( Route::has('report/*') ) {
-                    echo 'active';
-                } ?>" href="<?= route('reports.index') ?>">Reportes de Mascotas</a>
-            </li> --}}
 
             <li class="nav-item">
-                <a class="nav-link <?php if (Route::current()->getName() == 'legal') {
-                    echo 'active';
-                } ?>" href="<?= route('legal') ?>">Legal</a>
+                <a class="nav-link @if (Route::current()->getName() == 'legal') active @endif" href="{{ route('legal')}}">Legal</a>
             </li>
 
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link <?php if (Route::current()->getName() == 'reports.create') {
-                            echo 'active';
-                    } ?>" href="<?= route('reports.create') ?>">Nuevo reporte</a>
+                        <a class="nav-link @if (Route::current()->getName() == 'reports.create') active @endif" href="{{ route('reports.create') }}">Nuevo reporte</a>
                     </li>
                     @if(auth()->user()->can(\App\Repositories\Permissions::MODERATE_REPORTS))
                         <li class="nav-item">
-                            <a class="nav-link <?php if (Route::current()->getName() == 'moderation.index'){
-                                echo 'active';
-                            }?>"   href="{{ route('moderation.index')}}">Moderar</a>
+                            <a class="nav-link @if (Route::current()->getName() == 'moderation.index') active @endif"   href="{{ route('moderation.index')}}">Moderar</a>
+                        </li>
+                    @endif
+
+                    @if(auth()->user()->can(\App\Repositories\Permissions::MANAGE_USERS))
+                        <li class="nav-item">
+                            <a class="nav-link @if (Route::current()->getName() == 'users.index') active @endif"   href="{{ route('user.index')}}">Usuarios</a>
                         </li>
                     @endif
                 @else
