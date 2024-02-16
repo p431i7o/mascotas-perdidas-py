@@ -218,6 +218,8 @@ return [
 
     'mail_support'=>env('MAIL_SUPPORT','-completar-'),
     'captcha_public'=>env('CAPTCHA_PUBLIC','--'),
-    'captcha_secret'=>env('CAPTCHA_SECRET','--')
+    'captcha_secret'=>env('CAPTCHA_SECRET','--'),
+
+    'allowed_picture_extensions'=>env('ALLOWED_PICTURE_EXTENSIONS','jpg,png')
 
 ];

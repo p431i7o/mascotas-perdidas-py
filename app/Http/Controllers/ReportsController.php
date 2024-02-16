@@ -197,12 +197,16 @@ class ReportsController extends Controller
 
     private function storeFiles(Request $request, Report $report){
         $data = [];
+        $allowedExtensions = explode(',',config('app.allowed_picture_extensions','jpg,png,gif,jpeg'));
         foreach($request->pictures as $index=> $current_picture){
-           $path = $current_picture->store('report_uploads');
+           $path = $current_picture->store('report_uploads/'.$report->user_id.'/'.$report->id);
 
             $fileInfo = pathinfo($path);
             $sha1_file = sha1_file($current_picture->getRealPath());
             $extension = $current_picture->getClientOriginalExtension();
+            if(!in_array($extension, $allowedExtensions)){
+                abort(400,'Extension de imagen no admitida');
+            }
             $tmpProperties = [
                 'file_name' => $fileInfo['basename'],
                 'original_name'=>$current_picture->getClientOriginalName(),
@@ -222,9 +226,9 @@ class ReportsController extends Controller
                 }
             }
 
-            $properties = $tmpProperties;
 
-            $data[] = $properties;
+
+            $data[] = $tmpProperties;
 
         }
         $report->attachments= json_encode($data);
@@ -273,7 +277,7 @@ class ReportsController extends Controller
             abort(400);
         }
         // dd($attachments[$index]->file_name);
-        $file = Storage::get('report_uploads/'.$attachments[$index]->file_name);
+        $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
         header('Content-type:'.$attachments[$index]->mime);
         echo($file);
     }
