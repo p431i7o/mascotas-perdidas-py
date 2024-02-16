@@ -246,11 +246,8 @@
                         break;
                     }
                 }
-                if (!found) {
-                    $('#permission' + item.id)[0].switchButton('off',true);
-                } else {
-                    $('#permission' + item.id)[0].switchButton('on',true);
-                }
+
+                $('#permission' + item.id)[0].switchButton(!found?'off':'on',true);
             }
 
         }
