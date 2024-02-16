@@ -47,4 +47,4 @@ window.messages_es_mx = messages_es_mx;
 import Swal from 'sweetalert2';
 // import Swal from 'sweetalert2/dist/sweetalert2.all.js';
 window.Swal = Swal;
-
+import 'bootstrap-switch-button';

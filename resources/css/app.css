@@ -2,4 +2,6 @@
 @import 'sb-admin-2';
 @import 'sb-admin-2.min';
 
-@import 'leaflet.css'
+@import 'leaflet.css';
+
+@import '~bootstrap-switch-button/css/bootstrap-switch-button.css';

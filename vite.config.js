@@ -8,10 +8,10 @@ export default defineConfig({
             input: [
                 // 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/sb-admin-2.js',
-                'resources/js/chart-area-demo.js',
-                'resources/js/chart-bar-demo.js',
-                'resources/js/chart-pie-demo.js',
+                // 'resources/js/sb-admin-2.js',
+                // 'resources/js/chart-area-demo.js',
+                // 'resources/js/chart-bar-demo.js',
+                // 'resources/js/chart-pie-demo.js',
             ],
             refresh: true,
         }),
@@ -25,7 +25,8 @@ export default defineConfig({
             '~chart.js':path.resolve(__dirname,'node_modules/chart.js'),
             '~leaflet':path.resolve(__dirname,'node_modules/leaflet'),
             '~datatables.net-bs4':path.resolve(__dirname,'node_modules/datatables.net-bs4'),
-            '~datatables.net-responsive-bs4':path.resolve(__dirname,'node_modules/datatables.net-responsive-bs4')
+            '~datatables.net-responsive-bs4':path.resolve(__dirname,'node_modules/datatables.net-responsive-bs4'),
+            '~bootstrap-switch-button':path.resolve(__dirname,'node_modules/bootstrap-switch-button')
         }
     },
 });
