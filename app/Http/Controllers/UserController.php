@@ -4,7 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Repositories\Permissions;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
+
+// use Spatie\Permission\Contracts\Role;
 
 class UserController extends Controller
 {
@@ -33,9 +39,15 @@ class UserController extends Controller
 
             $query->limit($request->length)->offset($request->start);
             $data_result_set = $query->get();
-
+            // dd(User::find(1)->getAllPermissions
             foreach ($data_result_set as $indice => $fila) {
-                // $data_result_set[$indice]->roles = User::find($fila->id)->getRoleNames()->map(function($item,$key){return __($item);});
+                $data_result_set[$indice]->permissions = User::find($fila->id)->getAllPermissions()
+                    ->map(function($item,$key){
+                        return [
+                            'name'=>$item->name,
+                            'id'=>$item->id
+                        ];
+                    });
             }
 
             return response()->json([
@@ -47,7 +59,7 @@ class UserController extends Controller
                 'draw' => (int)$request->draw
             ]);
         }
-        return view('users.index');
+        return view('users.index')->with('permissions',Permission::select('name','id')->get() );
     }
 
     /**
@@ -113,10 +125,31 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+            abort(401,'No permitido');
+        }
+
         if($user->id != 1){
             return response()->json(['success'=>$user->delete()]);
         }else{
             return response()->json(['success'=>false]);
         }
+    }
+
+    public function updateRole(Request $request, User $user){
+        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+            abort(401,'No permitido');
+        }
+
+        if($request->action == 'asign'){
+            $user->assignRole($request->role);
+        }else if($request->action == 'remove'){
+            // A admin no se le quita nah
+            if($user->id != 1){
+                $user->removeRole($request->role);
+            }
+        }
+
+        return response()->json(['success'=>true],200);
     }
 }

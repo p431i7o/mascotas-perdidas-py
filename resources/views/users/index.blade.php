@@ -42,16 +42,29 @@
     </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Imágenes</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Permisos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body" id="modal_body">
-
+                    @foreach ($permissions as $permission)
+                        <div class="form-check form-check-inline">
+                            <input  type="checkbox" id="permission{{ $permission->id }}" data-toggle="switchbutton" checked data-onstyle="success" data-offstyle="danger" name="permission[{{ $permission->id }}]">
+                            <label for="permission[{{ $permission->id }}]" class="form-check-label">{{ $permission->name }}</label>
+                        </div>
+                        <script type="module">
+                            $(function() {
+                                $('#permission{{ $permission->id }}').change(function() {
+                                    // $('#console-event').html('Checked?: ' + $(this).prop('checked'))
+                                    console.log('chequeado',$(this).prop('checked'));
+                                })
+                            })
+                        </script>
+                    @endforeach
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -63,6 +76,7 @@
 
 @push('scripts')
     <script type="module">
+        window.permissions = @json($permissions);
         window.record_table = new Datatable('#theTable', {
             responsive: {
                 details: {
@@ -116,8 +130,8 @@
                     width: '10%'
                 },
                 {
-                    data:'city',
-                    width:'10%'
+                    data: 'city',
+                    width: '10%'
                 },
                 {
                     data: 'address',
@@ -130,19 +144,20 @@
                 {
                     data: 'email_verified_at',
                     width: '10%',
-                    render: function(data){
+                    render: function(data) {
                         var tag = '<i class="fa-solid fa-xmark"></i>';
-                        if(data != null){
-                            tag = '<span class="badge badge-success"><i class="fa-solid fa-user-check"></i></span>';
+                        if (data != null) {
+                            tag =
+                                '<span class="badge badge-success"><i class="fa-solid fa-user-check"></i></span>';
                         }
                         return tag;
                     }
                 },
                 {
-                    data:'active',
+                    data: 'active',
                     width: '10%',
-                    render: function(data){
-                        if(data==1){
+                    render: function(data) {
+                        if (data == 1) {
                             return '<span class="badge badge-success"><i class="fa-regular fa-circle-check"></i></span>';
                         }
                         return 'No';
@@ -166,8 +181,8 @@
                     width: '20%',
                     render: function(data, type, row) {
                         return ' <button data-row=\'' + JSON.stringify(row) +
-                            '\' title="Ver" data-action="view" class="btn btn-primary btn-sm"' +
-                            ' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>' +
+                            '\' title="Permisos" data-action="permissions" class="btn btn-primary btn-sm"' +
+                            ' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-layer-group"></i></button>' +
                             ' <button data-row=\'' + JSON.stringify(row) +
                             '\' title="Borrar" data-action="delete" class="btn btn-danger btn-sm">' +
                             '<i class="fa-solid fa-trash"></i></button>';
@@ -205,7 +220,7 @@
             var action = data.action;
             // console.log(row,action);
             switch (action) {
-                case "view":
+                case "permissions":
                     view(row);
                     break;
                 case "delete":
@@ -216,12 +231,28 @@
         });
 
         function view(row) {
-            console.log('view',row);
+            // console.log('view', row);
 
-            var imgs = '@todo';
+            // var imgs = '@todo';
+            var rol = null,
+                item, found = false;
+            for (var index in window.permissions) {
+                item = window.permissions[index];
+                found = false;
+                for (var index2 in row.permissions) {
 
-            $('#modal_body').html(`${imgs}`);
-            // debugger;
+                    if (item.id == row.permissions[index2].id) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    $('#permission' + item.id)[0].switchButton('off',true);
+                } else {
+                    $('#permission' + item.id)[0].switchButton('on',true);
+                }
+            }
+
         }
 
         function deleteRecord(row) {
@@ -231,36 +262,36 @@
                 showDenyButton: false,
                 showCancelButton: true,
                 confirmButtonText: "Si, borrar!",
-                cancelButtonText:"Cancelar"
+                cancelButtonText: "Cancelar"
             }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "DELETE",
-                        url: "{{ route('user.destroy','xx') }}".replace('xx',row.id),
-                        dataType:"json",
+                        url: "{{ route('user.destroy', 'xx') }}".replace('xx', row.id),
+                        dataType: "json",
                         data: {
                             _token: '{{ csrf_token() }}'
                         },
-                        success:function(data, textStatus, jqXHR){
+                        success: function(data, textStatus, jqXHR) {
 
-                            if(data.success){
+                            if (data.success) {
                                 Swal.fire("Borrado!", "", "success");
                                 window.record_table.ajax.reload();
-                            }else{
+                            } else {
                                 Swal.fire({
-                                    title:'Error',
-                                    text:'No se ha podido actualizar el registro',
-                                    icon:'error'
+                                    title: 'Error',
+                                    text: 'No se ha podido actualizar el registro',
+                                    icon: 'error'
                                 });
                             }
                         },
-                        error:function(jqXHR, textStatus, errorThrown){
+                        error: function(jqXHR, textStatus, errorThrown) {
                             Swal.fire({
-                                    title:'Error',
-                                    text:'Error al comunicarse con el servidor',
-                                    icon:'error'
-                                });
+                                title: 'Error',
+                                text: 'Error al comunicarse con el servidor',
+                                icon: 'error'
+                            });
                         }
 
                     });
