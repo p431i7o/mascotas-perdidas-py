@@ -276,7 +276,7 @@
             var attachments = JSON.parse(row.attachments);
             var imgs = '<div class="row">';
             for(var index in attachments){
-                imgs += `<img class="col-md-4" src="{{ route('report.image.show',['xx','yy']) }}"/>`.replace('xx',row.id).replace('yy',index);
+                imgs += `<img class="col-md-12" src="{{ route('report.image.show',['xx','yy']) }}"/>`.replace('xx',row.id).replace('yy',index);
             }
             imgs += '</div>'
             $('#modal_body').html( `Tipo: ${row.type} <br/>

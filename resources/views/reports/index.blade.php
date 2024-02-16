@@ -44,7 +44,7 @@
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ver reporte</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Imágenes</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -207,14 +207,17 @@
             var attachments = JSON.parse(row.attachments);
             var imgs = '<div class="row">';
             for (var index in attachments) {
-                imgs += `<img class="col-md-4" src="{{ route('report.image.show', ['xx', 'yy']) }}"/>`.replace('xx', row.id)
-                    .replace('yy', index);
+                imgs += `<div class="col-md-12">
+                    <a target="_blank" href="{{ route('report.image.show', ['xx', 'yy']) }}">
+                    <img class="col-12 mb-2"
+                    src="{{ route('report.image.show', ['xx', 'yy']) }}"/>`
+                    .replace(/xx/g, row.id)
+                    .replace(/yy/g, index)
+                    +`</a>
+                    </div>`;
             }
             imgs += '</div>'
-            $('#modal_body').html(`Tipo: ${row.type} <br/>
-            Nombre: ${row.name??'--'}<br/>
-            ${imgs}
-            `);
+            $('#modal_body').html(`${imgs}`);
             // debugger;
         }
 
