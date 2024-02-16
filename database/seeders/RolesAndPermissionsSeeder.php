@@ -29,7 +29,6 @@ class RolesAndPermissionsSeeder extends Seeder
         // $super_admin = Role::create(['name' => 'Super Admin']);
         $admin=false;
         if(Role::where('name','Admin')->count()<=0){
-
             $admin = Role::create(['name' => 'Admin']);
         }else{
             $admin = Role::where('name','Admin')->first();
