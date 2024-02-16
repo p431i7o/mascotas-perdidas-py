@@ -10,7 +10,9 @@ class HomeController extends Controller
 {
     public function root(Request $request)
     {
-        return view('welcome')->with('reportes', Report::with(['Department','City'])->where('status','active')->where('expiration','>',Carbon::now())->get());
+        return view('welcome')->with('reportes', Report::with(['Department','City','District','Neighborhood'])
+            ->where('status','active')
+            ->where('expiration','>',Carbon::now())->get());
     }
 
     public function index(Request $request)

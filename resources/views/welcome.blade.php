@@ -39,6 +39,7 @@
             <div class="row">
                 <?php
                 foreach ($reportes as $fila) {
+                    // dd($fila);
                     echo "<div class='col-md-4 mb-5'>";
                     echo "<a href='".route('reports.show',$fila->id)."' target='_blank'>".
                         (!empty($fila->name) ? "<h2>$fila->name</h2>" : "<h2>$fila->type</h2>") .
@@ -51,10 +52,10 @@
                     // }
                     echo "<p>$fila->description</p>";
 
-                    echo '<p>Departamento: ' . $fila->Department()->first()->name. '<br/>';
-                    echo "Ciudad: ".$fila->City()->first()->name."<br/>";
-                    echo "Distrito: ".$fila->District()->first()->name."<br/>";
-                    echo "Barrio: ".$fila->Neighborhood()->first()->name."<br/>";
+                    echo '<p>Departamento: ' . $fila->Department->name. '<br/>';
+                    echo "Ciudad: ".$fila->City->name."<br/>";
+                    echo "Distrito: ".$fila->District->name."<br/>";
+                    echo "Barrio: ".$fila->Neighborhood->name."<br/>";
                     // echo "Direcci&oacute;n: ".$fila->reporte_direccion."</p>";
                     // echo "<hr/>";
                     echo "<a href='".route('reports.show',$fila->id)."' target='_blank'>Ver</a>";
