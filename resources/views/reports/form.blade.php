@@ -62,7 +62,7 @@
                               <small id="helpId" class="form-text text-muted">Fecha en la que se perdio/encontró</small>
                             </div>
                             <div class="form-group ">
-                                <label for="inputName" class="col-sm-12 col-form-label">{{__("Name")}} <small>({{__("Optional")}})</small></label>
+                                <label for="name" class="col-sm-12 col-form-label">{{__("Name")}} <small>({{__("Optional")}})</small></label>
                                 {{-- <div class="col-12"> --}}
                                     <input type="text" value="{{ old('name',$record->name) }}" class="form-control" name="name" id="name" placeholder="{{__("Name")}} ">
                                 {{-- </div> --}}
@@ -133,20 +133,26 @@
     var DEFAULT_LAT = -23.299114;
 </script>
 <script  id="loadMap" data_load_map=marker type="text/javascript" charset="utf-8">
-    window.onload = function()
-        {
-            var action = document.getElementById("loadMap").getAttribute("data_load_map");
-            // debugger;
-            localization(action);
 
 
-        };
+
 </script>
 @endpush
 
 @push('scripts')
+    <script type="module">
+        //window.onload = function(){};
+        $(document).ready(function(){
+            console.log('ready');
+            var action = document.getElementById("loadMap").getAttribute("data_load_map");
+            localization(action);
 
+        });
+    </script>
     <script type="text/javascript">
+
+
+
         function clickZoom(e) {
             map.map.setView(e.target.getLatLng(),DEFAULT_ZOOM_MARKER);
             // map.map.setZoom(15);

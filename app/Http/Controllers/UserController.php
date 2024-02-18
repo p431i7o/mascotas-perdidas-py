@@ -8,6 +8,7 @@ use App\Repositories\Permissions;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
 use Spatie\Permission\Models\Permission;
 
 // use Spatie\Permission\Contracts\Role;
@@ -24,8 +25,9 @@ class UserController extends Controller
         if($request->wantsJson()){
             $query = User::select('id','name','email','city','address','phone','email_verified_at','active','created_at');
             if (!empty($request->search['value'])) {
-                $query->where('id', 'ilike', '%' . $request->search['value'] . '%');
-                $query->orWhere('type', 'ilike', '%' . $request->search['value'] . '%');
+                $query->where('id', 'like', '%' . $request->search['value'] . '%');
+                $query->orWhere('name', 'like', '%' . $request->search['value'] . '%');
+                $query->orWhere('email', 'like', '%' . $request->search['value'] . '%');
             }
 
             $count = $query->count();
@@ -150,6 +152,14 @@ class UserController extends Controller
             }
         }
 
+        return response()->json(['success'=>true],200);
+    }
+
+    public function sendVerifyMail(Request $request, User $user){
+        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+            abort(401,'No permitido');
+        }
+        event(new Registered($user));
         return response()->json(['success'=>true],200);
     }
 }

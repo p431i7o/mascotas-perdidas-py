@@ -26,9 +26,9 @@ class GoogleRecaptcha implements Rule
      */
     public function passes($attribute, $value)
     {
-        // if( env('APP_ENV')=='development' || env('APP_ENV') =='local'){
-        //     return true;
-        // }
+        if( env('APP_ENV')=='development' || env('APP_ENV') =='local'){
+            return true;
+        }
 
         $textResponse = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
             'secret' => config('app.captcha_secret'),
