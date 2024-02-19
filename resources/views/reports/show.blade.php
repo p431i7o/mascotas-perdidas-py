@@ -10,11 +10,14 @@
     </div>
     <div class="container">
         <div class="row">
-            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa-regular fa-envelope"></i> Contactar por este reporte</a>
+            <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                <i class="fa-regular fa-envelope"></i>
+                Contactar por este reporte
+            </a>
         </div>
-        <div class="row">
+        <div class="row mt-3 mb-5">
             @foreach (json_decode($report->attachments) as $index => $value)
-                <div class="col-3">
+                <div class="col-xxl-4 col-xl-3 col-sm-12 col-md-6 mb-1">
                     <a target="_blank" href="{{ route('report.image.show', [$report->id, $index]) }}">
                         <img class="col-12" src="{{ route('report.image.show', [$report->id, $index]) }}" />
                     </a>
@@ -141,7 +144,7 @@
                 draggable: false,
             }).addTo(map.map).bindPopup("{{ $report->name ?? __($report->type) }}").on('click', clickZoom);
             // debugger;
-            map.map.setZoom(15);
+            map.map.setZoom(14);
         }, 1500)
     </script>
 @endpush
