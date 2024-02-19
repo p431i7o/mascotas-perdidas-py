@@ -70,19 +70,26 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Contactar por este reporte</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form enctype="application/x-www-form-urlencoded" method="POST" action="{{ route('messages.store') }}">
-
+                        @csrf
+                        <input type="hidden" name="report_id" value="{{$report->id}}"/>
+                        <div class="row">
+                            <textarea class="form-control" rows="3" name="message" placeholder="Escriba aqui su mensaje"></textarea>
+                        </div>
+                        <div class="row mt-5">
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
                 </div>
             </div>
         </div>
@@ -143,8 +150,9 @@
                 id: {{ $report->id }},
                 draggable: false,
             }).addTo(map.map).bindPopup("{{ $report->name ?? __($report->type) }}").on('click', clickZoom);
-            // debugger;
-            map.map.setZoom(14);
+
+            marker.fireEvent('click');
+            // map.map.setZoom(14);
         }, 1500)
     </script>
 @endpush
