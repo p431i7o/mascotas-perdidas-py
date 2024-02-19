@@ -19,9 +19,12 @@ return new class extends Migration
             $table->foreign('from_user_id')->references('id')->on('users');
             $table->bigInteger('to_user_id')->unsigned()->nullable()->comment('Usuario destinatario');
             $table->foreign('to_user_id')->references('id')->on('users');
-            $table->string('message',500)->comment('Mensaje');
+            $table->string('message',1500)->comment('Mensaje');
             $table->enum('status',['Sent','Read'])->comment('Estados del mensaje');
             $table->dateTime('read_at')->comment('Fecha Hora de lectura');
+
+            $table->bigInteger('report_id')->unsigned()->comment('Referencia a reporte');
+            $table->foreign('report_id')->references('id')->on('reports');
 
             $table->timestamps();
             $table->softDeletes();

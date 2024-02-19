@@ -156,7 +156,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/moderate-report/approve',[ModerationController::class, 'approve'])->name('moderation.approve');
     Route::post('/moderate-report/reject',[ModerationController::class, 'reject'])->name('moderation.reject');
 
-    Route::resource('/messages',MessageController::class);
+    Route::resource('/messages',MessageController::class)->except(['create','show','update','edit']);
 
     Route::post('/user/{user}/updateRole',[UserController::class,'updateRole'])->name('user.updateRole');
     Route::post('/user/{user}/registeredMail',[UserController::class, 'sendVerifyMail'])->name('user.registered.mail');
