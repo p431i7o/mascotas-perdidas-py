@@ -160,5 +160,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/user/{user}/updateRole',[UserController::class,'updateRole'])->name('user.updateRole');
     Route::post('/user/{user}/registeredMail',[UserController::class, 'sendVerifyMail'])->name('user.registered.mail');
+    Route::post('/user/{user}/resetPassword',[UserController::class, 'sendResetPasswordMail'])->name('user.resetPassword.mail');
     Route::resource('/user',UserController::class);
 });

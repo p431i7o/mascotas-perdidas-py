@@ -187,6 +187,9 @@
                             +'\' title="Enmviar mail de verificacion" data-action="sendRegisteredEmail" class="btn btn-info btn-sm">'
                             + '<i class="fa-solid fa-square-envelope"></i></button>'
                             +' <button data-row=\'' + JSON.stringify(row)
+                            +'\' title="Enviar mail de restablecimiento de contraseña" data-action="sendResetPasswordEmail" class="btn btn-warning btn-sm">'
+                            + '<i class="fa-regular fa-paper-plane"></i></button>'
+                            +' <button data-row=\'' + JSON.stringify(row)
                             +'\' title="Borrar" data-action="delete" class="btn btn-danger btn-sm">'
                             +'<i class="fa-solid fa-trash"></i></button>';
                     }
@@ -239,6 +242,9 @@
                 case "sendRegisteredEmail":
                     sendRegisteredEmail(row);
                     break;
+                case "sendResetPasswordEmail":
+                    sendResetPasswordEmail(row);
+                    break;
             }
 
         });
@@ -284,6 +290,53 @@
                     $.ajax({
                         method: "POST",
                         url: "{{ route('user.registered.mail', 'xx') }}".replace('xx', row.id),
+                        dataType: "json",
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(data, textStatus, jqXHR) {
+
+                            if (data.success) {
+                                Swal.fire("Enviado!", "", "success");
+                                // window.record_table.ajax.reload();
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'No se ha podido enviar el mail',
+                                    icon: 'error'
+                                });
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Error al comunicarse con el servidor',
+                                icon: 'error'
+                            });
+                        }
+
+                    });
+
+                }
+            });
+        }
+
+        function sendResetPasswordEmail(row){
+
+            Swal.fire({
+                icon: "question",
+                title: "Desea enviar el mensaje de restablecer?",
+                text:"Confirme que desea enviar el mail de restablecimiento de contraseña",
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: "Si, enviar!",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: "{{ route('user.resetPassword.mail', 'xx') }}".replace('xx', row.id),
                         dataType: "json",
                         data: {
                             _token: '{{ csrf_token() }}'

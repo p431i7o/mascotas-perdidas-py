@@ -10,6 +10,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 use Spatie\Permission\Models\Permission;
+// use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Password;
 
 // use Spatie\Permission\Contracts\Role;
 
@@ -160,6 +162,16 @@ class UserController extends Controller
             abort(401,'No permitido');
         }
         event(new Registered($user));
+        return response()->json(['success'=>true],200);
+    }
+
+    public function sendResetPasswordMail(Request $request, User $user){
+        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+            abort(401,'No permitido');
+        }
+        // dd($user);
+        // event(new PasswordReset($user));
+        Password::sendResetLink(['email'=>$user->email]);
         return response()->json(['success'=>true],200);
     }
 }

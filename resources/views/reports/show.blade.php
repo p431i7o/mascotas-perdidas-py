@@ -73,20 +73,29 @@
         var DEFAULT_MAX_ZOOM_MAP = 20;
 
         // Villa Hayes - Paraguay.
-        var DEFAULT_LNG = -57.623807;
-        var DEFAULT_LAT = -23.299114;
+        var DEFAULT_LNG =  {{ $report->longitude }}; // -57.623807;
+        var DEFAULT_LAT =  {{ $report->latitude }}; //-23.299114;
     </script>
     <script id="loadMap" data_load_map=marker type="text/javascript" charset="utf-8">
-        window.onload = function() {
-            var action = document.getElementById("loadMap").getAttribute("data_load_map");
-            // debugger;
-            localization(action);
+        // window.onload = function() {
+        //     var action = document.getElementById("loadMap").getAttribute("data_load_map");
+        //     // debugger;
+        //     localization(action);
 
 
-        };
+        // };
     </script>
 @endpush
 @push('scripts')
+<script type="module">
+    //window.onload = function(){};
+    $(document).ready(function(){
+        console.log('ready');
+        var action = document.getElementById("loadMap").getAttribute("data_load_map");
+        localization(action);
+
+    });
+</script>
     <script type="text/javascript">
         function clickZoom(e) {
             map.map.setView(e.target.getLatLng(), DEFAULT_ZOOM_MARKER);
@@ -98,7 +107,8 @@
                 id: {{ $report->id }},
                 draggable: false,
             }).addTo(map.map).bindPopup("{{ $report->name ?? __($report->type) }}").on('click', clickZoom);
-            map.map.setZoom(15);
+            // debugger;
+             map.map.setZoom(15);
         }, 1500)
     </script>
 @endpush
