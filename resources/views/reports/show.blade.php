@@ -14,8 +14,10 @@
         </div>
         <div class="row">
             @foreach (json_decode($report->attachments) as $index => $value)
-                <div class="col-sm-3">
-                    <img src="{{ route('report.image.show', [$report->id, $index]) }}" />
+                <div class="col-3">
+                    <a target="_blank" href="{{ route('report.image.show', [$report->id, $index]) }}">
+                        <img class="col-12" src="{{ route('report.image.show', [$report->id, $index]) }}" />
+                    </a>
                 </div>
             @endforeach
         </div>
@@ -71,7 +73,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form enctype="application/x-www-form-urlencoded" method="POST" action="{{ route('message.send') }}">
+                    <form enctype="application/x-www-form-urlencoded" method="POST" action="{{ route('messages.store') }}">
 
                     </form>
                 </div>
