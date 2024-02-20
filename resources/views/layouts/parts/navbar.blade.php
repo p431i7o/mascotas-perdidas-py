@@ -6,9 +6,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item @if(Route::current()->getName() == 'home') active @endif">
-                <a class="nav-link" href="{{ route('home') }}">Inicio <span class="sr-only">(current)</span></a>
-            </li>
+            @auth
+                <li class="nav-item @if(Route::current()->getName() == 'home') active @endif">
+                    <a class="nav-link" href="{{ route('home') }}">Inicio <span class="sr-only">(current)</span></a>
+                </li>
+            @endauth
             <li class="nav-item">
                 <a class="nav-link @if (Route::current()->getName() == 'help') active @endif" href="{{ route('help')}}">Ayuda</a>
             </li>
@@ -34,16 +36,12 @@
                     @endif
                 @else
                 <li class="nav-item">
-                    <a class="nav-link <?php if (Route::has('login')) {
-                        echo 'active';
-                    } ?>" href="<?= route('login') ?>">Iniciar Sesi&oacute;n</a>
+                    <a class="nav-link @if (Route::current()->getName() == 'login') active @endif" href="{{ route('login') }}">Iniciar Sesi&oacute;n</a>
                     <!-- tabindex="-1"  disabled aria-disabled="true" -->
                 </li>
                     @if (Route::has('register'))
                     <li class="nav-item">
-                        <a class="nav-link <?php if (Route::current()->getName() == 'register') {
-                            echo 'active';
-                        } ?>" href="<?= route('register') ?>">Registro</a>
+                        <a class="nav-link @if (Route::current()->getName() == 'register') active @endif" href="{{ route('register') }}">Registro</a>
                     </li>
                     @endif
                 @endauth
