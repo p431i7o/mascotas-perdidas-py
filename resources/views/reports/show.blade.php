@@ -19,12 +19,18 @@
                 </div>
             @endif
         </div>
-        <div class="row">
-            <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                <i class="fa-regular fa-envelope"></i>
-                Contactar por este reporte
-            </a>
-        </div>
+        @auth
+            <div class="row">
+                <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    <i class="fa-regular fa-envelope"></i>
+                    Contactar por este reporte
+                </a>
+            </div>
+        @else
+            <div class="row">
+                <p><a href="{{ route('register') }}">Registrarse</a> o <a href="{{route('login')}}"> Iniciar sesion</a> para contactar <i class="fa-regular fa-envelope"></i> por este reporte</p>
+            </div>
+        @endauth
 
         <div class="row mt-3 mb-5">
             @foreach (json_decode($report->attachments) as $index => $value)
@@ -69,10 +75,16 @@
         <div class="row">
             <div id="map-container"></div>
         </div>
-        <div class="row mt-5">
-            <a href="{{ route('report.denounce', [$report->id]) }}" class="btn btn-danger"><i class="fa-solid fa-flag"></i>
-                Denunciar este reporte</a>
-        </div>
+        @auth
+            <div class="row mt-5">
+                <a href="{{ route('report.denounce', [$report->id]) }}" class="btn btn-danger"><i class="fa-solid fa-flag"></i>
+                    Denunciar este reporte</a>
+            </div>
+        @else
+            <div class="row">
+                <p><a href="{{ route('register') }}">Registrarse</a> o <a href="{{route('login')}}"> Iniciar sesion</a> para denunciar <i class="fa-solid fa-flag"></i> este reporte</p>
+            </div>
+        @endauth
     </div>
 
     <!-- Modal -->

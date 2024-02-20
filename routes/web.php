@@ -148,8 +148,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
     Route::delete('/report/{report}/delete',[ReportsController::class, 'destroy'])->name('reports.delete');
 
-    Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
-    Route::get('/report/{report}/image/{index}/show',[ReportsController::class,'showImage'])->name('report.image.show');
     Route::get('/report/{report}/denounce',[ReportsController::class,'denounce'])->name('report.denounce');
 
     Route::get('/moderate-reports',[ModerationController::class,'index'])->name('moderation.index');
@@ -163,3 +161,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/user/{user}/resetPassword',[UserController::class, 'sendResetPasswordMail'])->name('user.resetPassword.mail');
     Route::resource('/user',UserController::class);
 });
+
+Route::get('/report/{report}/image/{index}/show',[ReportsController::class,'showImage'])->name('report.image.show');
+Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
