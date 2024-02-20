@@ -33,6 +33,26 @@
         </thead>
     </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_title">--</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -88,12 +108,14 @@
                 },{
                     data:null,
                     render:function(data,type,row){
-                        return '<a href="{{ route('reports.show',['xx']) }}">Reporte</a>'.replace('xx',row.report_id);
+                        return '<a target="_blank" href="{{ route('reports.show',['xx']) }}">Reporte</a>'.replace('xx',row.report_id);
                     }
                 },{
                     data:null,
                     render:function(data,type,row){
-                        return '<button class="btn btn-sm btn-primary"><i class="fa-regular fa-eye"></i></button>'
+                        return '<button data-action="view" data-row=\'' + JSON.stringify(row)
+                                +'\' class="btn btn-sm btn-primary"><i class="fa-regular fa-eye"></i></button>';
+
                     }
                 }
 
@@ -122,6 +144,27 @@
 
             ],
         });
+
+        $('#theTable tbody').on('click', 'td > button', function(e) {
+            var data = $(e.currentTarget).data();
+            var row = data.row;
+            var action = data.action;
+            // console.log(row,action);
+            switch (action) {
+                case "view":
+                    view(row);
+                    break;
+            }
+
+        });
+
+        function view(row){
+            console.log('ver mas');
+            $('#modal_body').html(row.message);
+            $('#modal_title').html("De: "+row.from.name+", "+row.from.email );
+            $('#exampleModalCenter').modal('show');
+            //Ajax marcar como leido
+        }
     </script>
 @endpush
 
