@@ -23,11 +23,11 @@
         <thead>
             <tr>
                 <th></th>
-                <th>De</th>
-                <th>Para</th>
-                <th>Mensaje</th>
-                <th>Fecha Envio</th>
-                <th>Fecha Lectura</th>
+                <th>ID</th>
+                <th>DE</th>
+                <th>Fecha</th>
+                <th>Reporte</th>
+                <th></th>
             </tr>
 
         </thead>
@@ -37,7 +37,7 @@
 
 @push('scripts')
     <script type="module">
-        record_table = new Datatable('#theTable',{
+        window.record_table = new Datatable('#theTable',{
             responsive: {
                 details: {
                     type: 'column',
@@ -69,14 +69,34 @@
             columns:[
                 { data:null,className:'dtr-control',render:function(){return '';}, width:'2%',orderable:false},
                 { data: 'id',width:'2%' },
-                { data: 'type',width:'2%' },
-                { data: 'name',width:'18%' },
-                { data: 'expiration',width:'5%'},
-                { data: 'status'},
-                { data: 'department_name'},
-                { data: 'district_name'},
-                { data: 'city_name'},
-                { data: 'neighborhood_name'}
+                {
+                    data: 'from',
+                    render:function(data,type,row){
+                        return data.name;
+                    }
+                },{
+                    data:'created_at',
+                    render:function(data,type,row){
+                        return new Date(data).toLocaleString('es-PY', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })
+                    }
+                },{
+                    data:null,
+                    render:function(data,type,row){
+                        return '<a href="{{ route('reports.show',['xx']) }}">Reporte</a>'.replace('xx',row.report_id);
+                    }
+                },{
+                    data:null,
+                    render:function(data,type,row){
+                        return '<button class="btn btn-sm btn-primary"><i class="fa-regular fa-eye"></i></button>'
+                    }
+                }
+
             ],
             processing: true,
             serverSide: true,

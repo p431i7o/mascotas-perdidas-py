@@ -14,7 +14,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Mis mensajes</h4>
-                    <p class="card-text"><a href="#">Ver mis mensajes</a></p>
+                    <p class="card-text"><a href="{{ route('messages.index') }}">Ver mis mensajes</a></p>
                 </div>
             </div>
 

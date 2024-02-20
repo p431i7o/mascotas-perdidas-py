@@ -10,11 +10,22 @@
     </div>
     <div class="container">
         <div class="row">
+            @if(session('message'))
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ session('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+        </div>
+        <div class="row">
             <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 <i class="fa-regular fa-envelope"></i>
                 Contactar por este reporte
             </a>
         </div>
+
         <div class="row mt-3 mb-5">
             @foreach (json_decode($report->attachments) as $index => $value)
                 <div class="col-xxl-4 col-xl-3 col-sm-12 col-md-6 mb-1">
