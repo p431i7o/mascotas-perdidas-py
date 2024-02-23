@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
-
+use Laravel\Fortify\Contracts\LoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -20,7 +20,20 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+        public function toResponse($request)
+        {
+            // dd('aca es response');
+            if(empty(session()->get('link'))){
+                return $request->wantsJson()
+                        ? response()->json(['two_factor' => false])
+                        : redirect()->intended(Fortify::redirects('login'));
+
+            }else{
+                return redirect(session()->get('link'));
+            }
+        }
+    });
     }
 
     /**
@@ -30,6 +43,9 @@ class FortifyServiceProvider extends ServiceProvider
     {
 
         Fortify::loginView(function () {
+            if(!session()->has('link')){
+                session(['link' => url()->previous()]);
+            }
             return view('auth.login');
         });
 
@@ -63,5 +79,7 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
+
+
     }
 }
