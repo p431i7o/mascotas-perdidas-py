@@ -45,7 +45,7 @@
                     </label>
                 </div>
                 <button class="g-recaptcha btn btn-lg btn-primary btn-block"
-                data-sitekey="<?=config('app.captcha_public');?>"
+                data-sitekey="{{config('app.captcha_public')}}"
                 data-callback='onSubmit'
                 data-action='submit'
                 type="submit">Register</button>

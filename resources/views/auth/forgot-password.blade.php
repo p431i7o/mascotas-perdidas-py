@@ -13,7 +13,7 @@
     <div class="container">
         <div class="row">
 
-            <form id="demo-form" method="POST" class="form-signin needs-validation accordion" action="<?=route('password.email');?>" >
+            <form id="demo-form" method="POST" class="form-signin needs-validation accordion" action="{{ route('password.email') }}" >
 
                 @csrf
                 {{-- <input type="hidden" name="token" value="{{ $token }}">  --}}
@@ -26,20 +26,10 @@
                     </div> -->
                 @if(session('error'))
 
-                    <div class="alert alert-warning"><?=session('message') ?></div>
+                    <div class="alert alert-warning">{{ session('message') }}</div>
                 @endif
 
 
-                <?php
-                    if(isset($success)){
-                        if($success){
-                            ?><div class="alert alert-info">Se ha activado correctamente su cuenta!</div><?php
-                        }else{
-                            ?><div class="alert alert-warning">Se ha producido un error al activar su cuenta sus datos.
-                                Favor escribanos un email a <?=env('email_soporte');?> con sus datos para revisar el errror.</div><?php
-                        }
-                    }
-                ?>
                 <div class="form-label-group">
                     <input type="email" id="email" name="email" class="form-control" placeholder="Direcci&oacute;n de correo" required autofocus>
                     <label for="inputEmail">Correo electr&oacute;nico</label>
@@ -49,7 +39,7 @@
                   </div>
 
                 <button class="g-recaptcha btn btn-lg btn-primary btn-block"
-                data-sitekey="<?=env('captcha_public');?>"
+                data-sitekey="{{config('app.captcha_public')}}"
                 data-callback='onSubmit'
                 data-action='submit'>Cambiar contraseña</button>
 
