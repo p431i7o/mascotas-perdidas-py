@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use App\Models\Report;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -85,6 +86,18 @@ class MessageController extends Controller
         return back()->with('message','Enviado correctamente');
     }
 
+    public function markAsRead(Request $request, Message $message){
+        if($message->to_user_id != Auth::user()->id){
+            abort(400);
+        }
+
+        $message->read_at = Carbon::now();
+        $message->status = 'Read';
+
+        $result = $message->save();
+        return response()->json(['sucess'=>$result]);
+    }
+
     // /**
     //  * Display the specified resource.
     //  *
@@ -127,6 +140,10 @@ class MessageController extends Controller
      */
     public function destroy(Message $message)
     {
-        //
+        if($message->to_user_id!=Auth::user()->id){
+            abort(400);
+        }
+        $result = $message->delete();
+        return response()->json(['sucess'=>$result]);
     }
 }

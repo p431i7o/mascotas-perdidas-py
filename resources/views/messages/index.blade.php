@@ -48,7 +48,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="btn_delete_message" data-message-id="" onclick="deleteMessage(this)">Borrar mensaje</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar Ventana</button>
       </div>
     </div>
   </div>
@@ -92,7 +93,7 @@
                 {
                     data: 'from',
                     render:function(data,type,row){
-                        return data.name;
+                        return data.name + ' ['+row.from.email+']';
                     }
                 },{
                     data:'created_at',
@@ -163,7 +164,57 @@
             $('#modal_body').html(row.message);
             $('#modal_title').html("De: "+row.from.name+", "+row.from.email );
             $('#exampleModalCenter').modal('show');
-            //Ajax marcar como leido
+            $('#btn_delete_message').data('message-id',row.id);
+            $.ajax({
+                type: "post",
+                url: "{{ route('messages.markAsRead',['xx']) }}".replace('xx',row.id),
+                data: {
+                    id:row.id,
+                    report_id:row.report_id,
+                    _token:"{{ csrf_token() }}"
+                },
+                dataType: "json",
+                success: function (response) {
+                    console.log('success');
+                }
+            });
+        }
+
+        window.deleteMessage =  function(button){
+            var button = $(button);
+            var data = button.data();
+            Swal.fire({
+              title: 'Confirmación',
+              text: 'Confirma que desea borrar el mensaje?',
+              icon: 'question',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si borrar!',
+              cancelButtonText:'Cancelar'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+                    type: "delete",
+                    url: "{{ route('messages.destroy',['xx']) }}".replace('xx',data.messageId),
+                    data: {
+                        id:data.messageId,
+                        _token:"{{ csrf_token() }}"
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        Swal.fire(
+                          'Exito!',
+                          'Borrado correctamente',
+                          'success'
+                        );
+                        $('#exampleModalCenter').modal('hide');
+                        record_table.ajax.reload();
+                    }
+                });
+              }
+            })
+
         }
     </script>
 @endpush
