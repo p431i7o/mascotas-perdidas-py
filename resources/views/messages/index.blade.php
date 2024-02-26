@@ -48,12 +48,39 @@
 
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="btn_message_response" data-message-id="" onclick="messageResponsex(this)">Responder</button>
         <button type="button" class="btn btn-danger" id="btn_delete_message" data-message-id="" onclick="deleteMessage(this)">Borrar mensaje</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar Ventana</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalResponse" tabindex="-1" role="dialog" aria-labelledby="modalResponseTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_response_title">Responder mensaje</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modal_reponse_body">
+            <form method="POST" enctype="application/x-www-form-urlencoded"  id="form_response">
+                @csrf
+                <input type="text" id="message_id" value=""/>
+                <textarea required name="message" id="message_response" class="form-control"></textarea>
+            </form>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="sendMessage()">Enviar mensaje</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar Ventana</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @push('scripts')
@@ -115,7 +142,7 @@
                     data:null,
                     render:function(data,type,row){
                         return '<button data-action="view" data-row=\'' + JSON.stringify(row)
-                                +'\' class="btn btn-sm btn-primary"><i class="fa-regular fa-eye"></i></button>';
+                                +'\' class="btn btn-sm btn-primary"><i class="fa-regular fa-eye"></i> Ver mensaje</button>';
 
                     }
                 }
@@ -165,6 +192,7 @@
             $('#modal_title').html("De: "+row.from.name+", "+row.from.email );
             $('#exampleModalCenter').modal('show');
             $('#btn_delete_message').data('message-id',row.id);
+            $('#btn_message_response').data('message-id',row.id);
             $.ajax({
                 type: "post",
                 url: "{{ route('messages.markAsRead',['xx']) }}".replace('xx',row.id),
@@ -215,6 +243,24 @@
               }
             })
 
+        }
+
+        window.messageResponsex = function(button){
+            var button = $(button);
+            var data = button.data();
+            $('#exampleModalCenter').modal('hide');
+            $('#modalResponse').modal('show');
+            $('#message_id').val(data.messageId);
+        }
+
+        window.sendMessage =  function(){
+            var form = $('#form_response');
+            if( form[0].checkValidity() )
+            {
+
+                form[0].action = '{{ route('message.response',['xx']) }}'.replace('xx',$('#message_id').val());
+                form[0].submit();
+            }
         }
     </script>
 @endpush

@@ -71,6 +71,7 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
+        //@todo sanity checks
         $report = Report::find($request->report_id);
         $user_id = Auth::user()->id;
         $message = $request->message;
@@ -83,6 +84,20 @@ class MessageController extends Controller
             'report_id'=>$report->id
         ]);
 
+        return back()->with('message','Enviado correctamente');
+    }
+
+    public function respondMessage(Request $request, Message $message){
+        //@todo sanity checks
+        $user_id = Auth::user()->id;
+
+        Message::create([
+            'from_user_id'=>$user_id,
+            'to_user_id'=>$message->to_user_id,
+            'message'=>$request->message,
+            'status'=>'Sent',
+            'report_id'=>$message->report_id
+        ]);
         return back()->with('message','Enviado correctamente');
     }
 
