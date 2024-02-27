@@ -8,7 +8,7 @@
         <ul class="navbar-nav mr-auto">
             @auth
                 <li class="nav-item @if(Route::current()->getName() == 'home') active @endif">
-                    <a class="nav-link" href="{{ route('home') }}">Inicio <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{ route('home') }}">Tablero <span class="sr-only">(current)</span></a>
                 </li>
             @endauth
             <li class="nav-item">

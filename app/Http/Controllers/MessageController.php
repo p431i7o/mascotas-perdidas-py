@@ -19,7 +19,7 @@ class MessageController extends Controller
     public function index(Request $request)
     {
         if($request->wantsJson()){
-            $query = Message::where('to_user_id',auth()->user()->id)->with(['From','To']);
+            $query = Message::where('to_user_id',auth()->user()->id)->with('parent_id',null)->with(['From','To']);
             if (!empty($request->search['value'])) {
                 $query->where('message', 'ilike', '%' . $request->search['value'] . '%');
             }

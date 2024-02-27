@@ -13,6 +13,7 @@ class Message extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'parent_id',
         'from_user_id',
         'to_user_id',
         'message',
