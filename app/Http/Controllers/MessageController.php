@@ -19,7 +19,7 @@ class MessageController extends Controller
     public function index(Request $request)
     {
         if($request->wantsJson()){
-            $query = Message::where('to_user_id',auth()->user()->id)->with('parent_id',null)->with(['From','To']);
+            $query = Message::where('to_user_id',auth()->user()->id)->where('parent_id',null)->with(['From','To']);
             if (!empty($request->search['value'])) {
                 $query->where('message', 'ilike', '%' . $request->search['value'] . '%');
             }
@@ -75,8 +75,15 @@ class MessageController extends Controller
         $report = Report::find($request->report_id);
         $user_id = Auth::user()->id;
         $message = $request->message;
+        $parent_id = null;
+
+        $firstMessage = Message::where('from_user_id',$user_id)->where('to_user_id',$report->user_id)->where('report_id',$report->id)->orderBy('id','asc');
+        if($firstMessage->count() > 0){
+            $parent_id = $firstMessage->first()->id;
+        }
 
         Message::create([
+            'parent_id'=>$parent_id,
             'from_user_id'=>$user_id,
             'to_user_id'=>$report->user_id,
             'message'=>$message,
@@ -101,7 +108,7 @@ class MessageController extends Controller
         return back()->with('message','Enviado correctamente');
     }
 
-    public function markAsRead(Request $request, Message $message){
+    public function getConversation(Request $request, Message $message){
         if($message->to_user_id != Auth::user()->id){
             abort(400);
         }
@@ -110,7 +117,8 @@ class MessageController extends Controller
         $message->status = 'Read';
 
         $result = $message->save();
-        return response()->json(['sucess'=>$result]);
+        $conversation = Message::where('report_id',$message->report_id)->orderBy('created_at','asc')->get();
+        return response()->json(['sucess'=>$result,'data'=>$conversation]);
     }
 
     // /**

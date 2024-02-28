@@ -154,7 +154,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/moderate-report/approve',[ModerationController::class, 'approve'])->name('moderation.approve');
     Route::post('/moderate-report/reject',[ModerationController::class, 'reject'])->name('moderation.reject');
 
-    Route::post('/message/{message}/markAsRead',[MessageController::class, 'markAsRead'])->name('messages.markAsRead');
+    Route::post('/message/{message}/conversation',[MessageController::class, 'getConversation'])->name('messages.getConversation');
     Route::post('/message/{message}/response',[MessageController::class, 'respondMessage'])->name('message.response');
     Route::resource('/messages',MessageController::class)->except(['create','show','update','edit']);
 
