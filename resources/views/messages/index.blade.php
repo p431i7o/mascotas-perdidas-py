@@ -35,21 +35,24 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="conversationModal" tabindex="-1" role="dialog" aria-labelledby="conversationModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modal_title">--</h5>
+        <h5 class="modal-title" id="conversation_modal_title">--</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id="modal_body">
+      <div class="modal-body" id="conversation_modal_body">
 
       </div>
+      <div class="modal-body">
+        <textarea id="txt_response" class="form-control" placeholder="Escriba aqui su respuesta"></textarea>
+      </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="btn_message_response" data-message-id="" onclick="messageResponsex(this)">Responder</button>
-        <button type="button" class="btn btn-danger" id="btn_delete_message" data-message-id="" onclick="deleteMessage(this)">Borrar mensaje</button>
+        <button type="button" class="btn btn-success" id="btn_message_respond" data-message-id="" onclick="messageResponsex(this)">Responder</button>
+        <button type="button" class="btn btn-danger" id="btn_delete_conversation" data-message-id="" onclick="deleteMessage(this)">Borrar mensaje</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar Ventana</button>
       </div>
     </div>
@@ -142,7 +145,7 @@
                     data:null,
                     render:function(data,type,row){
                         return '<button data-action="view" data-row=\'' + JSON.stringify(row)
-                                +'\' class="btn btn-sm btn-primary"><i class="fa-regular fa-eye"></i> Ver mensaje</button>';
+                                +'\' class="btn btn-sm btn-primary"><i class="fa-regular fa-eye"></i> Ver conversación</button>';
 
                     }
                 }
@@ -188,14 +191,14 @@
 
         function view(row){
             console.log('ver mas');
-            $('#modal_body').html(row.message);
-            $('#modal_title').html("De: "+row.from.name+", "+row.from.email );
-            $('#exampleModalCenter').modal('show');
-            $('#btn_delete_message').data('message-id',row.id);
-            $('#btn_message_response').data('message-id',row.id);
+            // $('#conversation_modal_body').html(row.message);
+            $('#conversation_modal_title').html("De: "+row.from.name+", "+row.from.email );
+            // $('#conversationModal').modal('show');
+            $('#btn_delete_conversation').data('message-id',row.id);
+            $('#btn_message_respond').data('message-id',row.id);
             $.ajax({
                 type: "post",
-                url: "{{ route('messages.markAsRead',['xx']) }}".replace('xx',row.id),
+                url: "{{ route('messages.getConversation',['xx']) }}".replace('xx',row.id),
                 data: {
                     id:row.id,
                     report_id:row.report_id,
@@ -203,9 +206,24 @@
                 },
                 dataType: "json",
                 success: function (response) {
-                    console.log('success');
+                    console.log('success',arguments);
+                    diagramConversation(response.data, row);
                 }
             });
+        }
+
+        window.diagramConversation = function(conversationData, row){
+            // $('#conversation_modal_body').html('Aca la conversa');
+            var html = '';
+            var me = {{ Auth::user()->id }};
+            var alineacion = '', borderColor='';
+            for(var index in conversationData){
+                alineacion = me==conversationData[index].from_user_id?'end':'start';
+                borderColor = me==conversationData[index].from_user_id?'success':'primary';
+                html += `<div class='d-flex justify-content-${alineacion}'><div class="p-3 rounded-sm border border-${borderColor}">${conversationData[index].message}<br/><small>${conversationData[index].created_at}</small></div></div><br/>`;
+            }
+            $('#conversation_modal_body').html(html);
+            $('#conversationModal').modal('show');
         }
 
         window.deleteMessage =  function(button){
@@ -236,7 +254,7 @@
                           'Borrado correctamente',
                           'success'
                         );
-                        $('#exampleModalCenter').modal('hide');
+                        $('#conversationModal').modal('hide');
                         record_table.ajax.reload();
                     }
                 });
@@ -248,7 +266,7 @@
         window.messageResponsex = function(button){
             var button = $(button);
             var data = button.data();
-            $('#exampleModalCenter').modal('hide');
+            $('#conversationModal').modal('hide');
             $('#modalResponse').modal('show');
             $('#message_id').val(data.messageId);
         }

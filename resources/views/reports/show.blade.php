@@ -20,12 +20,14 @@
             @endif
         </div>
         @auth
-            <div class="row">
-                <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                    <i class="fa-regular fa-envelope"></i>
-                    Contactar por este reporte
-                </a>
-            </div>
+            @if(Auth::user()->id != $report->user_id)
+                <div class="row">
+                    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        <i class="fa-regular fa-envelope"></i>
+                        Contactar por este reporte
+                    </a>
+                </div>
+            @endif
         @else
             <div class="row">
                 <p><a href="{{ route('register') }}">Registrarse</a> o <a href="{{route('login')}}"> Iniciar sesion</a> para contactar <i class="fa-regular fa-envelope"></i> por este reporte</p>
@@ -76,10 +78,12 @@
             <div id="map-container"></div>
         </div>
         @auth
-            <div class="row mt-5">
-                <a href="{{ route('report.denounce', [$report->id]) }}" class="btn btn-danger"><i class="fa-solid fa-flag"></i>
-                    Denunciar este reporte</a>
-            </div>
+            @if(Auth::user()->id != $report->user_id)
+                <div class="row mt-5">
+                    <a href="{{ route('report.denounce', [$report->id]) }}" class="btn btn-danger"><i class="fa-solid fa-flag"></i>
+                        Denunciar este reporte</a>
+                </div>
+            @endif
         @else
             <div class="row">
                 <p><a href="{{ route('register') }}">Registrarse</a> o <a href="{{route('login')}}"> Iniciar sesion</a> para denunciar <i class="fa-solid fa-flag"></i> este reporte</p>

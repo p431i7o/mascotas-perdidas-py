@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('parent_id')->unsigned()->nullable()->comment('Mensaje al que responde');
+            $table->foreign('parent_id')->references('id')->on('messages');
             $table->bigInteger('from_user_id')->unsigned()->comment('Usuario remitente ');
             $table->foreign('from_user_id')->references('id')->on('users');
             $table->bigInteger('to_user_id')->unsigned()->nullable()->comment('Usuario destinatario');

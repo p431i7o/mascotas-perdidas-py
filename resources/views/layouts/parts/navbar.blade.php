@@ -8,7 +8,7 @@
         <ul class="navbar-nav mr-auto">
             @auth
                 <li class="nav-item @if(Route::current()->getName() == 'home') active @endif">
-                    <a class="nav-link" href="{{ route('home') }}">Inicio <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{ route('home') }}">Tablero <span class="sr-only">(current)</span></a>
                 </li>
             @endauth
             <li class="nav-item">
@@ -54,7 +54,7 @@
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}" id="logout_form">
                         @csrf
-                        <a href="javascript:;" class="clear nav-link" onclick="$('#logout_form').submit();">Cerrar Sesion</a>
+                        <a href="javascript:;" class="clear nav-link" onclick="$('#logout_form').submit();">[{{ Auth::user()->email }}] Cerrar Sesión</a>
                     </form>
                     {{-- <a class="nav-link" href="<?= route('logout') ?>">Cerrar Sesi&oacute;n</a> --}}
                     <!-- tabindex="-1"  disabled aria-disabled="true" -->
