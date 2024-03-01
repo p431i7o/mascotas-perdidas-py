@@ -220,6 +220,7 @@ return [
     'captcha_public'=>env('CAPTCHA_PUBLIC','--'),
     'captcha_secret'=>env('CAPTCHA_SECRET','--'),
 
-    'allowed_picture_extensions'=>env('ALLOWED_PICTURE_EXTENSIONS','jpg,png')
+    'allowed_picture_extensions'=>env('ALLOWED_PICTURE_EXTENSIONS','jpg,png'),
+    'report_denounces_threshold'=>env('DENOUNCES_THRESHOLD',10)
 
 ];

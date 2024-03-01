@@ -16,6 +16,7 @@ use phpDocumentor\Reflection\Types\Resource_;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ModerationController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ReportDenounceController;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
@@ -162,6 +163,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/user/{user}/registeredMail',[UserController::class, 'sendVerifyMail'])->name('user.registered.mail');
     Route::post('/user/{user}/resetPassword',[UserController::class, 'sendResetPasswordMail'])->name('user.resetPassword.mail');
     Route::resource('/user',UserController::class);
+
+    Route::get('/report/denounces',[ReportDenouncecontroller::class,'index'])->name('denounce.index');
+    Route::resource('/report/{report}/denounce',ReportDenounceController::class)->except(['index','create','show','edit','update','destroy']);
+    Route::post('/report/{report}/rejectDenounce',[ReportDenounceController::class, 'reject'])->name('reportDenounce.reject');
 });
 
 Route::get('/report/{report}/image/{index}/show',[ReportsController::class,'showImage'])->name('report.image.show');

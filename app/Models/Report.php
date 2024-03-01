@@ -33,7 +33,7 @@ class Report extends Model
         'attachments',
         'views',
         'renewed',
-        'reported',
+        // 'reported',
         'log'
     ];
 
@@ -77,6 +77,10 @@ class Report extends Model
 
     public function Neighborhood(){
         return $this->hasOne(Neighborhood::class,'id','neighborhood_id');
+    }
+
+    public function Denounces(){
+        return $this->hasMany(ReportDenounce::class,'report_id','id');
     }
 
 

@@ -34,6 +34,12 @@
                             <a class="nav-link @if (Route::current()->getName() == 'users.index') active @endif"   href="{{ route('user.index')}}">Usuarios</a>
                         </li>
                     @endif
+
+                    @if(auth()->user()->can(\App\Repositories\Permissions::MANAGE_DENOUNCES))
+                        <li class="nav-item">
+                            <a class="nav-link @if (Route::current()->getName() == 'denounce.index') active @endif"   href="{{ route('denounce.index')}}">Denuncias</a>
+                        </li>
+                    @endif
                 @else
                 <li class="nav-item">
                     <a class="nav-link @if (Route::current()->getName() == 'login') active @endif" href="{{ route('login') }}">Iniciar Sesi&oacute;n</a>
@@ -45,11 +51,7 @@
                     </li>
                     @endif
                 @endauth
-            {{-- <li class="nav-item">
-                <a class="nav-link <?php if (Route::has('profile') ) {
-                    echo 'active';
-                } ?>" href="<?= route('home') ?>">Mi cuenta</a>
-            </li> --}}
+            
             @auth
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}" id="logout_form">
