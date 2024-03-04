@@ -50,7 +50,7 @@ return new class extends Migration
 
             $table->integer('views')->default(0)->comment('Cantidad de visualizaciones');
             $table->integer('renewed')->default(0)->comment('Veces que se renovó');
-            $table->integer('reported')->default(0)->comment('Veces que se denunció');
+            // $table->integer('reported')->default(0)->comment('Veces que se denunció');
             $table->json('log')->comment('Cambios que sufre el registro');
             $table->timestamps();
             $table->softDeletes();

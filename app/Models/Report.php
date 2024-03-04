@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Report extends Model
 {
-    // use HasFactory;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'name',
@@ -33,7 +34,7 @@ class Report extends Model
         'attachments',
         'views',
         'renewed',
-        'reported',
+        // 'reported',
         'log'
     ];
 
@@ -77,6 +78,10 @@ class Report extends Model
 
     public function Neighborhood(){
         return $this->hasOne(Neighborhood::class,'id','neighborhood_id');
+    }
+
+    public function Denounces(){
+        return $this->hasMany(ReportDenounce::class,'report_id','id');
     }
 
 

@@ -184,7 +184,7 @@
                             +'\' title="Permisos" data-action="permissions" class="btn btn-primary btn-sm"'
                             +' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-layer-group"></i></button>'
                             +' <button data-row=\'' + JSON.stringify(row)
-                            +'\' title="Enmviar mail de verificacion" data-action="sendRegisteredEmail" class="btn btn-info btn-sm">'
+                            +'\' title="Enviar mail de verificacion" data-action="sendRegisteredEmail" class="btn btn-info btn-sm">'
                             + '<i class="fa-solid fa-square-envelope"></i></button>'
                             +' <button data-row=\'' + JSON.stringify(row)
                             +'\' title="Enviar mail de restablecimiento de contraseña" data-action="sendResetPasswordEmail" class="btn btn-warning btn-sm">'
