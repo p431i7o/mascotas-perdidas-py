@@ -49,7 +49,7 @@
 
         </div>
         <div class="modal-footer">
-           <button type="button" class="btn btn-success" id="modal_aprove" data-dismiss="modal" onclick="deleteReport(JSON.parse( $(this).data().row ))">Borrar reporte</button> |
+           <button type="button" class="btn btn-success" id="modal_delete_report" data-dismiss="modal" onclick="deleteReport(JSON.parse( $(this).data().row ))">Borrar reporte</button> |
            <button type="button" class="btn btn-danger" id="modal_reject" data-dismiss="modal" onclick="reject(JSON.parse( $(this).data().row ))">Rechazar</button> |
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         </div>
@@ -115,7 +115,7 @@
                             +' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>'
 
                             +' <button data-row=\'' + JSON.stringify(row)
-                            +'\' title="Rechazar denuncias" data-action="rejectDenounce" class="btn btn-warning btn-sm">'
+                            +'\' title="Rechazar denuncias" data-action="reject" class="btn btn-warning btn-sm">'
                             + '<i class="fa-solid fa-xmark"></i></button>'
 
                             +' <button data-row=\'' + JSON.stringify(row)
@@ -165,7 +165,7 @@
                 case "reject":
                     reject(row);
                     break;
-                case "deleteReport":
+                case "delete":
                 deleteReport(row);
                     break;
                 case "view":
@@ -194,11 +194,14 @@
             var denounces  = "<strong>Aqui denuncias</strong>";
 
             $('#modal_body').html(`${denounces}<br/>${imgs}`);
+            $('#modal_delete_report').data('row',row);
+            $('#modal_reject').data('row',row);
 
         }
 
-        function reject(row){
-            
+        window.reject = function (row){
+            console.log('reject',row);
+
             Swal.fire({
                 icon: "question",
                 title: "Ignorar denuncias",
@@ -244,9 +247,9 @@
             });
         }
 
-        
 
-        function deleteReport(row) {
+
+         window.deleteReport =  function(row) {
             Swal.fire({
                 icon: "question",
                 title: "Desea borrar el reporte?",
@@ -255,7 +258,7 @@
                 confirmButtonText: "Si, borrar!",
                 cancelButtonText: "Cancelar"
             }).then((result) => {
-                
+
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "DELETE",

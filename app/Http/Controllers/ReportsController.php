@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ReportStoreRequest;
 use App\Http\Requests\ReportUpdateRequest;
+use App\Repositories\Permissions;
 
 class ReportsController extends Controller
 {
@@ -155,6 +156,7 @@ class ReportsController extends Controller
      */
     public function update(ReportUpdateRequest $request, Report $report)
     {
+        $now = Carbon::now();
         $validated = $request->validated();
         // $validated = $report->update($request->validated());
         $record = $report;
@@ -187,7 +189,7 @@ class ReportsController extends Controller
         $current_log = json_decode($record->log);
         $current_log[$now->toISOString()]=['type'=>'updated','user_id'=>auth()->user()->id];
         $record->log= json_encode($current_log);
-        
+
         $save_result = $record->save();
         // dd($save_result);
         if($save_result){
@@ -245,17 +247,18 @@ class ReportsController extends Controller
      */
     public function destroy(Request $request, Report $report)
     {
+        $now = Carbon::now();
         $current_user_id = Auth::user()->id;
         if($report->user_id != $current_user_id || !Auth::user()->can(Permissions::MANAGE_DENOUNCES) ){
             abort(400);
         }
-        $current_log = json_decode($report->log);
+        $current_log = json_decode($report->log,true);
 
         $current_log[$now->toISOString()] = [
             'type'=>'deleted',
             'user_id'=>auth()->user()->id,
             'comment'=>$request->comment??''
-            
+
         ];
         $report->log = json_encode($current_log);
         $report->save();

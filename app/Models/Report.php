@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Report extends Model
 {
-    // use HasFactory;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'name',

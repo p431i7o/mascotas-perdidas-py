@@ -13,7 +13,7 @@
     <div class="jumbotron">
         <div class="container">
             <h1 class="display-2">Mascotas Perdidas Py</h1>
-            <p>Hola, soy Pablo Ruiz Diaz, creador del sitio, te preguntarás que es este sitio y para que sirve?
+            <p>Hola, soy p431i7o <small>(Pablito en leet)</small> en las redes, creador del sitio, te preguntarás que es este sitio y para que sirve?
                 Bueno, la respuesta es sencilla, mi idea es que la gente pueda reportar en esta página cuando pierdan a sus
                 mascotas, de manera a centralizar un poco más los esfuerzos de búsqueda,
                 y también que la gente que los encuentra puedan anunciarlos aquí, de esa manera quienes rescataron y quienes
@@ -37,33 +37,30 @@
         <div class="container">
             <h1 class="display-4">&Uacute;ltimos Reportes:</h1>
             <div class="row">
-                <?php
-                foreach ($reportes as $fila) {
-                    // dd($fila);
-                    echo "<div class='col-md-4 mb-5'>";
-                    echo "<a href='".route('reports.show',$fila->id)."' target='_blank'>".
-                        (!empty($fila->name) ? "<h2>$fila->name</h2>" : "<h2>$fila->type</h2>") .
-                        "</a>".
-                        '<br/>';
+                @foreach ($reportes as $fila)
 
-                    // foreach ($fila->imagenes_reporte as $imagen) {
-                    //     echo "<img style='margin-left:10px;' class='img-thumbnail' src='" . base_url('reporte/getImagen/' . $imagen->imagen_miniatura) . "/thumb'/>";
-                    //     break;
-                    // }
-                    echo "<p>$fila->description</p>";
+                    <div class='col-md-4 mb-5 col-sm-12 col-xl-3'>
+                    <a href="{{ route('reports.show',$fila->id) }}" target='_blank'>
+                        @if(!empty($fila->name))
+                            <h2>{{ $fila->name }}</h2>
+                        @else
+                            <h2>{{ $fila->type }}</h2>
+                        @endif
+                        </a>
+                        <br/>
 
-                    echo '<p>Departamento: ' . $fila->Department->name. '<br/>';
-                    echo "Ciudad: ".$fila->City->name."<br/>";
-                    echo "Distrito: ".$fila->District->name."<br/>";
-                    echo "Barrio: ".$fila->Neighborhood->name."<br/>";
-                    // echo "Direcci&oacute;n: ".$fila->reporte_direccion."</p>";
-                    // echo "<hr/>";
-                    echo "<a href='".route('reports.show',$fila->id)."' target='_blank'>Ver</a>";
-                    echo '</div>';
-                    //@todo paginador
-                }
-                ?>
 
+                    <p>{{ Str::of($fila->description)->limit(50) }}</p>
+
+                    <p>Departamento: {{ $fila->Department->name }} <br/>
+                    Ciudad: {{ $fila->City->name }}<br/>
+                    Distrito: {{ $fila->District->name }}<br/>
+                    Barrio: {{ $fila->Neighborhood->name }}<br/>
+
+                    <a href="{{ route('reports.show',$fila->id) }}" target="_blank">Ver</a>
+                    </div>
+
+                @endforeach
             </div>
         </div>
     @else
