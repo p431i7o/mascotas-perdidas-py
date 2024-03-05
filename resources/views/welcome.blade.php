@@ -36,7 +36,7 @@
     @if($reportes->count() > 0)
         <div class="container">
             <h1 class="display-4">&Uacute;ltimos Reportes:</h1>
-            <div class="row">
+            <div class="row" id="row_results">
                 @foreach ($reportes as $fila)
 
                     <div class='col-md-4 mb-5 col-sm-12 col-xl-3'>
@@ -61,6 +61,12 @@
                     </div>
 
                 @endforeach
+            </div>
+            <div class="row" id="row_paginator">
+                Páginas: <br/>
+                @for($i=0;$i<ceil($reportCount/$limit);$i++)
+                    <a class="btn @if($currentPage == $i+1)btn-primary @else btn-outline-primary @endif" href="{{ route('root') }}?page={{ $i+1 }}">{{ $i+1 }}</a>&nbsp;
+                @endfor
             </div>
         </div>
     @else
