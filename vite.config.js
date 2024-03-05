@@ -8,6 +8,7 @@ export default defineConfig({
             input: [
                 // 'resources/css/app.css',
                 'resources/js/app.js',
+                'node_modules/jquery.autocomplete/jquery.autocomplete.js'
                 // 'resources/js/sb-admin-2.js',
                 // 'resources/js/chart-area-demo.js',
                 // 'resources/js/chart-bar-demo.js',

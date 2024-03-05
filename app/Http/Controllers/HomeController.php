@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\Department;
+use App\Models\Neighborhood;
 use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -50,5 +53,19 @@ class HomeController extends Controller
 
     public function search(Request $request){
         echo "Hola esto es search";
+    }
+
+    public function autoComplete(Request $request){
+
+        $city = City::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Ciudad: '.$item->name;return $item;});
+        $department = Department::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Departamento: '.$item->name;return $item;});
+        $neiborghood = Neighborhood::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Barrio: '.$item->name;return $item;});
+
+        $merge = $city->merge($department)->merge($neiborghood);
+        return response()->json([
+            "query"=> $request->input('query'),
+            "suggestions"=>$merge->pluck('name'),// ['Bahamas', 'Bahrain', 'Bangladesh', 'Barbados'],
+            "data"=> $merge
+        ]);
     }
 }

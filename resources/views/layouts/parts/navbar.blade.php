@@ -74,11 +74,37 @@
 <script type="module">
     console.log('buscador');
     $( "#search" ).autocomplete({
-      source: "{{route('search.autocomplete')}}",
-      minLength: 1,
-      select: function( event, ui ) {
+      serviceUrl: "{{route('search.autocomplete')}}",
+      minChars: 2,
+      maxHeight: 400,
+      width: 300,
+      zIndex: 9999,
+      deferRequestBy: 1000, // miliseconds
+      noCache: false,
+      dataKey: 'name',
 
-        console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
-      }
+      onSelect: function(value, data) {
+        console.log(value,data,'selected');
+
+      },
+      searchKey: 'name',
+      identifier: 'some-unique-identifier', // added to attribute data-identifier of the autocomplete div
+      formatResult: function(value, data) {
+
+        console.log('format result', value, data);
+        console.log(this);
+        //return value;
+         var search = (this.searchKey) ? data[this.searchKey] : ''
+        if (this.dataKey) data = data[this.dataKey]
+        var pattern = '(' + value.replace(this.regEx, '\\$1') + ')'
+        return ((search + ' (' + data).replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>') + ')')
+    }
     });
 </script>
+<style>
+    .autocomplete-w1 { position: absolute; top: 0px; left: 0px; margin: 6px 0 0 6px; }
+    .autocomplete { border: 1px solid #999; background: #FFF; cursor: default; text-align: left; max-height: 350px; overflow: auto; margin: -6px 6px 6px -6px; }
+    .autocomplete .selected { background: #F0F0F0; }
+    .autocomplete div { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+    .autocomplete strong { font-weight: normal; color: #3399FF; }
+</style>
