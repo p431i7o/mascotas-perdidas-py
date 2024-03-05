@@ -26,8 +26,7 @@ export default defineConfig({
             '~leaflet':path.resolve(__dirname,'node_modules/leaflet'),
             '~datatables.net-bs4':path.resolve(__dirname,'node_modules/datatables.net-bs4'),
             '~datatables.net-responsive-bs4':path.resolve(__dirname,'node_modules/datatables.net-responsive-bs4'),
-            '~bootstrap-switch-button':path.resolve(__dirname,'node_modules/bootstrap-switch-button'),
-            '~jquery.autocomplete':path.resolve(__dirname,'node_modules/jquery.autocomplete')
+            '~bootstrap-switch-button':path.resolve(__dirname,'node_modules/bootstrap-switch-button')
         }
     },
 });
