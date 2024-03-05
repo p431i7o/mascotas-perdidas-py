@@ -51,7 +51,7 @@
                     </li>
                     @endif
                 @endauth
-            
+
             @auth
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}" id="logout_form">
@@ -65,8 +65,20 @@
 
         </ul>
         <form action="<?= route('search') ?>" class="form-inline my-2 my-lg-0">
-            <input name="search" class="form-control mr-sm-2" type="text" placeholder="Buscar" aria-label="Buscar">
+            <input id="search" name="search" class="form-control mr-sm-2" type="text" placeholder="Buscar" aria-label="Buscar">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
         </form>
     </div>
 </nav>
+
+<script type="module">
+    console.log('buscador');
+    $( "#search" ).autocomplete({
+      source: "{{route('search.autocomplete')}}",
+      minLength: 1,
+      select: function( event, ui ) {
+
+        console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+      }
+    });
+</script>

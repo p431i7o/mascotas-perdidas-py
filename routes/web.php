@@ -41,6 +41,7 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
 Route::get('/help', [HomeController::class, 'help'])->name('help');
 Route::get('/legal', [HomeController::class, 'legal'])->name('legal');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
+Route::get('/searchAutocomplete', [HomeController::class, 'autoComplete'])->name('search.autocomplete');
 
 Route::get('/login', [LoginController::class, 'create'])
     ->middleware(['guest:' . config('fortify.guard')])
