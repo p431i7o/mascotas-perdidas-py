@@ -152,10 +152,11 @@
                     data: null,
                     width: '20%',
                     render: function(data, type, row) {
-                        return ' <button data-row=\'' + JSON.stringify(row) +
+                        var fila = {"id":row.id};
+                        return ' <button data-row=\'' + JSON.stringify(fila) +
                             '\' title="Ver" data-action="view" class="btn btn-primary btn-sm"' +
                             ' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>' +
-                            ' <button data-row=\'' + JSON.stringify(row) +
+                            ' <button data-row=\'' + JSON.stringify(fila)+
                             '\' title="Borrar" data-action="delete" class="btn btn-danger btn-sm">' +
                             '<i class="fa-solid fa-trash"></i></button>';
                     }
@@ -190,7 +191,7 @@
             var data = $(e.currentTarget).data();
             var row = data.row;
             var action = data.action;
-            // console.log(row,action);
+            console.log(data,row,action);
             switch (action) {
                 case "view":
                     view(row);
@@ -230,7 +231,6 @@
                 confirmButtonText: "Si, borrar!",
                 cancelButtonText:"Cancelar"
             }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "DELETE",
