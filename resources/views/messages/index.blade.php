@@ -48,7 +48,7 @@
 
       </div>
       <div class="modal-body">
-        <textarea id="txt_response" class="form-control" placeholder="Escriba aqui su respuesta"></textarea>
+        {{-- <textarea id="txt_response" class="form-control" placeholder="Escriba aqui su respuesta"></textarea> --}}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="btn_message_respond" data-message-id="" onclick="messageResponsex(this)">Responder</button>
@@ -64,7 +64,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modal_response_title">Responder mensaje</h5>
+          <h5 class="modal-title" id="modal_response_title">Responder último mensaje</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -72,7 +72,7 @@
         <div class="modal-body" id="modal_reponse_body">
             <form method="POST" enctype="application/x-www-form-urlencoded"  id="form_response">
                 @csrf
-                <input type="text" id="message_id" value=""/>
+                <input type="hidden" id="message_id" value=""/>
                 <textarea required name="message" id="message_response" class="form-control"></textarea>
             </form>
             </form>
@@ -216,11 +216,18 @@
             // $('#conversation_modal_body').html('Aca la conversa');
             var html = '';
             var me = {{ Auth::user()->id }};
-            var alineacion = '', borderColor='';
+            var alineacion = '', borderColor='', dateMessage, timeMessage;
             for(var index in conversationData){
                 alineacion = me==conversationData[index].from_user_id?'end':'start';
                 borderColor = me==conversationData[index].from_user_id?'success':'primary';
-                html += `<div class='d-flex justify-content-${alineacion}'><div class="p-3 rounded-sm border border-${borderColor}">${conversationData[index].message}<br/><small>${conversationData[index].created_at}</small></div></div><br/>`;
+                dateMessage = new Date(conversationData[index].created_at).toLocaleDateString();
+                timeMessage = new Date(conversationData[index].created_at).toLocaleTimeString();
+                html += `<div class='d-flex justify-content-${alineacion}'>
+                            <div class="p-3 rounded-sm border border-${borderColor}">${conversationData[index].message}<br/>
+                                <small style="font-size:9px;float:right;">${dateMessage} ${timeMessage}</small>
+                            </div>
+                        </div>
+                        <br/>`;
             }
             $('#conversation_modal_body').html(html);
             $('#conversationModal').modal('show');
