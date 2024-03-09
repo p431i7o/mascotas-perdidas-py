@@ -150,7 +150,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
     Route::delete('/report/{report}/delete',[ReportsController::class, 'destroy'])->name('reports.delete');
 
-    Route::get('/report/{report}/denounce',[ReportsController::class,'denounce'])->name('report.denounce');
+    Route::get('/report/{report}/denounce',[ReportDenounceController::class,'store'])->name('report.denounce');
 
     Route::get('/moderate-reports',[ModerationController::class,'index'])->name('moderation.index');
     Route::post('/moderate-report/approve',[ModerationController::class, 'approve'])->name('moderation.approve');

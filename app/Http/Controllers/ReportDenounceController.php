@@ -75,7 +75,7 @@ class ReportDenounceController extends Controller
         $count_records  = ReportDenounce::where('report_id',$report->id)->where('user_id',$user_id)->count();
 
         //nos interesa si aun no denuncio y el reporte es uno activo
-        if($count_records <= 0  && $report->status == 'Active'){
+        if($count_records <= 0  && $report->status == __('Active')){
             ReportDenounce::create([
                 'report_id'=>$report->id,
                 'user_id'=> $user_id,
@@ -88,7 +88,9 @@ class ReportDenounceController extends Controller
             }
         }
         //como sea se retorna exito
-        return response()->json(['success'=>true]);
+        return response()->json([
+            'success'=>true
+        ]);
     }
 
 }

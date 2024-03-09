@@ -80,8 +80,9 @@
         @auth
             @if(Auth::user()->id != $report->user_id)
                 <div class="row mt-5">
-                    <a href="{{ route('report.denounce', [$report->id]) }}" class="btn btn-danger"><i class="fa-solid fa-flag"></i>
-                        Denunciar este reporte</a>
+                    <button type="button" class="btn btn-danger" onclick="denounceReport()">
+                        <i class="fa-solid fa-flag"></i> Denunciar este reporte
+                    </button>
                 </div>
             @endif
         @else
@@ -180,6 +181,40 @@
 
             marker.fireEvent('click');
             // map.map.setZoom(14);
-        }, 1500)
+        }, 1500);
+
+        window.denounceReport = async function(){
+
+            const { value: text } = await Swal.fire({
+                icon: "warning",
+                input: "textarea",
+                inputLabel: "Denunciar Reporte",
+                cancelButtonText:'Cancelar',
+                confirmButtonText:'Listo! Enviar',
+                inputPlaceholder: "Por qué no debería esto estar aquí...",
+                inputAttributes: {
+                    "aria-label": "Por qué no debería esto estar aquí"
+                },
+                showCancelButton: true
+            });
+            if (text) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('report.denounce',$report->id) }}",
+                    data: {
+                        comment:text,
+                        _token:'{{ csrf_token() }}'
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if(response.success){
+                            Swal.fire("Denuncia recibida!");
+                        }else{
+                            Swal.fire("Hubo un problema al procesar su envío, reintente en unos minutos")
+                        }
+                    }
+                });
+            }
+        }
     </script>
 @endpush
