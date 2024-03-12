@@ -150,7 +150,7 @@
                 },
                 {
                     data: null,
-                    width: '20%',
+                    width: '25%',
                     render: function(data, type, row) {
                         var fila = {"id":row.id};
                         return ' <button data-row=\'' + JSON.stringify(fila) +
@@ -158,7 +158,8 @@
                             ' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>' +
                             ' <button data-row=\'' + JSON.stringify(fila)+
                             '\' title="Borrar" data-action="delete" class="btn btn-danger btn-sm">' +
-                            '<i class="fa-solid fa-trash"></i></button>';
+                            '<i class="fa-solid fa-trash"></i></button>'+
+                            (row.expired=="yes"?' <button title="Renovar 1 semana" class="btn btn-primary btn-sm"><i class="fa-solid fa-hourglass-end"></i></button>':'');
                     }
 
                 }

@@ -24,7 +24,7 @@ class ReportsController extends Controller
     {
         if($request->wantsJson()){
             $query = Report::where('user_id',auth()->user()->id)
-                ->select(DB::raw('reports.*, departments.name as department_name, cities.name as city_name, districts.name as district_name, neighborhoods.name as neighborhood_name '))
+                ->select(DB::raw('reports.*, departments.name as department_name, cities.name as city_name, districts.name as district_name, neighborhoods.name as neighborhood_name, now() as ct, case when now()>reports.expiration then "yes" else "no" end as expired'))
                 ->leftJoin('departments','departments.id','reports.department_id')
                 ->leftJoin('cities','cities.id','reports.city_id')
                 ->leftJoin('districts','districts.id','reports.district_id')
