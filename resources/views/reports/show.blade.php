@@ -44,7 +44,7 @@
             @endforeach
         </div>
         <div class="row">
-            <table class="table col-4">
+            <table class="table col-sm-12 col-md-4">
                 <tr>
                     <th>Nombre</th>
                     <td>{{ $report->name }}</td>
@@ -66,7 +66,7 @@
                     <td>{{ $report->address }}</td>
                 </tr>
             </table>
-            <div class="col-4">
+            <div class="col-sm-12 col-md-6">
                 <strong>Descripción</strong><br />
                 {{ $report->description }}<br />
                 <strong>Fecha</strong><br />
@@ -139,7 +139,7 @@
 
         // Map.
         var DEFAULT_ZOOM_MAP = 6;
-        var DEFAULT_ZOOM_MARKER = 16;
+        var DEFAULT_ZOOM_MARKER = 13;
         var DEFAULT_MIN_ZOOM_MAP = 6;
         var DEFAULT_MAX_ZOOM_MAP = 20;
 

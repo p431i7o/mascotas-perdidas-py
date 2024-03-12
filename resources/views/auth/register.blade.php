@@ -14,19 +14,19 @@
                     <div class="alert alert-info">{{session('status')}}</div>
                 @endif
                 <div class="form-label-group">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="Nombre completo" value="{{old('name')}}" name="name">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="Nombre completo" value="{{old('name')}}" name="name" maxlength="255">
                     <label for="floatingInput">{{ __("Name") }}</label>
                 </div>
                 <div class="form-label-group">
-                    <input type="email" class="form-control" id="floatingInputEmail" placeholder="name@example.com" value="{{old('email')}}" name="email">
+                    <input type="email" class="form-control" id="floatingInputEmail" placeholder="nombre@ejemplo.com" value="{{old('email')}}" name="email" maxlength="300">
                     <label for="floatingInputEmail">{{ __("Email address") }}</label>
                 </div>
                 <div class="form-label-group">
-                    <input type="phone" class="form-control" id="floatingInputPhone" placeholder="09xx555123" value="{{old('phone')}}" name="phone">
+                    <input type="phone" class="form-control" id="floatingInputPhone" placeholder="09xx555123" value="{{old('phone')}}" name="phone" maxlength="20">
                     <label for="floatingInputPhone">{{ __("Phone") }}</label>
                 </div>
                 <div class="form-label-group">
-                    <input type="phone" class="form-control" id="floatingInputCity" placeholder="" value="{{old('city')}}" name="city">
+                    <input type="phone" class="form-control" id="floatingInputCity" placeholder="por ej Asunción" value="{{old('city')}}" name="city" maxlength="250">
                     <label for="floatingInputCity">{{ __("City") }}</label>
                 </div>
 

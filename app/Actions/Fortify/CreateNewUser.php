@@ -31,7 +31,7 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'city'=>['required','string','max:250'],
-            'phone'=>['required','string','max:255'],
+            'phone'=>['required','string','max:20'],
             'accept_term_conditions'=>['accepted'],
             'password' => $this->passwordRules(),
         ],[],[

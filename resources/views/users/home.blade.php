@@ -21,7 +21,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Mi perfil</h4>
-                    <p class="card-text"><a href="#">Editar mi perfil</a></p>
+                    <p class="card-text"><a href="{{ route('profile') }}">Editar mi perfil</a></p>
                 </div>
             </div>
         </div>

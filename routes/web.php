@@ -142,6 +142,8 @@ if(Features::enabled(Features::resetPasswords())){
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::get('/my-profile',[HomeController::class,'profile'])->name('profile');
+    Route::post('/my-profile',[HomeController::class, 'updateProfile']);
 
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
     Route::get('/report/new', [ReportsController::class, 'create'])->name('reports.create');

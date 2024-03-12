@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProfileRequest;
 use App\Models\City;
 use App\Models\Department;
 use App\Models\Neighborhood;
 use App\Models\Report;
+use App\Models\User;
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -91,5 +94,16 @@ class HomeController extends Controller
             "suggestions"=>$merge->pluck('name'),// ['Bahamas', 'Bahrain', 'Bangladesh', 'Barbados'],
             "data"=> $merge
         ]);
+    }
+
+    public function profile(Request $request){
+        return view('profile')->with('user',Auth::user());
+    }
+
+    public function updateProfile(UpdateProfileRequest $request){
+        $user = User::find(Auth::user()->id);
+        $user->update($request->validated());
+        return redirect()->route('profile')->with('message','Datos guardados correctamente!');
+
     }
 }

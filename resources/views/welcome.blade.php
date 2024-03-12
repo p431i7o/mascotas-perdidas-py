@@ -10,6 +10,7 @@
         echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
         echo '</div>';
     } ?>
+    @if(request()->input('page',1) <= 1)
     <div class="jumbotron">
         <div class="container">
             <h1 class="display-2">Mascotas Perdidas Py</h1>
@@ -32,10 +33,11 @@
             @endguest
         </div>
     </div>
+    @endif
 
     @if($reportes->count() > 0)
         <div class="container">
-            <div class="row mb-5">
+            <div class="row mb-5 mt-5">
                 <div id="map-container"></div>
             </div>
             <h1 class="display-4">&Uacute;ltimos Reportes:</h1>
