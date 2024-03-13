@@ -28,10 +28,11 @@
                     <th>Nombre</th>
                     <th>Expira</th>
                     <th>Estado</th>
-                    <th>Departamento</th>
-                    <th>Distrito</th>
-                    <th>Ciudad</th>
-                    <th>Barrio</th>
+                    <th>Ubicación</th>
+                    {{-- <th>Departamento</th> --}}
+                    {{-- <th>Distrito</th>
+                    <th>Ciudad</th> --}}
+                    {{-- <th>Barrio</th> --}}
                     <th></th>
 
                 </tr>
@@ -116,7 +117,7 @@
                 },
                 {
                     data: 'expiration',
-                    width: '25%',
+                    width: '15%',
                     render: function(data, type, row) {
                         return new Date(data).toLocaleString('es-PY', {
                             day: '2-digit',
@@ -124,11 +125,12 @@
                             year: 'numeric',
                             hour: '2-digit',
                             minute: '2-digit'
-                        })
+                        }) + (row.expired=='yes'?'<br/><span class="badge badge-danger">Expirado</span>':'')
                     }
                 },
                 {
                     data: 'status',
+                    width:'5%',
                     render: function(data, type, row) {
                         if (data == "{{ __('Rejected') }}") {
                             return data + ` (${row.observations})`;
@@ -137,29 +139,40 @@
                     }
                 },
                 {
-                    data: 'department_name'
+                    data:null,
+                    width: '18%',
+                    render:function(data,type,row){
+                        return `${row.department_name} - ${row.city_name} (${row.district_name})`;
+                    }
                 },
-                {
-                    data: 'district_name'
-                },
-                {
-                    data: 'city_name'
-                },
-                {
-                    data: 'neighborhood_name'
-                },
+                // {
+                //     data: 'department_name'
+                // },
+                // {
+                //     data: 'district_name'
+                // },
+                // {
+                //     data: 'city_name'
+                // },
+                // {
+                //     data: 'neighborhood_name'
+                // },
                 {
                     data: null,
-                    width: '25%',
+                    width: '10%',
                     render: function(data, type, row) {
                         var fila = {"id":row.id};
                         return ' <button data-row=\'' + JSON.stringify(fila) +
-                            '\' title="Ver" data-action="view" class="btn btn-primary btn-sm"' +
-                            ' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>' +
+                            '\' title="Ver" data-action="view" class="btn btn-primary btn-xs"' +
+                            ' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye fa-xs"></i></button>' +
                             ' <button data-row=\'' + JSON.stringify(fila)+
-                            '\' title="Borrar" data-action="delete" class="btn btn-danger btn-sm">' +
-                            '<i class="fa-solid fa-trash"></i></button>'+
-                            (row.expired=="yes"?' <button title="Renovar 1 semana" class="btn btn-primary btn-sm"><i class="fa-solid fa-hourglass-end"></i></button>':'');
+                            '\' title="Borrar" data-action="delete" class="btn btn-danger btn-xs">' +
+                            '<i class="fa-solid fa-trash fa-xs"></i></button>'+
+                            (row.expired=="yes"?
+                                ' <button data-row=\'' + JSON.stringify(fila)+'\' data-action="renew" '+
+                                    'title="Renovar {{ config('app.renew_days_count',1) }} dias" class="btn btn-success btn-xs"><i class="fa-solid fa-hourglass-end fa-xs"></i></button>'
+                                :''
+                            );
                     }
 
                 }
@@ -178,7 +191,7 @@
             buttons: //Botones personalizados para la grilla
                 [{
                         text: '<i class="fas fa-sync"></i> {{ __('Reload') }}',
-                        className: 'btn btn-sm',
+                        className: 'btn btn-xs',
                         action: function(e, dt, node, config) {
 
                             record_table.ajax.reload();
@@ -200,9 +213,57 @@
                 case "delete":
                     deleteReport(row);
                     break;
+                case "renew":
+                    renewReport(row);
+                    break;
             }
 
         });
+
+        function renewReport(row){
+            Swal.fire({
+                icon: "question",
+                title:"Renovar el reporte",
+                text: "Desea renovar el reporte por {{ config('app.renew_days_count',1) }} dias?",
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: "Si, renovar!",
+                cancelButtonText:"Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: "{{ route('reports.renovate','xx') }}".replace('xx',row.id),
+                        dataType:"json",
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success:function(data, textStatus, jqXHR){
+
+                            if(data.success){
+                                Swal.fire("Renovado!", "", "success");
+                                window.record_table.ajax.reload();
+                            }else{
+                                Swal.fire({
+                                    title:'Error',
+                                    text:'No se ha podido actualizar el registro',
+                                    icon:'error'
+                                });
+                            }
+                        },
+                        error:function(jqXHR, textStatus, errorThrown){
+                            Swal.fire({
+                                    title:'Error',
+                                    text:'Error al comunicarse con el servidor',
+                                    icon:'error'
+                                });
+                        }
+
+                    });
+
+                }
+            });
+        }
 
         function view(row) {
             // console.log('view',row);

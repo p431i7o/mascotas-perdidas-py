@@ -295,6 +295,31 @@ class ReportsController extends Controller
         $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
         header('Content-type:'.$attachments[$index]->mime);
         echo($file);
+
+    }
+
+    public function renovate(Request $request, Report $report)
+    {
+        $now = Carbon::now();
+        $current_user_id = Auth::user()->id;
+        if($report->user_id != $current_user_id ){
+            abort(400);
+        }
+        $current_log = json_decode($report->log,true);
+
+        $current_log[$now->toISOString()] = [
+            'type'=>'renovated',
+            'user_id'=>auth()->user()->id
+        ];
+        $report->log = json_encode($current_log);
+        $report->expiration = Carbon::now()->addDays(config('app.renew_days_count'));
+        $result = $report->save();
+
+        if($request->wantsJson()){
+            return response()->json(['success'=>$result]);
+        }else{
+            return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Renewed'));
+        }
     }
 
 

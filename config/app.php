@@ -221,6 +221,7 @@ return [
     'captcha_secret'=>env('CAPTCHA_SECRET','--'),
 
     'allowed_picture_extensions'=>env('ALLOWED_PICTURE_EXTENSIONS','jpg,png'),
-    'report_denounces_threshold'=>env('DENOUNCES_THRESHOLD',10)
+    'report_denounces_threshold'=>env('DENOUNCES_THRESHOLD',10),
+    'renew_days_count'=>env('RENEW_DAYS_COUNT',7)
 
 ];
