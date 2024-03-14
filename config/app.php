@@ -222,6 +222,7 @@ return [
 
     'allowed_picture_extensions'=>env('ALLOWED_PICTURE_EXTENSIONS','jpg,png'),
     'report_denounces_threshold'=>env('DENOUNCES_THRESHOLD',10),
-    'renew_days_count'=>env('RENEW_DAYS_COUNT',7)
+    'renew_days_count'=>env('RENEW_DAYS_COUNT',7),
+    'days_until_deletion'=>env('DAYS_UNTIL_DELETION',15)
 
 ];
