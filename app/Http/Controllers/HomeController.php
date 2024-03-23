@@ -12,6 +12,8 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+use App\Actions\Fortify\ResetUserPassword;
+
 class HomeController extends Controller
 {
     public function root(Request $request)
@@ -103,6 +105,9 @@ class HomeController extends Controller
     public function updateProfile(UpdateProfileRequest $request){
         $user = User::find(Auth::user()->id);
         $user->update($request->validated());
+        if(!empty($request->input('password'))){
+            (app(ResetUserPassword::class))->reset($user,$request->only(['password','password_confirmation']));
+        }
         return redirect()->route('profile')->with('message','Datos guardados correctamente!');
 
     }
