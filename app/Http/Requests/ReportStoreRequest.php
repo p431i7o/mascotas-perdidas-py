@@ -35,4 +35,23 @@ class ReportStoreRequest extends FormRequest
 
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'type' => 'tipo',
+            'animal_kind_id'=>'tipo de animal',
+            'date'=>'fecha',
+            'name'=>'nombre',
+            'description'=>'descripcion',
+            'latitude'=>'latitud',
+            'longitude'=>'longitud',
+            'address'=>'direccion'
+        ];
+    }
 }

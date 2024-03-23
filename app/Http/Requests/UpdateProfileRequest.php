@@ -29,4 +29,18 @@ class UpdateProfileRequest extends FormRequest
             'phone'=>['required','string','max:20']
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'name' => 'nombre',
+            'city' => 'ciudad',
+            'phone'=> 'telefono'
+        ];
+    }
 }

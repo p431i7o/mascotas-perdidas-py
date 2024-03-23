@@ -32,7 +32,26 @@ class ReportUpdateRequest extends FormRequest
             'description'=>['required','string'],
             'latitude'=>['required','decimal:3,17'],
             'longitude'=>['required','decimal:3,17'],
-            'address'=>['string']
+            'address'=>['string','max:200']
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'type' => 'tipo',
+            'animal_kind_id'=>'tipo de animal',
+            'date'=>'fecha',
+            'name'=>'nombre',
+            'description'=>'descripcion',
+            'latitude'=>'latitud',
+            'longitude'=>'longitud',
+            'address'=>'direccion'
         ];
     }
 }
