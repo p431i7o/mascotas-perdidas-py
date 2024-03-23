@@ -250,7 +250,7 @@ class ReportsController extends Controller
         $now = Carbon::now();
         $current_user_id = Auth::user()->id;
         if($report->user_id != $current_user_id || !Auth::user()->can(Permissions::MANAGE_DENOUNCES) ){
-            abort(400);
+            abort(400,'No puedes');
         }
         $current_log = json_decode($report->log,true);
 
