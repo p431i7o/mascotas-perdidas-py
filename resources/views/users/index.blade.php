@@ -51,6 +51,7 @@
                     </button>
                 </div>
                 <div class="modal-body" id="modal_body">
+                    <input type="text" id="permission_user_id" value=""/>
                     @foreach ($permissions as $permission)
                         <div class="form-check form-check-inline">
                             <input  type="checkbox" id="permission{{ $permission->id }}" data-toggle="switchbutton" checked data-onstyle="success" data-offstyle="danger" name="permission[{{ $permission->id }}]">
@@ -61,6 +62,8 @@
                                 $('#permission{{ $permission->id }}').change(function() {
                                     // $('#console-event').html('Checked?: ' + $(this).prop('checked'))
                                     console.log('chequeado',$(this).prop('checked'));
+                                    updatePermission($('#permission_user_id').val(),'{{$permission->name}}',$(this).prop('checked'));
+
                                 })
                             })
                         </script>
@@ -255,6 +258,7 @@
             // var imgs = '@todo';
             var rol = null,
                 item, found = false;
+            $('#permission_user_id').val(row.id);
             for (var index in window.permissions) {
                 item = window.permissions[index];
                 found = false;
@@ -269,6 +273,40 @@
                 $('#permission' + item.id)[0].switchButton(!found?'off':'on',true);
             }
 
+        }
+
+        window.updatePermission=function(user_id, permission, action){
+            $.ajax({
+                method: "POST",
+                url: "{{ route('user.updatePermission', 'xx') }}".replace('xx', user_id),
+                dataType: "json",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    permission:permission,
+                    action:action?'asign':'remove'
+                },
+                success: function(data, textStatus, jqXHR) {
+
+                    if (data.success) {
+                        Swal.fire("Guardado!", "", "success");
+                        // window.record_table.ajax.reload();
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'No se ha podido enviar el mail',
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Error al comunicarse con el servidor',
+                        icon: 'error'
+                    });
+                }
+
+            });
         }
 
         function sendRegisteredEmail(row){

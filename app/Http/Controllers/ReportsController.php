@@ -263,6 +263,13 @@ class ReportsController extends Controller
         ];
         $report->log = json_encode($current_log);
         $report->save();
+
+        $attachments = json_decode($report->attachments);
+        foreach($attachments as $attachment){
+            Storage::delete('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachment->file_name);
+        }
+
+
         $result= $report->delete();
 
         if($request->wantsJson()){

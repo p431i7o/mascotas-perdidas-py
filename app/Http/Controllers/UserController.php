@@ -157,6 +157,23 @@ class UserController extends Controller
         return response()->json(['success'=>true],200);
     }
 
+    public function updatePermission(Request $request, User $user){
+        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+            abort(401,'No permitido');
+        }
+
+        if($request->action == 'asign'){
+            $user->givePermissionTo($request->permission);
+        }else if($request->action == 'remove'){
+            // A admin no se le quita nah
+            if($user->id != 1){
+                $user->revokePermissionTo($request->permission);
+            }
+        }
+
+        return response()->json(['success'=>true],200);
+    }
+
     public function sendVerifyMail(Request $request, User $user){
         if(!Auth::user()->can(Permissions::MANAGE_USERS)){
             abort(401,'No permitido');

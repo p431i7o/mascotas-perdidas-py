@@ -164,6 +164,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/messages',MessageController::class)->except(['create','show','update','edit']);
 
     Route::post('/user/{user}/updateRole',[UserController::class,'updateRole'])->name('user.updateRole');
+    Route::post('/user/{user}/updatePermission',[UserController::class,'updatePermission'])->name('user.updatePermission');
     Route::post('/user/{user}/registeredMail',[UserController::class, 'sendVerifyMail'])->name('user.registered.mail');
     Route::post('/user/{user}/resetPassword',[UserController::class, 'sendResetPasswordMail'])->name('user.resetPassword.mail');
     Route::resource('/user',UserController::class);
