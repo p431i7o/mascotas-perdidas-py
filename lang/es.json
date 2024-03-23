@@ -490,5 +490,6 @@
     "Rejected":"Rechazado",
     "Reported":"Reportado",
     "Active":"Activo",
-    "Status":"Estado"
+    "Status":"Estado",
+    "The :attribute must be at least :length characters.":"El campo :attribute debe tener al menos :length caracteres"
 }
