@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 use Carbon\Carbon;
 use App\Models\Report;
 use App\Models\AnimalKind;
@@ -203,7 +206,18 @@ class ReportsController extends Controller
         $data = [];
         $allowedExtensions = explode(',',config('app.allowed_picture_extensions','jpg,png,gif,jpeg'));
         foreach($request->pictures as $index=> $current_picture){
-           $path = $current_picture->store('report_uploads/'.$report->user_id.'/'.$report->id);
+           $path = $current_picture->store('report_uploads/'.$report->user_id.'/'.$report->id.'/originals');
+
+            // create image manager with desired driver
+            $manager = new ImageManager(new Driver());
+
+            $image = $manager->read(storage_path('app/'.$path));
+            $image_thumb = $manager->read(storage_path('app/'.$path));
+
+
+           $image->scale(width: 640);
+           $image_thumb->scale(width:50);
+
 
             $fileInfo = pathinfo($path);
             $sha1_file = sha1_file($current_picture->getRealPath());
@@ -211,6 +225,9 @@ class ReportsController extends Controller
             if(!in_array($extension, $allowedExtensions)){
                 abort(400,'Extension de imagen no admitida');
             }
+            // $new_image->save(public_path('ru/'.$report->user_id.'/'.$report->id.'/'.$fileInfo['basename']));
+            $image->save(storage_path('app/report_uploads/'.$report->user_id.'/'.$report->id.'/'.$fileInfo['basename']));
+            $image_thumb->save(storage_path('app/report_uploads/'.$report->user_id.'/'.$report->id.'/thumb_'.$fileInfo['basename']));
             $tmpProperties = [
                 'file_name' => $fileInfo['basename'],
                 'original_name'=>$current_picture->getClientOriginalName(),
@@ -266,6 +283,7 @@ class ReportsController extends Controller
 
         $attachments = json_decode($report->attachments);
         foreach($attachments as $attachment){
+            Storage::delete('report_uploads/'.$report->user_id.'/'.$report->id.'/originals/'.$attachment->file_name);
             Storage::delete('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachment->file_name);
         }
 
