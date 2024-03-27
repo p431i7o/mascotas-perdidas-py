@@ -51,7 +51,7 @@
                     </button>
                 </div>
                 <div class="modal-body" id="modal_body">
-                    <input type="text" id="permission_user_id" value=""/>
+                    <input type="hidden" id="permission_user_id" value=""/>
                     @foreach ($permissions as $permission)
                         <div class="form-check form-check-inline">
                             <input  type="checkbox" id="permission{{ $permission->id }}" data-toggle="switchbutton" checked data-onstyle="success" data-offstyle="danger" name="permission[{{ $permission->id }}]">

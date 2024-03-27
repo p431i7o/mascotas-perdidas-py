@@ -72,7 +72,7 @@
 </nav>
 
 <script type="module">
-    console.log('buscador');
+
     $( "#search" ).autocomplete({
       serviceUrl: "{{route('search.autocomplete')}}",
       minChars: 2,

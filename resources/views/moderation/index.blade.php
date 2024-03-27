@@ -109,9 +109,11 @@
                 { data: null,
                     width:'20%',
                     render:function(data,type,row){
-                        return '<button data-row=\''+JSON.stringify(row)+'\' title="Aprobar" data-action="approve" class="btn btn-success btn-sm"><i class="fa-solid fa-check"></i></button>'
-                        +' <button data-row=\''+JSON.stringify(row)+'\' title="Ver" data-action="view" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>'
-                        +' <button data-row=\''+JSON.stringify(row)+'\' title="Rechazar" data-action="reject" class="btn btn-danger btn-sm"><i class="fa-solid fa-xmark"></i></button>';
+                        var newRow = {id:row.id,attachments:row.attachments, type:row.type,name:row.name};
+                        // console.log(row);
+                        return '<button data-row=\''+JSON.stringify(newRow)+'\' title="Aprobar" data-action="approve" class="btn btn-success btn-sm"><i class="fa-solid fa-check"></i></button>'
+                        +' <button data-row=\''+JSON.stringify(newRow)+'\' title="Ver" data-action="view" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>'
+                        +' <button data-row=\''+JSON.stringify(newRow)+'\' title="Rechazar" data-action="reject" class="btn btn-danger btn-sm"><i class="fa-solid fa-xmark"></i></button>';
                     }
 
                 }
@@ -163,8 +165,8 @@
         });
 
         window.approve = function (row){
-            debugger;
-            console.log('aprobado',row);
+            // debugger;
+            // console.log('aprobado',row);
             Swal.fire({
                 title: "Confirmación",
                 text: "Desea aprobar",
@@ -215,7 +217,7 @@
         }
 
         window.reject = function (row){
-            console.log('rejecting',row);
+            // console.log('rejecting',row);
             Swal.fire({
                 title: "Rechazar",
                 text:"Ingrese la razón del rechazo",
@@ -272,7 +274,7 @@
         }
 
         function view(row){
-            console.log('view',row);
+            // console.log('view',row);
             var attachments = JSON.parse(row.attachments);
             var imgs = '<div class="row">';
             for(var index in attachments){
