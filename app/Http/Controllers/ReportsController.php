@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Response;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -309,7 +310,7 @@ class ReportsController extends Controller
 
     }
 
-    public function showImage(Request $request, Report $report, $index){
+    public function showImage(Request $request, Report $report, $index, $kind=null){
         if($report->expiration < Carbon::now()){
             abort(404);
         }
@@ -317,10 +318,16 @@ class ReportsController extends Controller
         if(!isset($attachments[$index])){
             abort(400);
         }
-        // dd($attachments[$index]->file_name);
-        $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
-        header('Content-type:'.$attachments[$index]->mime);
-        echo($file);
+        
+        if($kind=='thumb'){
+            $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/thumb_'.$attachments[$index]->file_name);
+        }else{
+            $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
+
+        }
+        
+        return Response::make($file, 200)->header("Content-Type", $attachments[$index]->mime);
+        
 
     }
 
