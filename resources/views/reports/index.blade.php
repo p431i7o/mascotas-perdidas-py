@@ -161,7 +161,7 @@
                     data: null,
                     width: '10%',
                     render: function(data, type, row) {
-                        var fila = {"id":row.id};
+                        var fila = {"id":row.id,attachments:row.attachments};
                         return ' <button data-row=\'' + JSON.stringify(fila) +
                             '\' title="Ver" data-action="view" class="btn btn-primary btn-xs"' +
                             ' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye fa-xs"></i></button>' +
@@ -270,10 +270,10 @@
             var attachments = JSON.parse(row.attachments);
             var imgs = '<div class="row">';
             for (var index in attachments) {
-                imgs += `<div class="col-md-12">
+                imgs += `<div class="col-md-4">
                     <a target="_blank" href="{{ route('report.image.show', ['xx', 'yy']) }}">
                     <img class="col-12 mb-2"
-                    src="{{ route('report.image.show', ['xx', 'yy']) }}"/>`
+                    src="{{ route('report.image.show', ['xx', 'yy','medium']) }}"/>`
                     .replace(/xx/g, row.id)
                     .replace(/yy/g, index)
                     +`</a>

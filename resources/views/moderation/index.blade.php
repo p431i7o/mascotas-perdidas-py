@@ -111,9 +111,9 @@
                     render:function(data,type,row){
                         var newRow = {id:row.id,attachments:row.attachments, type:row.type,name:row.name};
                         // console.log(row);
-                        return '<button data-row=\''+JSON.stringify(newRow)+'\' title="Aprobar" data-action="approve" class="btn btn-success btn-sm"><i class="fa-solid fa-check"></i></button>'
-                        +' <button data-row=\''+JSON.stringify(newRow)+'\' title="Ver" data-action="view" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>'
-                        +' <button data-row=\''+JSON.stringify(newRow)+'\' title="Rechazar" data-action="reject" class="btn btn-danger btn-sm"><i class="fa-solid fa-xmark"></i></button>';
+                        return '<button data-row=\''+JSON.stringify(newRow)+'\' title="Aprobar" data-action="approve" class="btn btn-success btn-xs"><i class="fa-solid fa-check"></i></button>'
+                        +' <button data-row=\''+JSON.stringify(newRow)+'\' title="Ver" data-action="view" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye"></i></button>'
+                        +' <button data-row=\''+JSON.stringify(newRow)+'\' title="Rechazar" data-action="reject" class="btn btn-danger btn-xs"><i class="fa-solid fa-xmark"></i></button>';
                     }
 
                 }
@@ -278,7 +278,7 @@
             var attachments = JSON.parse(row.attachments);
             var imgs = '<div class="row">';
             for(var index in attachments){
-                imgs += `<img class="col-md-12" src="{{ route('report.image.show',['xx','yy']) }}"/>`.replace('xx',row.id).replace('yy',index);
+                imgs += `<img class="col-md-4" src="{{ route('report.image.show',['xx','yy']) }}"/>`.replace('xx',row.id).replace('yy',index);
             }
             imgs += '</div>'
             $('#modal_body').html( `Tipo: ${row.type} <br/>

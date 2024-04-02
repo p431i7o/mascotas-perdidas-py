@@ -99,7 +99,9 @@
 
                             <div class="form-group">
                               <label for="pictures[]">Imagenes del animal</label>
-                              <input type="file" multiple class="form-control-file" name="pictures[]" id="pictures[]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
+                              <input type="file"  class="form-control-file" name="pictures[]" id="pictures[0]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
+                              <input type="file"  class="form-control-file" name="pictures[]" id="pictures[1]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
+                              <input type="file"  class="form-control-file" name="pictures[]" id="pictures[2]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
                               <small id="pictureHelpId" class="form-text text-muted">Seleccione hasta 3 imagenes para subir</small>
                             </div>
 
