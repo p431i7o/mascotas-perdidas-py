@@ -1,66 +1,36 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://www.mascotasperdidaspy.org" target="_blank">Mascotas Perdidas PY</a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Acerca del proyecto - About the project
 
-## About Laravel
+Construido sobre Laravel, usando sus tecnologías existentes más otras auxiliares como jQuery, Bootstrap, Leaflet; el proyecto busca dar una respuesta a la problemática de las mascotas perdidas y encontradas en el país, de modo a que se puedan ubicar más fácilmente por medio de herramientas geográficos.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+--
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Build on top of Laravel, using its build in component plus other auxiliarys like jQuery, Bootstrap, Leaflet; the project seeks to respond the problematic of the lost and found mascots in the country, in a way that they could be found easily by the means of geografic tools.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Contribuir con el proyecto - Contribute to the project
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+De momento no estoy buscando auspicio económico de ningún tipo, el proyecto a nivel código está hosteado acá en github como para que cualquiera pueda clonarlo, mejorarlo y redistribuirlo como mejor le parezca. Y a nivel de ejecución se está hosteando en Linode que podría escalar de ser necesario, pero por ahora me la banco solo.
 
-## Laravel Sponsors
+Si puede ser útil los PR con mejoras y correcciones, que en serio son la forma en la que los proyectos open source crecen y mejoran.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+-- 
 
-### Premium Partners
+At the moment I am not looking for financial sponsorship of any kind, the project at the code level is hosted here on github so that anyone can clone it, improve and redistribute it as they see fit. And at the execution level it is being hosted on Linode which could be scaled if necessary, but for now me la banco solo.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+PRs with improvements and corrections can be useful, which are  the way in which open source projects grow and improve.
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Vulnerabilidades de seguridad - Security Vulnerabilities
 
-## Code of Conduct
+Si descubres una vulnerabilidad o un error serio con el proyecto, me puedes contactar por twitter (ahora le dicen X) en [@p431i7o](https://twitter.com/p431i7o)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+If you discover a security vulnerability or a serious error within the project, you can reach me at my twitter (now is called X) [@p431i7o](https://twitter.com/p431i7o) 
 
-## Security Vulnerabilities
+## Licencia - License
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+El código lo libero con licencia MIT que es la misma que usa Laravel [MIT license](https://opensource.org/licenses/MIT).
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
