@@ -179,6 +179,8 @@ Map.prototype.marker_point = function (p_zoom)
     map.setView(coordinates, p_zoom);
 
     marker_point.on("dragend", ondragend);
+    $('#latitude').val(coordinates[0]);
+    $('#longitude').val(coordinates[1]);
 
     //addSearcher(map);
 }
