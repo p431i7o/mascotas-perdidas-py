@@ -174,5 +174,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/report/{report}/rejectDenounce',[ReportDenounceController::class, 'reject'])->name('reportDenounce.reject');
 });
 
-Route::get('/report/{report}/image/{index}/show',[ReportsController::class,'showImage'])->name('report.image.show');
+Route::get('/report/{report}/image/{index}/show/{kind?}',[ReportsController::class,'showImage'])->name('report.image.show');
 Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
