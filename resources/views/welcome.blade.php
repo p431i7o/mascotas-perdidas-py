@@ -61,6 +61,11 @@
                     Ciudad: {{ $fila->City->name }}<br/>
                     Distrito: {{ $fila->District->name }}<br/>
                     Barrio: {{ $fila->Neighborhood->name }}<br/>
+                    <div class="row">
+                    @foreach(json_decode($fila->attachments) as $index=>$attachment)
+                        <img class="col-4" src="{{ route('report.image.show', [$fila->id, $index,'thumb']) }}" />
+                    @endforeach
+                    </div>
 
                     <a href="{{ route('reports.show',$fila->id) }}" target="_blank">Ver</a>
                     </div>
