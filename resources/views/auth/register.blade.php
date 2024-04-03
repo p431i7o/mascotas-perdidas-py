@@ -21,10 +21,10 @@
                     <input type="email" class="form-control" id="floatingInputEmail" placeholder="nombre@ejemplo.com" value="{{old('email')}}" name="email" maxlength="300">
                     <label for="floatingInputEmail">{{ __("Email address") }}</label>
                 </div>
-                <div class="form-label-group">
+                {{-- <div class="form-label-group">
                     <input type="phone" class="form-control" id="floatingInputPhone" placeholder="09xx555123" value="{{old('phone')}}" name="phone" maxlength="20">
                     <label for="floatingInputPhone">{{ __("Phone") }}</label>
-                </div>
+                </div> --}}
                 <div class="form-label-group">
                     <input type="phone" class="form-control" id="floatingInputCity" placeholder="por ej Asunción" value="{{old('city')}}" name="city" maxlength="250">
                     <label for="floatingInputCity">{{ __("City") }}</label>
@@ -48,7 +48,7 @@
                 data-sitekey="{{config('app.captcha_public')}}"
                 data-callback='onSubmit'
                 data-action='submit'
-                type="submit">Register</button>
+                type="submit">Registrarme!</button>
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
