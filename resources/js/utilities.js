@@ -11,7 +11,7 @@ window.gps_active = false;
 window.localization = function  (p_action)
 {
 	action = p_action;
-	
+
     if (navigator.geolocation)
     {
         navigator.geolocation.getCurrentPosition(getCoordinates, errors,
@@ -38,7 +38,7 @@ window.getCoordinates = function  (p_position)
     let coordinates = new Array();
     coordinates['lng']  = p_position.coords.longitude;
 	coordinates['lat'] = p_position.coords.latitude;
-	
+
     let zoom = DEFAULT_ZOOM_MAP;
     gps_active = true;
 
@@ -69,23 +69,23 @@ window.errors = function  (error)
     		break;
     }
     defaultPosition();
-}	
+}
 
 /**
  * Method that positions default.
  * @method defaultPosition
  * @returns void
- */ 
+ */
 window.defaultPosition = function ()
 {
     let lng = DEFAULT_LNG;
 	let lat = DEFAULT_LAT;
 	let coordinates = new Array();
 	let zoom = DEFAULT_ZOOM_MAP;
-   
+
     coordinates['lng']  = lng;
     coordinates['lat'] = lat;
-    
+
 	load_map(coordinates, zoom);
 }
 
@@ -147,7 +147,7 @@ window.marker_point_map = function (p_e, p_zoom)
 //         $.each(p_data, function(key, val) {
 //             bb = val.boundingbox;
 //             console.log('val: ', val);
-            
+
 //             v_array_items.push("<li><a href='#' onclick='elegirDireccion(" + bb[0] + ", " + bb[2] + ", " + bb[1] + ", " + bb[3] + ", \"" + val.osm_type + "\");return false;'>" + val.display_name + '</a></li>');
 //         });
 
@@ -168,3 +168,25 @@ window.marker_point_map = function (p_e, p_zoom)
 // function elegirDireccion(p_lat1, p_lng1, p_lat2, p_lng2, p_tipo_osm) {
 //     v_mapa.marcar(p_lat1, p_lng1, p_lat2, p_lng2, p_tipo_osm);
 // }
+
+window.setCookie = function(cname, cvalue, exdays=365) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+window.getCookie=function(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }

@@ -145,9 +145,29 @@
     <script type="module">
         //window.onload = function(){};
         $(document).ready(function(){
-            console.log('ready');
+            // console.log('ready');
+
             var action = document.getElementById("loadMap").getAttribute("data_load_map");
-            localization(action);
+            if(getCookie("informedAboutLocation")==""){
+                Swal.fire({
+                    title: "Desea compartir su ubicación?",
+                    text:"La ubicación es utilizada para poder ubicar el punto en el mapa, si elige denegar igual puede arrastrar el marcador hasta la ubicación correcta",
+                    showDenyButton: false,
+                    showCancelButton: false,
+                    confirmButtonText: "Entiendo",
+
+                    }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        setCookie("informedAboutLocation","yes");
+                        localization(action);
+                    }
+                });
+            }else{
+
+                localization(action);
+            }
+
 
         });
     </script>

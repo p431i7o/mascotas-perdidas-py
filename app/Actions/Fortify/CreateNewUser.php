@@ -31,7 +31,7 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'city'=>['required','string','max:250'],
-            'phone'=>['required','string','max:20'],
+            // 'phone'=>['required','string','max:20'],
             'accept_term_conditions'=>['accepted'],
             'password' => $this->passwordRules(),
         ],[],[
@@ -43,7 +43,7 @@ class CreateNewUser implements CreatesNewUsers
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            'phone' => $input['phone'],
+            // 'phone' => $input['phone'],
             // 'address'=> $input['address'],
             'city'=>$input['city'],
             'password' => Hash::make($input['password']),

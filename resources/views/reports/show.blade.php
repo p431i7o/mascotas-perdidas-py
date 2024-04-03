@@ -159,29 +159,25 @@
 @endpush
 @push('scripts')
     <script type="module">
-        //window.onload = function(){};
-        $(document).ready(function() {
-            console.log('ready');
-            var action = document.getElementById("loadMap").getAttribute("data_load_map");
-            localization(action);
-
-        });
-    </script>
-    <script type="text/javascript">
         function clickZoom(e) {
             map.map.setView(e.target.getLatLng(), DEFAULT_ZOOM_MARKER);
-            // map.map.setZoom(15);
         }
-        //@TODO: ENCONTRAR EL EVENTO CORRECTO DE LEAFTLET PARA SETEAR el marcador
-        setTimeout(function() {
+
+        $(document).ready(function() {
+
+            var action = document.getElementById("loadMap").getAttribute("data_load_map");
+            let coordinates = new Array();
+            coordinates['lng']  = {{ $report->longitude }};
+            coordinates['lat'] = {{ $report->latitude }};
+            map = new Map(coordinates, 15, 'marker');
             var marker = L.marker([{{ $report->latitude }}, {{ $report->longitude }}], {
                 id: {{ $report->id }},
                 draggable: false,
             }).addTo(map.map).bindPopup("{{ $report->name ?? __($report->type) }}").on('click', clickZoom);
 
-            marker.fireEvent('click');
-            // map.map.setZoom(14);
-        }, 1500);
+        });
+    </script>
+    <script type="module">
 
         window.denounceReport = async function(){
 

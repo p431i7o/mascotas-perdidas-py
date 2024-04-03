@@ -61,25 +61,32 @@ class HomeController extends Controller
         $search_array = explode(' ',$search);
         $keywords = ['Ciudad:','Departamento:'];
 
-        $query = Report::select('reports.*')->join('cities','cities.id','reports.city_id')->join('departments','departments.id','reports.department_id');
-        foreach($keywords  as $keyword){
-            if(strpos($search,$keyword)!== false){
-                if($keyword=='Ciudad:'){
-                    foreach($search_array as $sa){
-                        if(!in_array($sa,$keywords)){
-                            $query->orWhere('cities.name','like','%'.$sa.'%');
+        $query = Report::select('reports.*')
+            ->where('reports.expiration','>=',Carbon::now())
+            ->where('reports.status','Active')
+            ->join('cities','cities.id','reports.city_id')
+            ->join('departments','departments.id','reports.department_id');
+        $query->where(function($query)use($keywords,$search,$search_array){
+            foreach($keywords  as $keyword){
+                if(strpos($search,$keyword)!== false){
+                    if($keyword=='Ciudad:'){
+                        foreach($search_array as $sa){
+                            if(!in_array($sa,$keywords)){
+                                $query->orWhere('cities.name','like','%'.$sa.'%');
+                            }
                         }
                     }
-                }
-                if($keyword=='Departamento:'){
-                    foreach($search_array as $sa){
-                        if(!in_array($sa,$keywords)){
-                            $query->orWhere('departments.name','like','%'.$sa.'%');
+                    if($keyword=='Departamento:'){
+                        foreach($search_array as $sa){
+                            if(!in_array($sa,$keywords)){
+                                $query->orWhere('departments.name','like','%'.$sa.'%');
+                            }
                         }
                     }
                 }
             }
-        }
+
+        });
         $results = $query->get();
         return view('search.result')->with('results',$results);
     }

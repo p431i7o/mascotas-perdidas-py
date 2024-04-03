@@ -26,7 +26,7 @@ class UpdateProfileRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'city'=>['required','string','max:250'],
-            'phone'=>['required','string','max:20']
+            // 'phone'=>['required','string','max:20']
         ];
     }
 

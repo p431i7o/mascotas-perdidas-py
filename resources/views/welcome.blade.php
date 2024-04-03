@@ -109,32 +109,52 @@
     <script type="module">
         //window.onload = function(){};
         $(document).ready(function(){
-            console.log('ready');
+            // console.log('ready');
+            // var action = document.getElementById("loadMap").getAttribute("data_load_map");
+            // var action = document.getElementById("loadMap").getAttribute("data_load_map");
+            // if(getCookie("informedAboutLocation")==""){
+            //     Swal.fire({
+            //         title: "Desea compartir su ubicación?",
+            //         text:"La ubicación es utilizada para poder ubicar el punto en el mapa, si elige denegar igual puede arrastrar el marcador hasta la ubicación correcta",
+            //         showDenyButton: false,
+            //         showCancelButton: false,
+            //         confirmButtonText: "Entiendo",
+
+            //         }).then((result) => {
+            //         /* Read more about isConfirmed, isDenied below */
+            //         if (result.isConfirmed) {
+            //             setCookie("informedAboutLocation","yes");
+            //             localization(action);
+            //         }
+            //     });
+            // }else{
+            //     localization(action);
+            // }
             var action = document.getElementById("loadMap").getAttribute("data_load_map");
-            localization(action);
+            let coordinates = new Array();
+            coordinates['lng']  = DEFAULT_LNG;
+            coordinates['lat'] = DEFAULT_LAT;
+            map = new Map(coordinates, 6, 'marker');
+
+            @foreach ($reportes as $index=>  $record)
+                var marker_{{ $index }} = L.marker([{{$record->latitude }}, {{$record->longitude}} ],{
+                id:{{ $record->id }},
+                draggable: false,
+                })
+                .addTo(map.map)
+                .bindPopup("<a href=\"{{route('reports.show',$record->id)}}\" target='_blank'>{{$record->name??__($record->type)}}</a><br/> {{ Str::of($record->description)->limit(50) }}")
+                .on('click',clickZoom);
+            @endforeach
 
         });
     </script>
     <script type="text/javascript">
     function clickZoom(e) {
         map.map.setView(e.target.getLatLng(),DEFAULT_ZOOM_MARKER);
-        // map.map.setZoom(15);
+
     }
 
-        //@TODO: ENCONTRAR EL EVENTO CORRECTO DE LEAFTLET PARA SETEAR el marcador
-        setTimeout(function(){
-            @foreach ($reportes as  $record)
-                var marker = L.marker([{{$record->latitude }}, {{$record->longitude}} ],{
-                id:{{ $record->id }},
-                draggable: false,
-            })
-            .addTo(map.map)
-            .bindPopup("<a href=\"{{route('reports.show',$record->id)}}\" target='_blank'>{{$record->name??__($record->type)}}</a><br/> {{ Str::of($record->description)->limit(50) }}")
-            .on('click',clickZoom);
-            @endforeach
 
-            // map.map.setZoom(15)
-        },1500)
 
 
 
