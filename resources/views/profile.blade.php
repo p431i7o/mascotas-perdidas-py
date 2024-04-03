@@ -28,21 +28,21 @@
                 @error('name')
                     <div class="alert alert-danger">
                         <strong>{{ $message }}</strong>
-                    </span>
+                    </div>
                 @enderror
             </div>
         </div>
 
-        <div class="form-group">
+        {{-- <div class="form-group">
             <div class="col-md-3"><label>Teléfono</label></div>
             <div class="col-md-9"><input class="form-control" name="phone" type="text" value="{{ old('phone',$user->phone) }}" maxlength="20">
                 @error('phone')
                     <div class="alert alert-danger">
                         <strong>{{ $message }}</strong>
-                    </span>
+                    </div>
                 @enderror
             </div>
-        </div>
+        </div> --}}
 
         <div class="form-group">
             <div class="col-md-3"><label>Ciudad</label></div>
@@ -50,7 +50,7 @@
                 @error('city')
                     <div class="alert alert-danger">
                         <strong>{{ $message }}</strong>
-                    </span>
+                    </div>
                 @enderror
         </div>
         </div>
@@ -61,7 +61,7 @@
                 @error('password')
                     <div class="alert alert-danger">
                         <strong>{{ $message }}</strong>
-                    </span>
+                    </div>
                 @enderror
             </div>
 
@@ -73,7 +73,7 @@
                 @error('password_confirm')
                     <div class="alert alert-danger">
                         <strong>{{ $message }}</strong>
-                    </span>
+                    </div>
                 @enderror
             </div>
         </div>
