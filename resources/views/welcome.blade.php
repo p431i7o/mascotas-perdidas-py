@@ -21,7 +21,7 @@
                 perdieron puedan coincidir con más facilidad.</p>
             <p>¿Cómo funciona esto?</p>
             <p>Pues no es muy complicado, lo primero que hay que hacer es que te registres con una dirección de correo
-                electrónico válido, y nos dejes un número telefónico donde te podamos encontrar</p>
+                electrónico válido</p>
             <p>Luego de que completes el formulario de registro, te enviaremos un email con un enlace para que confirmes que
                 la dirección de correo es efectivamente tuya, una vez que confirmes tu email
                 ya podras iniciar una sesión y estarás listo para hacer tu primer reporte.</p>
