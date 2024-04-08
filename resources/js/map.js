@@ -36,7 +36,8 @@ window.Map = function  (p_coordinates, p_zoom, p_action)
     //map.setMaxBounds([[-90, -180], [90, 180]]);
 
     // Humanitarian Style.
-	let url = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+	// let url = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+    let url = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
     L.tileLayer(url,
     {
         minZoom: minZoom,
