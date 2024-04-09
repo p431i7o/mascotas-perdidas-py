@@ -216,14 +216,15 @@
             // $('#conversation_modal_body').html('Aca la conversa');
             var html = '';
             var me = {{ Auth::user()->id }};
-            var alineacion = '', borderColor='', dateMessage, timeMessage;
+            var alineacion = '', borderColor='', dateMessage, timeMessage, margin;
             for(var index in conversationData){
                 alineacion = me==conversationData[index].from_user_id?'end':'start';
                 borderColor = me==conversationData[index].from_user_id?'success':'primary';
+                margin = me==conversationData[index].from_user_id?'mr-5':'ml-5';
                 dateMessage = new Date(conversationData[index].created_at).toLocaleDateString();
                 timeMessage = new Date(conversationData[index].created_at).toLocaleTimeString();
                 html += `<div class='d-flex justify-content-${alineacion}'>
-                            <div class="p-3 rounded-sm border border-${borderColor}">${conversationData[index].message}<br/>
+                            <div class="p-3 rounded-sm border border-${borderColor} ${margin}">${conversationData[index].message}<br/>
                                 <small style="font-size:9px;float:right;">${dateMessage} ${timeMessage}</small>
                             </div>
                         </div>

@@ -19,7 +19,13 @@ class MessageController extends Controller
     public function index(Request $request)
     {
         if($request->wantsJson()){
-            $query = Message::where('to_user_id',auth()->user()->id)->where('parent_id',null)->with(['From','To']);
+            $query = Message::where(function($query){
+                $query->where('to_user_id',auth()->user()->id)
+                    ->orWhere('from_user_id',auth()->user()->id);
+            })
+                //where('to_user_id',auth()->user()->id)
+                ->where('parent_id',null)
+                ->with(['From','To']);
             if (!empty($request->search['value'])) {
                 $query->where('message', 'ilike', '%' . $request->search['value'] . '%');
             }
@@ -74,7 +80,7 @@ class MessageController extends Controller
         //@todo sanity checks
         $report = Report::find($request->report_id);
         $user_id = Auth::user()->id;
-        $message = $request->message;
+        $message =   $request->message ;
         $parent_id = null;
 
         $firstMessage = Message::where('from_user_id',$user_id)->where('to_user_id',$report->user_id)->where('report_id',$report->id)->orderBy('id','asc');
@@ -109,7 +115,7 @@ class MessageController extends Controller
     }
 
     public function getConversation(Request $request, Message $message){
-        if($message->to_user_id != Auth::user()->id){
+        if($message->to_user_id != Auth::user()->id && $message->from_user_id != Auth::user()->id){
             abort(400);
         }
 
@@ -118,6 +124,9 @@ class MessageController extends Controller
 
         $result = $message->save();
         $conversation = Message::where('report_id',$message->report_id)->orderBy('created_at','asc')->get();
+        foreach($conversation as $index=>$value){
+            $conversation[$index]->message = htmlentities($value->message);
+        }
         return response()->json(['sucess'=>$result,'data'=>$conversation]);
     }
 
