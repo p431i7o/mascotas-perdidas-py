@@ -491,5 +491,6 @@
     "Reported":"Reportado",
     "Active":"Activo",
     "Status":"Estado",
-    "The :attribute must be at least :length characters.":"El campo :attribute debe tener al menos :length caracteres"
+    "The :attribute must be at least :length characters.":"El campo :attribute debe tener al menos :length caracteres",
+    "Insufficient quantity of images":"Cantidad insuficiente de imágenes"
 }
