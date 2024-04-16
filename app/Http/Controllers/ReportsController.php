@@ -88,11 +88,12 @@ class ReportsController extends Controller
      */
     public function store(ReportStoreRequest $request)
     {
+        DB::beginTransaction();
         $now = Carbon::now();
         $validated = $request->validated();
 
         $record = new Report($validated);
-        $record->status = 'Pending';
+        $record->status = 'Active';
 
 
         $lat = $validated['latitude'];
@@ -120,7 +121,7 @@ class ReportsController extends Controller
             $record->district_id = $result[0]->district_id;
             $record->neighborhood_id = $result[0]->neighborhood_id;
         }
-        $record->expiration = Carbon::now()->addDays(7);
+        $record->expiration = Carbon::now()->addDays(config('app.renew_days_count'));
         $record->user_id = Auth::user()->id;
         $record->attachments = json_encode([]);
         $record->log= json_encode([$now->toISOString()=>['type'=>'created','user_id'=>auth()->user()->id]]);
@@ -128,10 +129,16 @@ class ReportsController extends Controller
 
         // dd($request->pictures);
         $picture_storage = $this->storeFiles($request,$record);
+        if(!$picture_storage){
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('success',false)->with('message',__('Insufficient quantity of images'));
+        }
 
         if($save_result){
+            DB::commit();
             return  redirect()->route('reports.index')->with('success', true)->with('message',__('Saved correctly'));
         }else{
+            DB::rollBack();
             return redirect()->back()->withInput()->with('success',false)->with('message',__('Error saving'));
         }
     }
@@ -253,6 +260,9 @@ class ReportsController extends Controller
             $data[] = $tmpProperties;
 
         }
+        if(empty($data)){
+            return false;
+        }
         $report->attachments= json_encode($data);
         return $report->save();
     }
@@ -318,16 +328,16 @@ class ReportsController extends Controller
         if(!isset($attachments[$index])){
             abort(400);
         }
-        
+
         if($kind=='thumb'){
             $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/thumb_'.$attachments[$index]->file_name);
         }else{
             $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
 
         }
-        
+
         return Response::make($file, 200)->header("Content-Type", $attachments[$index]->mime);
-        
+
 
     }
 
