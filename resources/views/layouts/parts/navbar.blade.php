@@ -65,7 +65,7 @@
 
         </ul>
         <form action="<?= route('search') ?>" class="form-inline my-2 my-lg-0">
-            <input id="search" name="search" class="form-control mr-sm-2" type="text" placeholder="Buscar" aria-label="Buscar">
+            <input id="search" name="search" class="form-control mr-sm-2" type="text" placeholder="Ciudad o departamento" aria-label="Buscar" data-toggle="tooltip" data-placement="top" title="Escriba el nombre de la ciudad y el autocompletado le sugerirá si es una ciudad o un departamento">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
         </form>
     </div>
