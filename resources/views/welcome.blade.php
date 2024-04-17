@@ -14,8 +14,9 @@
     <div class="jumbotron">
         <div class="container">
             <h1 class="display-2">Mascotas Perdidas Py</h1>
-            <p>Hola, soy p431i7o <small>(Pablito en leet)</small> en las redes, creador del sitio, te preguntarás que es este sitio y para que sirve?
-                Bueno, la respuesta es sencilla, mi idea es que la gente pueda reportar en esta página cuando pierdan a sus
+            <p>Hola, soy p431i7o, creador del sitio</p>
+            <p>te preguntarás <strong>¿qué es este sitio y para que sirve?</strong></p>
+            <p>Bueno, la respuesta es sencilla, mi idea es que la gente pueda reportar en esta página cuando pierdan a sus
                 mascotas, de manera a centralizar un poco más los esfuerzos de búsqueda,
                 y también que la gente que los encuentra puedan anunciarlos aquí, de esa manera quienes rescataron y quienes
                 perdieron puedan coincidir con más facilidad.</p>
@@ -24,7 +25,7 @@
                 electrónico válido</p>
             <p>Luego de que completes el formulario de registro, te enviaremos un email con un enlace para que confirmes que
                 la dirección de correo es efectivamente tuya, una vez que confirmes tu email
-                ya podras iniciar una sesión y estarás listo para hacer tu primer reporte.</p>
+                ya podras iniciar una sesión y estarás listo para <a class="btn btn-primary btn-sm" href="{{ route('reports.create')}}"> hacer tu primer reporte</a>.</p>
             @guest
 
             <p>Listo quiero <a class="btn btn-primary btn-sm" href="<?= route('register') ?>" role="button">crear una
@@ -57,10 +58,10 @@
 
                     <p>{{ Str::of($fila->description)->limit(50) }}</p>
 
-                    <p>Departamento: {{ $fila->Department->name }} <br/>
-                    Ciudad: {{ $fila->City->name }}<br/>
-                    Distrito: {{ $fila->District->name }}<br/>
-                    Barrio: {{ $fila->Neighborhood->name }}<br/>
+                    <p>Departamento: {{ $fila->Department->name??'' }} <br/>
+                    Ciudad: {{ $fila->City->name??'' }}<br/>
+                    Distrito: {{ $fila->District->name??'' }}<br/>
+                    Barrio: {{ $fila->Neighborhood->name??'' }}<br/>
                     <div class="row">
                     @foreach(json_decode($fila->attachments) as $index=>$attachment)
                         <img class="col-4" src="{{ route('report.image.show', [$fila->id, $index,'thumb']) }}" />

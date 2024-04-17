@@ -51,15 +51,15 @@
                 </tr>
                 <tr>
                     <th>Departamento</th>
-                    <td>{{ $report->Department()->first()->name }}</td>
+                    <td>{{ $report->Department()->first()->name??'--' }}</td>
                 </tr>
                 <tr>
                     <th>Ciudad</th>
-                    <td>{{ $report->City()->first()->name }}</td>
+                    <td>{{ $report->City()->first()->name??'--' }}</td>
                 </tr>
                 <tr>
                     <th>Barrio</th>
-                    <td>{{ $report->Neighborhood()->first()->name }}</td>
+                    <td>{{ $report->Neighborhood()->first()->name??'--' }}</td>
                 </tr>
                 <tr>
                     <th>Dirección</th>
