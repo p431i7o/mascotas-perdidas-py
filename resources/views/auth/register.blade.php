@@ -25,9 +25,14 @@
                     <input type="phone" class="form-control" id="floatingInputPhone" placeholder="09xx555123" value="{{old('phone')}}" name="phone" maxlength="20">
                     <label for="floatingInputPhone">{{ __("Phone") }}</label>
                 </div> --}}
-                <div class="form-label-group">
-                    <input type="phone" class="form-control" id="floatingInputCity" placeholder="por ej Asunción" value="{{old('city')}}" name="city" maxlength="250">
+                <div class="form-group">
                     <label for="floatingInputCity">{{ __("City") }}</label>
+                    <select id="floatingInputCity" class="form-control" name="city">
+                        @foreach ($cities as $city)
+                            <option value="{{ $city->name }}">{{ $city->name }}</option>
+                        @endforeach
+                    </select>
+                    {{-- <input type="text" class="form-control" id="floatingInputCity" placeholder="por ej Asunción" value="{{old('city')}}" name="city" maxlength="250"> --}}
                 </div>
 
                 <div class="form-label-group">

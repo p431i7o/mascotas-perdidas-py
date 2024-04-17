@@ -19,8 +19,8 @@
                 mascotas, de manera a centralizar un poco más los esfuerzos de búsqueda,
                 y también que la gente que los encuentra puedan anunciarlos aquí, de esa manera quienes rescataron y quienes
                 perdieron puedan coincidir con más facilidad.</p>
-            <p>¿Cómo funciona esto?</p>
-            <p>Pues no es muy complicado, lo primero que hay que hacer es que te registres con una dirección de correo
+            <p><strong>¿Cómo funciona esto?</strong></p>
+            <p>Pues no es muy complicado, <u>lo primero que hay que hacer</u> es que te registres con una dirección de correo
                 electrónico válido</p>
             <p>Luego de que completes el formulario de registro, te enviaremos un email con un enlace para que confirmes que
                 la dirección de correo es efectivamente tuya, una vez que confirmes tu email
