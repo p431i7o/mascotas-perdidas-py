@@ -58,7 +58,7 @@
                             </div>
                             <div class="form-group">
                               <label for="date">Fecha *</label>
-                              <input required value="{{ old('date',$record->date) }}" type="datetime-local" class="form-control" name="date" id="date" aria-describedby="helpId" placeholder="Fecha en la que ocurrio">
+                              <input required value="{{ old('date',$record->date) }}" type="datetime-local" max="{{ Carbon\Carbon::now() }}" class="form-control" name="date" id="date" aria-describedby="helpId" placeholder="Fecha en la que ocurrio">
                               <small id="helpId" class="form-text text-muted">Fecha en la que se perdio/encontró</small>
                             </div>
                             <div class="form-group ">
@@ -74,7 +74,7 @@
                               <textarea class="form-control"
                                 name="description"
                                 id="description"
-                                rows="3" placeholder="Describa datos del animal, caracteristicas únicas, donde se perdió/encontró">{{ old('description',$record->description) }}</textarea>
+                                rows="3" placeholder="Describa datos del animal, caracteristicas únicas, donde se perdió/encontró. Además de alguna forma de contacto (telefono,mail,etc)">{{ old('description',$record->description) }}</textarea>
                             </div>
 
                             <div class="form-group">
@@ -92,8 +92,8 @@
                             </div>
 
                             <div class="form-group">
-                              <label for="address" class="col-sm-12 col-form-label">{{__("Address")}} <small>({{__("Optional")}})</small></label>
-                              <input type="text" value="{{ old('address',$record->address) }}" class="form-control" name="address" id="address" aria-describedby="helpId" placeholder="{{__("Address")}}">
+                              <label for="address" class="col-sm-12 col-form-label">{{__("Address")}} <small>*</small></label>
+                              <input type="text" required value="{{ old('address',$record->address) }}" class="form-control" name="address" id="address" aria-describedby="helpId" placeholder="{{__("Address")}}">
                               <small id="helpId" class="form-text text-muted">Direccion aproximada</small>
                             </div>
 
@@ -107,7 +107,7 @@
 
                             <div class="form-group row">
                                     <div class="alert alert-warning d-none" id="errores"></div>
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block mb-1" onclick="validarYGuardar();">{{__("Save") }}</button>
+                                    <button type="button" class="btn btn-primary btn-lg btn-block mb-1" onclick="validarYGuardar();">{{__("Save") }}</button>
 
                             </div>
                         </form>
@@ -206,6 +206,7 @@
             var longitud = $('#longitude').val();
 
             var reporte_fecha = $('#date').val();
+            var direccion = $('#address').val();
 
             var errores = []
             if(tipo_reporte==null || tipo_reporte ==""){
@@ -223,6 +224,11 @@
                 errores.push('<li>Debe cargar una descripción</li>');
             }
 
+            if(direccion==null || direccion ==""){
+                esValido = false;
+                errores.push('<li>Debe cargar una dirección aproximada</li>');
+            }
+
             if(reporte_fecha==null || reporte_fecha ==""){
                 esValido = false;
                 errores.push('<li>Debe cargar la fecha en la que se encontró/perdió el animal</li>');
@@ -237,6 +243,9 @@
             if (parseInt($fileUpload.get(0).files.length)>3){
                 esValido = false;
                 errores.push("<li>3 Imágenes es el límite de imágenes a subir</li>");
+            }else if(parseInt($fileUpload.get(0).files.length)==0){
+                esValido = false;
+                errores.push("<li>Debe subir almenos una imagen</li>");
             }
 
             if(!esValido){

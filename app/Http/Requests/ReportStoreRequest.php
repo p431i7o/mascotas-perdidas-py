@@ -31,7 +31,7 @@ class ReportStoreRequest extends FormRequest
             'description'=>['required','string'],
             'latitude'=>['required','decimal:3,17'],
             'longitude'=>['required','decimal:3,17'],
-            'address'=>['string']
+            'address'=>['string' ]
 
         ];
     }
