@@ -17,6 +17,9 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        chunkSizeWarningLimit: 1600,
+    },
     resolve: {
         alias: {
             '~jquery': path.resolve(__dirname, 'node_modules/jquery'),

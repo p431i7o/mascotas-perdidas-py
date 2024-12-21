@@ -46,9 +46,9 @@ import 'datatables.net-buttons/js/buttons.colVis.mjs';
 window.Datatable = DataTable;
 // DataTable(window, window.$);
 
-let lang = import.meta.globEager('./es-MX.json');
+let lang = import.meta.glob('./es-MX.json', { eager: true });
 let messages_es_mx = lang['./es-MX.json'];
-// window.lang = lang;
+
 window.messages_es_mx = messages_es_mx;
 
 // ES6 Modules or TypeScript
