@@ -142,8 +142,8 @@ return [
     'captcha_secret'=>env('CAPTCHA_SECRET','--'),
 
     'allowed_picture_extensions'=>env('ALLOWED_PICTURE_EXTENSIONS','jpg,png'),
-    'report_denounces_threshold'=>env('DENOUNCES_THRESHOLD',10),
-    'renew_days_count'=>env('RENEW_DAYS_COUNT',7),
-    'days_until_deletion'=>env('DAYS_UNTIL_DELETION',15)
+    'report_denounces_threshold'=>intval(env('DENOUNCES_THRESHOLD',10)),
+    'renew_days_count'=>intval(env('RENEW_DAYS_COUNT',7)),
+    'days_until_deletion'=>intval(env('DAYS_UNTIL_DELETION',15))
 
 ];
