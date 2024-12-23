@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use Response;
+use Illuminate\Support\Facades\Response;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ReportStoreRequest;
 use App\Http\Requests\ReportUpdateRequest;
 use App\Repositories\Permissions;
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class ReportsController extends Controller
 {
@@ -24,7 +27,7 @@ class ReportsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): View|JsonResponse
     {
         if($request->wantsJson()){
             $query = Report::where('user_id',auth()->user()->id)
@@ -69,10 +72,8 @@ class ReportsController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
 
         return view('reports.form')
@@ -84,9 +85,8 @@ class ReportsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(ReportStoreRequest $request)
+    public function store(ReportStoreRequest $request):RedirectResponse
     {
         DB::beginTransaction();
         $now = Carbon::now();
@@ -121,6 +121,7 @@ class ReportsController extends Controller
             $record->district_id = $result[0]->district_id;
             $record->neighborhood_id = $result[0]->neighborhood_id;
         }
+
         $record->expiration = Carbon::now()->addDays(config('app.renew_days_count'));
         $record->user_id = Auth::user()->id;
         $record->attachments = json_encode([]);
@@ -145,13 +146,8 @@ class ReportsController extends Controller
 
 
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Report $report)
+
+    public function edit(Report $report): View
     {
         return view('reports.form')
             ->with('record', $report)
@@ -163,9 +159,9 @@ class ReportsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ReportUpdateRequest $request, Report $report)
+    public function update(ReportUpdateRequest $request, Report $report): RedirectResponse
     {
         $now = Carbon::now();
         $validated = $request->validated();
@@ -210,7 +206,8 @@ class ReportsController extends Controller
         }
     }
 
-    private function storeFiles(Request $request, Report $report){
+    private function storeFiles(Request $request, Report $report): bool
+    {
         $data = [];
         $allowedExtensions = explode(',',config('app.allowed_picture_extensions','jpg,png,gif,jpeg'));
         foreach($request->pictures as $index=> $current_picture){
@@ -219,8 +216,8 @@ class ReportsController extends Controller
             // create image manager with desired driver
             $manager = new ImageManager(new Driver());
 
-            $image = $manager->read(storage_path('app/'.$path));
-            $image_thumb = $manager->read(storage_path('app/'.$path));
+            $image = $manager->read(config('filesystems.disks.local.root').'/'.$path);
+            $image_thumb = $manager->read(config('filesystems.disks.local.root').'/'.$path);
 
 
            $image->scale(width: 640);
@@ -233,9 +230,9 @@ class ReportsController extends Controller
             if(!in_array($extension, $allowedExtensions)){
                 abort(400,'Extension de imagen no admitida');
             }
-            // $new_image->save(public_path('ru/'.$report->user_id.'/'.$report->id.'/'.$fileInfo['basename']));
-            $image->save(storage_path('app/report_uploads/'.$report->user_id.'/'.$report->id.'/'.$fileInfo['basename']));
-            $image_thumb->save(storage_path('app/report_uploads/'.$report->user_id.'/'.$report->id.'/thumb_'.$fileInfo['basename']));
+
+            $image->save(sprintf(config('filesystems.disks.local.root').'/report_uploads/%s/%s/%s', $report->user_id, $report->id, $fileInfo['basename']));
+            $image_thumb->save(sprintf(config('filesystems.disks.local.root').'/report_uploads/%s/%s/thumb_%s', $report->user_id, $report->id, $fileInfo['basename']));
             $tmpProperties = [
                 'file_name' => $fileInfo['basename'],
                 'original_name'=>$current_picture->getClientOriginalName(),
@@ -267,13 +264,15 @@ class ReportsController extends Controller
         return $report->save();
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Report  $report
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request, Report $report)
+    public function destroy(Request $request, Report $report): RedirectResponse|JsonResponse
     {
         $now = Carbon::now();
         $current_user_id = Auth::user()->id;
@@ -308,7 +307,8 @@ class ReportsController extends Controller
         }
     }
 
-    public function show(Request $request, Report $report){
+    public function show(Request $request, Report $report): View
+    {
         if($report->expiration< Carbon::now()){
             abort(404);
         }
@@ -316,11 +316,11 @@ class ReportsController extends Controller
         $report->save();
 
         return view('reports.show')->with('report',$report);
-        //dd($report);
 
     }
 
-    public function showImage(Request $request, Report $report, $index, $kind=null){
+    public function showImage(Request $request, Report $report, $index, $kind=null): \Illuminate\Http\Response
+    {
         if($report->expiration < Carbon::now()){
             abort(404);
         }
@@ -337,11 +337,9 @@ class ReportsController extends Controller
         }
 
         return Response::make($file, 200)->header("Content-Type", $attachments[$index]->mime);
-
-
     }
 
-    public function renovate(Request $request, Report $report)
+    public function renovate(Request $request, Report $report): JsonResponse|RedirectResponse
     {
         $now = Carbon::now();
         $current_user_id = Auth::user()->id;
@@ -364,8 +362,5 @@ class ReportsController extends Controller
             return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Renewed'));
         }
     }
-
-
-
 
 }
