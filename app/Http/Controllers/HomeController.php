@@ -16,21 +16,15 @@ use App\Actions\Fortify\ResetUserPassword;
 
 class HomeController extends Controller
 {
-    public function root(Request $request)
+    public function root(Request $request): \Illuminate\Contracts\View\View
     {
         $reports = Report::with(['Department','City','District','Neighborhood'])
                 ->where('status','active')
                 ->where('expiration','>',Carbon::now());
         $count = $reports->count();
-        $start = 0;
         $limit = 8;
-
         $page = ($request->page??1);
-
-
         $start = $limit * $page - $limit;
-
-
 
         return view('welcome')
             ->with('reportes', $reports->limit($limit)->offset($start)->get())
@@ -41,19 +35,24 @@ class HomeController extends Controller
 
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\Contracts\View\View
     {
         return view('users.home');
     }
 
-    public function help()
+    public function help(): \Illuminate\Contracts\View\View
     {
         return view('help');
     }
 
-    public function legal()
+    public function legal(): \Illuminate\Contracts\View\View
     {
         return view('legal');
+    }
+
+    public function about(): \Illuminate\Contracts\View\View
+    {
+        return view('about');
     }
 
     public function search(Request $request){
@@ -91,31 +90,46 @@ class HomeController extends Controller
         return view('search.result')->with('results',$results);
     }
 
-    public function autoComplete(Request $request){
+    public function autoComplete(Request $request): \Illuminate\Http\JsonResponse
+    {
 
-        $city = City::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Ciudad: '.$item->name;return $item;});
-        $department = Department::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Departamento: '.$item->name;return $item;});
+        $city = City::where('name','like','%'.$request->input('query').'%')
+            ->select('id','name')
+            ->get()
+            ->map(
+                function($item){
+                    $item->name = 'Ciudad: '.$item->name;return $item;
+                });
+        $department = Department::where('name','like','%'.$request->input('query').'%')
+            ->select('id','name')
+            ->get()
+            ->map(
+                function($item){
+                    $item->name = 'Departamento: '.$item->name;return $item;
+                });
         // $neiborghood = Neighborhood::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Barrio: '.$item->name;return $item;});
 
         $merge = $city->merge($department);//->merge($neiborghood);
         return response()->json([
             "query"=> $request->input('query'),
-            "suggestions"=>$merge->pluck('name'),// ['Bahamas', 'Bahrain', 'Bangladesh', 'Barbados'],
+            "suggestions"=>$merge->pluck('name'),
             "data"=> $merge
         ]);
     }
 
-    public function profile(Request $request){
-        return view('profile')->with('user',Auth::user());
+    public function profile(Request $request): \Illuminate\Contracts\View\View
+    {
+        return view('profile')
+            ->with('user',Auth::user());
     }
 
-    public function updateProfile(UpdateProfileRequest $request){
+    public function updateProfile(UpdateProfileRequest $request): \Illuminate\Http\RedirectResponse
+    {
         $user = User::find(Auth::user()->id);
         $user->update($request->validated());
         if(!empty($request->input('password'))){
             (app(ResetUserPassword::class))->reset($user,$request->only(['password','password_confirmation']));
         }
         return redirect()->route('profile')->with('message','Datos guardados correctamente!');
-
     }
 }

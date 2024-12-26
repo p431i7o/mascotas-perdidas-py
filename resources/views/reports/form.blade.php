@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.default.default')
 @section('content')
 <div class="container">
     <div class="row text-center">
@@ -120,25 +120,22 @@
 @endsection
 
 @push('pre-scripts')
-<script type="text/javascript">
-    var HOSTNAME = '{{url('/')}}';
-    var HOSTNAME_API = HOSTNAME + '/api/';
+    <script type="text/javascript">
+        var HOSTNAME = '{{url('/')}}';
+        var HOSTNAME_API = HOSTNAME + '/api/';
 
-    // Map.
-    var DEFAULT_ZOOM_MAP = 6;
-    var DEFAULT_ZOOM_MARKER = 16;
-    var DEFAULT_MIN_ZOOM_MAP = 6;
-    var DEFAULT_MAX_ZOOM_MAP = 20;
+        // Map.
+        var DEFAULT_ZOOM_MAP = 6;
+        var DEFAULT_ZOOM_MARKER = 10;
+        var DEFAULT_MIN_ZOOM_MAP = 6;
+        var DEFAULT_MAX_ZOOM_MAP = 20;
 
-    // Villa Hayes - Paraguay.
-    var DEFAULT_LNG = -57.623807;
-    var DEFAULT_LAT = -23.299114;
-</script>
-<script  id="loadMap" data_load_map=marker type="text/javascript" charset="utf-8">
-
-
-
-</script>
+        // Villa Hayes - Paraguay.
+        var DEFAULT_LNG = -57.623807;
+        var DEFAULT_LAT = -23.299114;
+    </script>
+    <script  id="loadMap" data_load_map=marker type="text/javascript" charset="utf-8">
+    </script>
 @endpush
 
 @push('scripts')
@@ -164,7 +161,6 @@
                     }
                 });
             }else{
-
                 localization(action);
             }
 

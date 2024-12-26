@@ -2,8 +2,8 @@
 /*@tailwind components;*/
 /*@tailwind utilities;*/
 @import '~fontawesome/css/all.css';
-@import './sb-admin-2.css';
-@import './sb-admin-2.min.css';
+/*@import './sb-admin-2.css';*/
+/*@import './sb-admin-2.min.css';*/
 
 @import 'leaflet.css';
 

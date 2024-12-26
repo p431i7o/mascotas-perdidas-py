@@ -28,9 +28,10 @@ export default defineConfig({
             '~fontawesome':path.resolve(__dirname,'node_modules/@fortawesome/fontawesome-free'),
             '~chart.js':path.resolve(__dirname,'node_modules/chart.js'),
             '~leaflet':path.resolve(__dirname,'node_modules/leaflet'),
-            '~datatables.net-bs4':path.resolve(__dirname,'node_modules/datatables.net-bs4'),
-            '~datatables.net-responsive-bs4':path.resolve(__dirname,'node_modules/datatables.net-responsive-bs4'),
-            '~bootstrap-switch-button':path.resolve(__dirname,'node_modules/bootstrap-switch-button')
+            '~datatables.net-bs5':path.resolve(__dirname,'node_modules/datatables.net-bs5'),
+            '~datatables.net-responsive-bs5':path.resolve(__dirname,'node_modules/datatables.net-responsive-bs5'),
+            '~bootstrap-switch-button':path.resolve(__dirname,'node_modules/bootstrap-switch-button'),
+            '~bootstrap-icons':path.resolve(__dirname,'node_modules/bootstrap-icons'),
         }
     },
 });

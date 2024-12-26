@@ -4,7 +4,7 @@ window.cluster_markers = null;
 // Class Map.
 
 // Constructor Map.
-window.Map = function  (p_coordinates, p_zoom, p_action)
+window.Mapa = function  (p_coordinates, p_zoom, p_action)
 {
 	// Attributes.
     this.coordinates = p_coordinates;

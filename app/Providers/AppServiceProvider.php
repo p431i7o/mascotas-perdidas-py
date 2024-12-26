@@ -20,8 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Fortify::verifyEmailView(function () {
-            return view('auth.verify-email');
-        });
+//        Fortify::verifyEmailView(function () {
+//            return view('auth.verify-email');
+//        });
     }
 }

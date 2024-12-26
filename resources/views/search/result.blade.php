@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.default.default')
 @section('content')
 @if($results->count() > 0)
     <div class="container">
@@ -69,7 +69,7 @@
             let coordinates = new Array();
             coordinates['lng']  = DEFAULT_LNG;
             coordinates['lat'] = DEFAULT_LAT;
-            map = new Map(coordinates, 6, 'marker');
+            map = new Mapa(coordinates, 6, 'marker');
 
             @foreach ($results as  $record)
                 var marker = L.marker([{{$record->latitude }}, {{$record->longitude}} ],{

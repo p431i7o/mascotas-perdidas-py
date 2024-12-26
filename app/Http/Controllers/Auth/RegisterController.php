@@ -22,7 +22,7 @@ class RegisterController extends RegisteredUserController{
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/home';
 
     // public function __construct(StatefulGuard $guard)
     // {
@@ -61,8 +61,8 @@ class RegisterController extends RegisteredUserController{
         // //$this->guard()->login($user);
         // $request->session()->flash('result', true);
         // $request->session()->flash('message', 'Se ha registrado correctamente! para iniciar sesión, favor confirme desde el enlace que enviamos a su correo.');
-        
-        
+
+
         // $register_response =  app(RegisterResponse::class);
         // // dd($register_response);
         // return $register_response;

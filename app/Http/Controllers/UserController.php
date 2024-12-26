@@ -12,6 +12,8 @@ use Illuminate\Auth\Events\Registered;
 use Spatie\Permission\Models\Permission;
 // use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Password;
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 
 // use Spatie\Permission\Contracts\Role;
 
@@ -19,10 +21,8 @@ class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse|View
     {
         if($request->wantsJson()){
             $query = User::select('id','name','email','city','address','phone','email_verified_at','active','created_at');
@@ -186,7 +186,7 @@ class UserController extends Controller
         if(!Auth::user()->can(Permissions::MANAGE_USERS)){
             abort(401,'No permitido');
         }
-        // dd($user);
+
         // event(new PasswordReset($user));
         Password::sendResetLink(['email'=>$user->email]);
         return response()->json(['success'=>true],200);

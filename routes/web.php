@@ -27,6 +27,7 @@ $enableViews = config('fortify.views', true);
 $verificationLimiter = config('fortify.limiters.verification', '6,1');
 
 Route::get('/', [HomeController::class, 'root'])->name('root');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/help', [HomeController::class, 'help'])->name('help');
 Route::get('/legal', [HomeController::class, 'legal'])->name('legal');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
@@ -124,7 +125,12 @@ if(Features::enabled(Features::resetPasswords())){
     })->middleware('guest')->name('password.update');
 }
 
-
+Route::get('/report/new', [ReportsController::class, 'create'])->name('reports.create');
+Route::post('/report/save', [ReportsController::class, 'store'])->name('reports.store');
+Route::get('/report/{report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
+Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
+Route::delete('/report/{report}/delete',[ReportsController::class, 'destroy'])->name('reports.delete');
+Route::post('/report/{report}/renovate',[ReportsController::class,'renovate'])->name('reports.renovate');
 
 //Estas rutas de aca en adelante requiren que la cuenta este verificada
 // Esto genera las rutas de login y verificacion
@@ -135,12 +141,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/my-profile',[HomeController::class, 'updateProfile']);
 
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
-    Route::get('/report/new', [ReportsController::class, 'create'])->name('reports.create');
-    Route::post('/report/save', [ReportsController::class, 'store'])->name('reports.store');
-    Route::get('/report/{report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
-    Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
-    Route::delete('/report/{report}/delete',[ReportsController::class, 'destroy'])->name('reports.delete');
-    Route::post('/report/{report}/renovate',[ReportsController::class,'renovate'])->name('reports.renovate');
+
 
     Route::get('/report/{report}/denounce',[ReportDenounceController::class,'store'])->name('report.denounce');
 

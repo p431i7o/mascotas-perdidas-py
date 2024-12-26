@@ -1,82 +1,76 @@
-@extends('layouts.default')
+@extends('layouts.default.default')
+@push('styles')
+    <style>
+        #map-container { height: 600px; width: 100%; }
+    </style>
+@endpush
 @section('content')
-    <?php if (isset($mensaje)) {
-        if (isset($error)) {
-            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>";
-        } else {
-            echo "<div class='alert alert-info' alert-dismissible fade show' role='alert'>";
-        }
-        echo $mensaje;
-        echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-        echo '</div>';
-    } ?>
-    @if(request()->input('page',1) <= 1)
-    <div class="jumbotron">
-        <div class="container">
-            <h1 class="display-2">Mascotas Perdidas Py</h1>
-            <p>Hola, soy p431i7o, creador del sitio</p>
-            <p>te preguntarás <strong>¿qué es este sitio y para que sirve?</strong></p>
-            <p>Bueno, la respuesta es sencilla, mi idea es que la gente pueda reportar en esta página cuando pierdan a sus
-                mascotas, de manera a centralizar un poco más los esfuerzos de búsqueda,
-                y también que la gente que los encuentra puedan anunciarlos aquí, de esa manera quienes rescataron y quienes
-                perdieron puedan coincidir con más facilidad.</p>
-            <p><strong>¿Cómo funciona esto?</strong></p>
-            <p>Pues no es muy complicado, <u>lo primero que hay que hacer</u> es que te registres con una dirección de correo
-                electrónico válido</p>
-            <p>Luego de que completes el formulario de registro, te enviaremos un email con un enlace para que confirmes que
-                la dirección de correo es efectivamente tuya, una vez que confirmes tu email
-                ya podras iniciar una sesión y estarás listo para <a class="btn btn-primary btn-sm" href="{{ route('reports.create')}}"> hacer tu primer reporte</a>.</p>
-            @guest
-
-            <p>Listo quiero <a class="btn btn-primary btn-sm" href="<?= route('register') ?>" role="button">crear una
-                    cuenta ahora</a> o si ya tienes una tal vez quieras <a class="btn btn-primary btn-sm "
-                    href="<?= route('login') ?>" role="button">Iniciar Sesi&oacute;n</a></p>
-            @endguest
+    @if(isset($message))
+        <div class="alert alert-@if(isset($error)) danger @else info @endif alert-dismissible fade show" role="alert">
+            {{ $message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    @endif
+    <div class="container my-5">
+        <div class="p-5 text-center bg-body-tertiary rounded-3">
+            <h1 class="text-body-emphasis">Mascotas Perdidas PY</h1>
+            <p class="col-lg-8 mx-auto fs-5 text-muted">
+                ¿Qué desea reportar?
+            </p>
+            <div class="d-inline-flex gap-2 mb-5">
+                <a class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" href="{{route('reports.create',['type'=>'lost'])}}">
+                    Una mascota perdida
+                    <svg class="bi ms-2" width="24" height="24"><use xlink:href="#arrow-right-short"/></svg>
+                </a>
+                <a class="btn btn-outline-secondary btn-lg px-4 rounded-pill" href="{{route('reports.create',['type'=>'found'])}}">
+                    Una mascota encontrada
+                </a>
+            </div>
         </div>
     </div>
-    @endif
+
 
     @if($reportes->count() > 0)
         <div class="container">
+            <h1 class="display-4">&Uacute;ltimos Reportes:</h1>
             <div class="row mb-5 mt-5">
                 <div id="map-container"></div>
             </div>
-            <h1 class="display-4">&Uacute;ltimos Reportes:</h1>
-            <div class="row" id="row_results">
+
+
+            <div class="row mb-2">
                 @foreach ($reportes as $fila)
-
-                    <div class='col-md-4 mb-5 col-sm-12 col-xl-3'>
-                    <a href="{{ route('reports.show',$fila->id) }}" target='_blank'>
-                        @if(!empty($fila->name))
-                            <h2>{{ $fila->name }}</h2>
-                        @else
-                            <h2>{{ $fila->type }}</h2>
-                        @endif
-                        </a>
-                        <br/>
-
-
-                    <p>{{ Str::of($fila->description)->limit(50) }}</p>
-
-                    <p>Departamento: {{ $fila->Department->name??'' }} <br/>
-                    Ciudad: {{ $fila->City->name??'' }}<br/>
-                    Distrito: {{ $fila->District->name??'' }}<br/>
-                    Barrio: {{ $fila->Neighborhood->name??'' }}<br/>
-                    <div class="row">
-                    @foreach(json_decode($fila->attachments) as $index=>$attachment)
-                        <img class="col-4" src="{{ route('report.image.show', [$fila->id, $index,'thumb']) }}" />
-                    @endforeach
+                    <div class="col-md-6">
+                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-primary-emphasis">{{ $fila->type }}</strong>
+                                <h3 class="mb-0">{{ $fila->name }}</h3>
+                                <div class="mb-1 text-body-secondary">Nov 12</div>
+                                <p class="card-text mb-auto">{{ Str::of($fila->description)->limit(50,'...',true) }}</p>
+                                <a href="{{ route('reports.show',$fila->id) }}" class="icon-link gap-1 icon-link-hover stretched-link">
+                                    Ampliar reporte
+                                    <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+                                </a>
+                            </div>
+                            <div class="col-auto d-none d-lg-block">
+                                @foreach(json_decode($fila->attachments) as $index=>$attachment)
+                                    <img width="200" class="bd-placeholder-img" src="{{ route('report.image.show', [$fila->id, $index,'thumb']) }}" />
+                                    @break
+                                @endforeach
+                                {{--                            <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>--}}
+                            </div>
+                        </div>
                     </div>
-
-                    <a href="{{ route('reports.show',$fila->id) }}" target="_blank">Ver</a>
-                    </div>
-
                 @endforeach
             </div>
+
             <div class="row" id="row_paginator">
                 Páginas: <br/>
                 @for($i=0;$i<ceil($reportCount/$limit);$i++)
-                    <a class="btn @if($currentPage == $i+1)btn-primary @else btn-outline-primary @endif" href="{{ route('root') }}?page={{ $i+1 }}">{{ $i+1 }}</a>&nbsp;
+                    <a class="btn @if($currentPage == $i+1)btn-primary @else btn-outline-primary @endif"
+                       href="{{ route('root') }}?page={{ $i+1 }}">
+                        {{ $i+1 }}
+                    </a>&nbsp;
                 @endfor
             </div>
         </div>
@@ -135,7 +129,7 @@
             let coordinates = new Array();
             coordinates['lng']  = DEFAULT_LNG;
             coordinates['lat'] = DEFAULT_LAT;
-            map = new Map(coordinates, 6, 'marker');
+            map = new Mapa(coordinates, 6, 'marker');
 
             @foreach ($reportes as $index=>  $record)
                 var marker_{{ $index }} = L.marker([{{$record->latitude }}, {{$record->longitude}} ],{
@@ -150,23 +144,12 @@
         });
     </script>
     <script type="text/javascript">
-    function clickZoom(e) {
-        map.map.setView(e.target.getLatLng(),DEFAULT_ZOOM_MARKER);
-
-    }
-
-
-
-
+        function clickZoom(e) {
+            map.map.setView(e.target.getLatLng(),DEFAULT_ZOOM_MARKER);
+        }
 
         function send_marker (){
             marker_point_map(event, ((gps_active)? DEFAULT_ZOOM_MARKER : DEFAULT_ZOOM_MAP))
         }
     </script>
-@endpush
-
-@push('styles')
-    <style>
-        #map-container { height: 600px; width: 100%; }
-    </style>
 @endpush

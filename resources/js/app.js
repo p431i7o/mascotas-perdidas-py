@@ -1,18 +1,16 @@
 import './bootstrap';
 import 'leaflet';
 import './utilities';
-import './map';
+
 
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 
-import jquery from 'jquery';
-window.$ = jquery;
-window.jQuery = jquery;
+
 
 //  import './sb-admin-2';
-import  'jquery.easing';
+
 // import 'chart.js';
 // window.eax = easing;
 
@@ -33,10 +31,10 @@ import '../css/app.css'
 // import '../css/sb-admin-2.css'
 // import '../css/sb-admin-2.min.css'
 
-import  DataTable from 'datatables.net-bs4';
-import 'datatables.net-responsive-bs4'
-import 'datatables.net-buttons-bs4'
-// import 'datatables.net-select-bs4'
+import  DataTable from 'datatables.net-bs5';
+import 'datatables.net-responsive-bs5'
+import 'datatables.net-buttons-bs5'
+// import 'datatables.net-select-bs5'
 // import 'pdfmake'; //algo le falta y no funciona
 // import 'jszip'; //no uso por eso comento
 import 'datatables.net-buttons/js/buttons.html5.mjs';

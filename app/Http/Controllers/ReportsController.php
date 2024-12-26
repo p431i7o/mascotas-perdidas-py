@@ -221,7 +221,7 @@ class ReportsController extends Controller
 
 
            $image->scale(width: 640);
-           $image_thumb->scale(width:50);
+           $image_thumb->scale(width:250);
 
 
             $fileInfo = pathinfo($path);

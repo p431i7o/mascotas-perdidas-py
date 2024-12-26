@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.default.default')
 @section('content')
     <div class="container">
         <div class="row text-center">
@@ -64,6 +64,14 @@
                 <tr>
                     <th>Dirección</th>
                     <td>{{ $report->address }}</td>
+                </tr>
+                <tr>
+                    <th>Latitud</th>
+                    <td>{{ $report->latitude }}</td>
+                </tr>
+                <tr>
+                    <th>Longitud</th>
+                    <td>{{ $report->longitude }}</td>
                 </tr>
             </table>
             <div class="col-sm-12 col-md-6">
@@ -169,7 +177,7 @@
             let coordinates = new Array();
             coordinates['lng']  = {{ $report->longitude }};
             coordinates['lat'] = {{ $report->latitude }};
-            map = new Map(coordinates, 15, 'marker');
+            map = new Mapa(coordinates, 15, 'marker');
             var marker = L.marker([{{ $report->latitude }}, {{ $report->longitude }}], {
                 id: {{ $report->id }},
                 draggable: false,

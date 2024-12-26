@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.default.default')
 @section('content')
 <div class="container">
 
@@ -33,7 +33,7 @@
               Sin embargo, la transmisi&oacute;n de datos por internet no es completamente segura. Por lo tanto, la informaci&oacute;n publicada en la p&aacute;gina web de MascotasPerdidasPy puede verse sometida a alteraciones o interrupciones as&iacute; como a violaciones de la seguridad y la confidencialidad. Por este motivo, MascotasPerdidasPy no asume ninguna responsabilidad por la recepci&oacute;n/no recepci&oacute;n o el procesamiento/no procesamiento de cualquier informaci&oacute;n que el usuario haya transmitido desde y a MascotasPerdidasPy a trav&eacute;s de la presente p&aacute;gina web o a trav&eacute;s de una direcci&oacute;n electr&oacute;nica.
           </p>
 
-          
+
   </div>
 </div>
 @endsection
