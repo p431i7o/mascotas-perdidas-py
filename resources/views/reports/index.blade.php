@@ -40,21 +40,19 @@
             </thead>
         </table>
     </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+    <div class="modal fade" id="modalImagesView" tabindex="-1" aria-labelledby="modalImagesViewLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Imágenes</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h1 class="modal-title fs-5" id="modalImagesViewLabel">Imágenes</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modal_body">
-
+                    ...
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
@@ -145,32 +143,25 @@
                         return `${row.department_name} - ${row.city_name} (${row.district_name})`;
                     }
                 },
-                // {
-                //     data: 'department_name'
-                // },
-                // {
-                //     data: 'district_name'
-                // },
-                // {
-                //     data: 'city_name'
-                // },
-                // {
-                //     data: 'neighborhood_name'
-                // },
                 {
                     data: null,
                     width: '10%',
                     render: function(data, type, row) {
                         var fila = {"id":row.id,attachments:row.attachments};
-                        return ' <button data-row=\'' + JSON.stringify(fila) +
-                            '\' title="Ver" data-action="view" class="btn btn-primary btn-xs"' +
-                            ' data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-eye fa-xs"></i></button>' +
+                        return ' <button data-row=\'' + JSON.stringify(fila) +'\' '
+                            +'title="Ver" data-action="view" class="btn btn-primary btn-xs"'
+                            +' data-bs-toggle="modal" data-bs-target="#modalImagesView">'
+                            +'<i class="fa-solid fa-eye fa-xs"></i>'
+                            +'</button>' +
                             ' <button data-row=\'' + JSON.stringify(fila)+
                             '\' title="Borrar" data-action="delete" class="btn btn-danger btn-xs">' +
                             '<i class="fa-solid fa-trash fa-xs"></i></button>'+
                             (row.expired=="yes"?
                                 ' <button data-row=\'' + JSON.stringify(fila)+'\' data-action="renew" '+
-                                    'title="Renovar {{ config('app.renew_days_count',1) }} dias" class="btn btn-success btn-xs"><i class="fa-solid fa-hourglass-end fa-xs"></i></button>'
+                                    'title="Renovar {{ config('app.renew_days_count',1) }} dias" '
+                                    +'class="btn btn-success btn-xs">'
+                                    +'<i class="fa-solid fa-hourglass-end fa-xs"></i>'
+                                    +'</button>'
                                 :''
                             );
                     }
@@ -193,7 +184,6 @@
                         text: '<i class="fas fa-sync"></i> {{ __('Reload') }}',
                         className: 'btn btn-xs',
                         action: function(e, dt, node, config) {
-
                             record_table.ajax.reload();
                         }
                     },
@@ -205,7 +195,6 @@
             var data = $(e.currentTarget).data();
             var row = data.row;
             var action = data.action;
-            console.log(data,row,action);
             switch (action) {
                 case "view":
                     view(row);
@@ -266,7 +255,6 @@
         }
 
         function view(row) {
-            // console.log('view',row);
             var attachments = JSON.parse(row.attachments);
             var imgs = '<div class="row">';
             for (var index in attachments) {
@@ -281,7 +269,6 @@
             }
             imgs += '</div>'
             $('#modal_body').html(`${imgs}`);
-            // debugger;
         }
 
         function deleteReport(row) {
