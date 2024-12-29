@@ -39,9 +39,11 @@
                             @endif
                             <div class="form-group">
                               <label for="type" class="col-sm-12 col-form-label">Tipo de reporte</label>
+
                               <select class="form-control" name="type" id="type">
+
                                 @foreach (['Lost','Found'] as  $option)
-                                    <option value="{{$option}}" @if(old('type',$record->type)==$option) @selected(true) @endif>{{__($option)}}</option>))
+                                    <option value="{{$option}}" @if(__(old('type',$record->type))==__($option)) @selected(true) @endif>{{__($option)}}</option>))
                                 @endforeach
 
 
@@ -51,8 +53,7 @@
                               <label for="animal_kind_id">Tipo de Animal</label>
                               <select class="form-control" name="animal_kind_id" id="animal_kind_id">
                                 @foreach ($kinds as $kind)
-                                    <option value="{{$kind->id}}"  @if(old('type',$record->animal_kind_id)==$kind->id) @selected(true) @endif>{{$kind->name}}</option>
-
+                                      <option value="{{$kind->id}}"  @if(old('type',$record->animal_kind_id)==$kind->id) @selected(true) @endif>{{$kind->name}} <small>(Por ejemplo: {{$kind->example}})</small></option>
                                 @endforeach
                               </select>
                             </div>
@@ -78,9 +79,12 @@
                             </div>
 
                             <div class="form-group">
-                                <button type="button" class="btn btn-primary btn-lg btn-block mb-1" onclick="send_marker()">
-                                    Ubicar punto en el mapa
-                                </button>
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-primary btn-lg btn-block mt-5 mb-1" onclick="send_marker()">
+                                        Ubicar punto en el mapa
+                                    </button>
+                                </div>
+
                                 <div id="map-container"></div>
                                 <label for="latitude">Ubicación <small>(Latitud/Longitud)</small></label>
                               <input type="text" value="{{ old('latitude',$record->latitude) }}" class="form-control col-12" name="latitude" id="latitude" aria-describedby="latitudHelpId" placeholder="Latitud">
@@ -94,14 +98,20 @@
                             <div class="form-group">
                               <label for="address" class="col-sm-12 col-form-label">{{__("Address")}} <small>*</small></label>
                               <input type="text" required value="{{ old('address',$record->address) }}" class="form-control" name="address" id="address" aria-describedby="helpId" placeholder="{{__("Address")}}">
-                              <small id="helpId" class="form-text text-muted">Direccion aproximada</small>
+                              <small id="helpId" class="form-text text-muted">Dirección aproximada</small>
                             </div>
 
                             <div class="form-group">
-                              <label for="pictures[]">Imagenes del animal</label>
-                              <input type="file"  class="form-control-file" name="pictures[]" id="pictures[0]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
-                              <input type="file"  class="form-control-file" name="pictures[]" id="pictures[1]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
-                              <input type="file"  class="form-control-file" name="pictures[]" id="pictures[2]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
+                              <label for="pictures[]">Imágenes del animal</label>
+                                <div class="mb-3">
+                                    <input type="file"  class="form-control" name="pictures[]" id="pictures[0]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
+                                </div>
+                                <div class="mb-3">
+                                    <input type="file"  class="form-control" name="pictures[]" id="pictures[1]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
+                                </div>
+                                <div class="mb-3">
+                                    <input type="file"  class="form-control" name="pictures[]" id="pictures[2]" placeholder="seleccione una foto para subir" aria-describedby="pictureHelpId">
+                                </div>
                               <small id="pictureHelpId" class="form-text text-muted">Seleccione hasta 3 imagenes para subir</small>
                             </div>
 
@@ -128,13 +138,13 @@
         var DEFAULT_ZOOM_MAP = 6;
         var DEFAULT_ZOOM_MARKER = 10;
         var DEFAULT_MIN_ZOOM_MAP = 6;
-        var DEFAULT_MAX_ZOOM_MAP = 20;
+        var DEFAULT_MAX_ZOOM_MAP = 16;
 
         // Villa Hayes - Paraguay.
         var DEFAULT_LNG = -57.623807;
         var DEFAULT_LAT = -23.299114;
     </script>
-    <script  id="loadMap" data_load_map=marker type="text/javascript" charset="utf-8">
+    {{--<script  id="loadMap" data_load_map=marker type="text/javascript" charset="utf-8">--}}
     </script>
 @endpush
 
@@ -144,7 +154,7 @@
         $(document).ready(function(){
             // console.log('ready');
 
-            var action = document.getElementById("loadMap").getAttribute("data_load_map");
+            //var action = document.getElementById("loadMap").getAttribute("data_load_map");
             if(getCookie("informedAboutLocation")==""){
                 Swal.fire({
                     title: "Desea compartir su ubicación?",
@@ -153,42 +163,38 @@
                     showCancelButton: false,
                     confirmButtonText: "Entiendo",
 
-                    }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
+                }).then((result) => {
                     if (result.isConfirmed) {
                         setCookie("informedAboutLocation","yes");
                         localization(action);
+                        drawMap();
                     }
                 });
             }else{
                 localization(action);
+                drawMap();
             }
-
-
         });
     </script>
     <script type="text/javascript">
-
-
-
-        function clickZoom(e) {
-            map.map.setView(e.target.getLatLng(),DEFAULT_ZOOM_MARKER);
-            // map.map.setZoom(15);
+        function drawMap(){
+            var action = "marker";
+            let coordinates = new Array();
+            coordinates['lng']  = DEFAULT_LNG;
+            coordinates['lat'] = DEFAULT_LAT;
+            window.mapaLocal = new MapaLocal(coordinates, 6, action);
         }
+
         @if(!empty($record->id))
             //@TODO: ENCONTRAR EL EVENTO CORRECTO DE LEAFTLET PARA SETEAR el marcador
            setTimeout(function(){
-            var marker = L.marker([{{$record->latitude }}, {{$record->longitude}} ],{
-                id:{{ $record->id }},
-                draggable: 'true',
-            }).addTo(map.map).bindPopup("{{$record->name??__($record->type)}}").on('dragend',ondragend);
-            map.map.setZoom(15)
+               setMarkerToLocation({'lng':{{$record->longitude}},'lat':{{$record->latitude}}},{{$record->id}},"{{$record->name??__($record->type)}}",15,false,false);
            },1500)
 
         @endif
 
         function send_marker (){
-            marker_point_map(event, ((gps_active)? DEFAULT_ZOOM_MARKER : DEFAULT_ZOOM_MAP))
+            setToMyLocation();
         }
     </script>
     <script>
@@ -258,7 +264,6 @@
 
 
 @endpush
-
 @push('styles')
     <style>
         #map-container { height: 600px; width: 100%; }

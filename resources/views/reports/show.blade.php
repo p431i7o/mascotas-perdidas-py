@@ -94,10 +94,11 @@
                 </div>
             @endif
         @else
-            <div class="row">
+            <div class="row mt-1">
                 <p><a href="{{ route('register') }}">Registrarse</a> o <a href="{{route('login')}}"> Iniciar sesion</a> para denunciar <i class="fa-solid fa-flag"></i> este reporte</p>
             </div>
         @endauth
+
     </div>
 
     <!-- Modal -->
@@ -149,39 +150,22 @@
         var DEFAULT_ZOOM_MAP = 6;
         var DEFAULT_ZOOM_MARKER = 13;
         var DEFAULT_MIN_ZOOM_MAP = 6;
-        var DEFAULT_MAX_ZOOM_MAP = 20;
+        var DEFAULT_MAX_ZOOM_MAP = 16;
 
         // Villa Hayes - Paraguay.
         var DEFAULT_LNG = {{ $report->longitude }}; // -57.623807;
         var DEFAULT_LAT = {{ $report->latitude }}; //-23.299114;
     </script>
-    <script id="loadMap" data_load_map=marker type="text/javascript" charset="utf-8">
-        // window.onload = function() {
-        //     var action = document.getElementById("loadMap").getAttribute("data_load_map");
-        //     // debugger;
-        //     localization(action);
-
-
-        // };
-    </script>
 @endpush
 @push('scripts')
     <script type="module">
-        function clickZoom(e) {
-            map.map.setView(e.target.getLatLng(), DEFAULT_ZOOM_MARKER);
-        }
-
         $(document).ready(function() {
-
-            var action = document.getElementById("loadMap").getAttribute("data_load_map");
             let coordinates = new Array();
             coordinates['lng']  = {{ $report->longitude }};
             coordinates['lat'] = {{ $report->latitude }};
-            map = new Mapa(coordinates, 15, 'marker');
-            var marker = L.marker([{{ $report->latitude }}, {{ $report->longitude }}], {
-                id: {{ $report->id }},
-                draggable: false,
-            }).addTo(map.map).bindPopup("{{ $report->name ?? __($report->type) }}").on('click', clickZoom);
+            mapaLocal = new MapaLocal(coordinates, 15, 'marker');
+            var marker = setMarkerToLocation(coordinates, {{ $report->id }}, "{{ $report->name ?? __($report->type) }}", 12, false, false);
+            marker.on('click', clickZoom);
 
         });
     </script>

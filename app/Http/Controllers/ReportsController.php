@@ -29,55 +29,68 @@ class ReportsController extends Controller
      */
     public function index(Request $request): View|JsonResponse
     {
-        if($request->wantsJson()){
+        if($request->wantsJson())
+        {
             $query = Report::where('user_id',auth()->user()->id)
                 ->select(DB::raw('reports.*, departments.name as department_name, cities.name as city_name, districts.name as district_name, neighborhoods.name as neighborhood_name, now() as ct, case when now()>reports.expiration then "yes" else "no" end as expired'))
                 ->leftJoin('departments','departments.id','reports.department_id')
                 ->leftJoin('cities','cities.id','reports.city_id')
                 ->leftJoin('districts','districts.id','reports.district_id')
                 ->leftJoin('neighborhoods','neighborhoods.id','reports.neighborhood_id');
-            if (!empty($request->search['value'])) {
+            if (!empty($request->search['value']))
+            {
                 $query->where('id', 'ilike', '%' . $request->search['value'] . '%');
                 $query->orWhere('type', 'ilike', '%' . $request->search['value'] . '%');
             }
 
             $count = $query->count();
-            if (isset($request->order)) {
-                foreach ($request->order as $order) {
+            if (isset($request->order))
+            {
+                foreach ($request->order as $order)
+                {
                     $query->orderBy(DB::raw($order['column']+1), $order['dir']);
                 }
-            } else {
+            }
+            else
+            {
                 $query->orderBy('id', 'asc');
             }
 
             $query->limit($request->length)->offset($request->start);
             $data_result_set = $query->get();
 
-            foreach ($data_result_set as $indice => $fila) {
+            foreach ($data_result_set as $indice => $fila)
+            {
                 // $data_result_set[$indice]->roles = User::find($fila->id)->getRoleNames()->map(function($item,$key){return __($item);});
             }
 
             return response()->json([
-                'data' => $data_result_set,
-                'recordsFiltered' => $count,
-                'recordsTotal' => $count,
-                'success' => true,
-                'params' => $_GET,
-                'draw' => (int)$request->draw
+                'data'              => $data_result_set,
+                'recordsFiltered'   => $count,
+                'recordsTotal'      => $count,
+                'success'           => true,
+                'params'            => $_GET,
+                'draw'              => (int)$request->draw
             ]);
         }
-        // dd('request normal');
+
         return view('reports.index');
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        $record = new Report();
+
+        if($request->input('type') && in_array($request->input('type'),['Found','Lost']))
+        {
+            $record->type = $request->input('type');
+        }
 
         return view('reports.form')
-            ->with('record',new Report())
+            ->with('record', $record)
             ->with('kinds',AnimalKind::get());
     }
 
@@ -94,7 +107,6 @@ class ReportsController extends Controller
 
         $record = new Report($validated);
         $record->status = 'Active';
-
 
         $lat = $validated['latitude'];
         $long= $validated['longitude'];
@@ -128,7 +140,6 @@ class ReportsController extends Controller
         $record->log= json_encode([$now->toISOString()=>['type'=>'created','user_id'=>auth()->user()->id]]);
         $save_result = $record->save();
 
-        // dd($request->pictures);
         $picture_storage = $this->storeFiles($request,$record);
         if(!$picture_storage){
             DB::rollBack();
@@ -144,9 +155,6 @@ class ReportsController extends Controller
         }
     }
 
-
-
-
     public function edit(Report $report): View
     {
         return view('reports.form')
@@ -159,13 +167,12 @@ class ReportsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ReportUpdateRequest $request, Report $report): RedirectResponse
     {
         $now = Carbon::now();
         $validated = $request->validated();
-        // $validated = $report->update($request->validated());
+
         $record = $report;
         $lat = $validated['latitude'];
         $long= $validated['longitude'];
@@ -187,9 +194,9 @@ class ReportsController extends Controller
             ;
         $result = $query->get();
         if($result->count()>0){
-            $record->department_id = $result[0]->department_id;
-            $record->city_id = $result[0]->city_id;
-            $record->district_id = $result[0]->district_id;
+            $record->department_id  = $result[0]->department_id;
+            $record->city_id        = $result[0]->city_id;
+            $record->district_id    = $result[0]->district_id;
             $record->neighborhood_id = $result[0]->neighborhood_id;
         }
         $this->storeFiles($request,$record);
@@ -198,7 +205,6 @@ class ReportsController extends Controller
         $record->log= json_encode($current_log);
 
         $save_result = $record->save();
-        // dd($save_result);
         if($save_result){
             return  redirect()->route('reports.index')->with('success', true)->with('message',__('Saved correctly'));
         }else{
@@ -218,12 +224,8 @@ class ReportsController extends Controller
 
             $image = $manager->read(config('filesystems.disks.local.root').'/'.$path);
             $image_thumb = $manager->read(config('filesystems.disks.local.root').'/'.$path);
-
-
-           $image->scale(width: 640);
-           $image_thumb->scale(width:250);
-
-
+            $image->scale(width: 640);
+            $image_thumb->scale(width:250);
             $fileInfo = pathinfo($path);
             $sha1_file = sha1_file($current_picture->getRealPath());
             $extension = $current_picture->getClientOriginalExtension();
@@ -241,36 +243,30 @@ class ReportsController extends Controller
                 'file_size'=>$current_picture->getSize(),
                 'sha1_content'=>$sha1_file
             ];
-            if($extension == 'jpg' || $extension == 'png'){
-
-                // dd($tmpProperties);
+            if($extension == 'jpg' || $extension == 'png')
+            {
                 $imageSize = getimagesize($current_picture->getRealPath());
-                if(@is_array($imageSize)){
-
+                if(@is_array($imageSize))
+                {
                     $tmpProperties['width'] = $imageSize[0];
                     $tmpProperties['height'] = $imageSize[1];
                 }
             }
-
-
-
             $data[] = $tmpProperties;
-
         }
-        if(empty($data)){
+        if(empty($data))
+        {
             return false;
         }
         $report->attachments= json_encode($data);
         return $report->save();
     }
 
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Report  $report
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request, Report $report): RedirectResponse|JsonResponse
     {
@@ -290,19 +286,18 @@ class ReportsController extends Controller
         ];
         $report->log = json_encode($current_log);
         $report->save();
-
         $attachments = json_decode($report->attachments);
         foreach($attachments as $attachment){
             Storage::delete('report_uploads/'.$report->user_id.'/'.$report->id.'/originals/'.$attachment->file_name);
             Storage::delete('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachment->file_name);
         }
-
-
         $result= $report->delete();
-
-        if($request->wantsJson()){
+        if($request->wantsJson())
+        {
             return response()->json(['success'=>$result]);
-        }else{
+        }
+        else
+        {
             return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Erased'));
         }
     }
@@ -329,13 +324,14 @@ class ReportsController extends Controller
             abort(400);
         }
 
-        if($kind=='thumb'){
+        if($kind=='thumb')
+        {
             $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/thumb_'.$attachments[$index]->file_name);
-        }else{
-            $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
-
         }
-
+        else
+        {
+            $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
+        }
         return Response::make($file, 200)->header("Content-Type", $attachments[$index]->mime);
     }
 
@@ -362,5 +358,4 @@ class ReportsController extends Controller
             return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Renewed'));
         }
     }
-
 }

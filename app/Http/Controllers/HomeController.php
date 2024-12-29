@@ -19,15 +19,16 @@ class HomeController extends Controller
     public function root(Request $request): \Illuminate\Contracts\View\View
     {
         $reports = Report::with(['Department','City','District','Neighborhood'])
+                ->orderBy('created_at','desc')
                 ->where('status','active')
                 ->where('expiration','>',Carbon::now());
         $count = $reports->count();
-        $limit = 8;
+        $limit = 25;
         $page = ($request->page??1);
         $start = $limit * $page - $limit;
 
         return view('welcome')
-            ->with('reportes', $reports->limit($limit)->offset($start)->get())
+            ->with('reports', $reports->limit($limit)->offset($start)->get())
             ->with('reportCount',$count)
             ->with('currentPage',$page)
             ->with('limit',$limit)
@@ -67,7 +68,7 @@ class HomeController extends Controller
             ->join('departments','departments.id','reports.department_id');
         $query->where(function($query)use($keywords,$search,$search_array){
             foreach($keywords  as $keyword){
-                if(strpos($search,$keyword)!== false){
+                if(str_contains($search, $keyword)){
                     if($keyword=='Ciudad:'){
                         foreach($search_array as $sa){
                             if(!in_array($sa,$keywords)){
