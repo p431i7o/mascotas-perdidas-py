@@ -3,7 +3,7 @@
 @section('content')
  <div class="container mt-5">
     <div class="row">
-        <div class="card-columns">
+        <div class="col">
             <div class="card">
 
                 <div class="card-body">
@@ -11,13 +11,18 @@
                     <p class="card-text"><a href="{{route('reports.index')}}">Ver mis reportes</a></p>
                 </div>
             </div>
+        </div>
+
+        <div class="col">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Mis mensajes</h4>
                     <p class="card-text"><a href="{{ route('messages.index') }}">Ver mis mensajes</a></p>
                 </div>
             </div>
+        </div>
 
+        <div class="col">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Mi perfil</h4>
