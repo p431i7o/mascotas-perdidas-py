@@ -1,5 +1,5 @@
-import './bootstrap';
 import 'leaflet';
+import './bootstrap';
 import './utilities';
 
 
