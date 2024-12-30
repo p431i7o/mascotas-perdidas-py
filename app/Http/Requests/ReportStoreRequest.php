@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\GoogleRecaptcha;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ReportStoreRequest extends FormRequest
@@ -11,7 +12,7 @@ class ReportStoreRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,9 +22,10 @@ class ReportStoreRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
-        return [
+        $rules = [
+            'g-recaptcha-response'=>['required', new GoogleRecaptcha],
             'type'=>['required','in:Lost,Found'],
             'animal_kind_id'=>['required','exists:animal_kinds,id'],
             'date'=>['required','date'],
@@ -32,8 +34,11 @@ class ReportStoreRequest extends FormRequest
             'latitude'=>['required','decimal:3,17'],
             'longitude'=>['required','decimal:3,17'],
             'address'=>['string' ]
-
         ];
+        if(!auth()->user()){
+            $rules['email'] = ['required','email'];
+        }
+        return $rules;
     }
 
     /**
@@ -41,17 +46,18 @@ class ReportStoreRequest extends FormRequest
      *
      * @return array
      */
-    public function attributes()
+    public function attributes(): array
     {
         return [
-            'type' => 'tipo',
+            'type' => 'tipo de reporte',
             'animal_kind_id'=>'tipo de animal',
             'date'=>'fecha',
             'name'=>'nombre',
-            'description'=>'descripcion',
+            'description'=>'descripción',
             'latitude'=>'latitud',
             'longitude'=>'longitud',
-            'address'=>'direccion'
+            'address'=>'direccion',
+            'email'=>'correo electrónico'
         ];
     }
 }

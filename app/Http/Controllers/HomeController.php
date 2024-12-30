@@ -131,6 +131,8 @@ class HomeController extends Controller
         if(!empty($request->input('password'))){
             (app(ResetUserPassword::class))->reset($user,$request->only(['password','password_confirmation']));
         }
-        return redirect()->route('profile')->with('message','Datos guardados correctamente!');
+        return redirect()->route('profile')
+            ->with('success',true)
+            ->with('message','Datos guardados correctamente!');
     }
 }

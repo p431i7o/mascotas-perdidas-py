@@ -53,12 +53,11 @@ window.setMarkerToLocation = function  (p_coordinates, p_id, p_label, p_zoom, p_
     var newMarker = L.marker([coordinates['lat'], coordinates['lng'] ],
         {
             id: -1,
-            draggable: p_allow_drag?'true':'false',
+            draggable: p_allow_drag,
         }
     )
     .addTo(window.mapaLocal.map)
     .bindPopup(p_label);
-
     if(p_allow_drag){
         newMarker.on('dragend',ondragend)
     }

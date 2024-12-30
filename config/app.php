@@ -144,6 +144,7 @@ return [
     'allowed_picture_extensions'=>env('ALLOWED_PICTURE_EXTENSIONS','jpg,png'),
     'report_denounces_threshold'=>intval(env('DENOUNCES_THRESHOLD',10)),
     'renew_days_count'=>intval(env('RENEW_DAYS_COUNT',7)),
-    'days_until_deletion'=>intval(env('DAYS_UNTIL_DELETION',15))
+    'days_until_deletion'=>intval(env('DAYS_UNTIL_DELETION',15)),
+    'number_of_pictures'=>intval(env('NUMBER_OF_PICTURES',3)),
 
 ];

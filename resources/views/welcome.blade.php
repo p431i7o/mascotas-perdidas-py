@@ -5,12 +5,7 @@
     </style>
 @endpush
 @section('content')
-    @if(isset($message))
-        <div class="alert alert-@if(isset($error)) danger @else info @endif alert-dismissible fade show" role="alert">
-            {{ $message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        </div>
-    @endif
+    @include('layouts.default.parts.messages')
     <div class="container my-5">
         <div class="p-5 text-center bg-body-tertiary rounded-3">
             <h1 class="text-body-emphasis">Mascotas Perdidas PY</h1>

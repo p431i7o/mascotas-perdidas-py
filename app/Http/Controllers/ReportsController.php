@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -101,12 +103,22 @@ class ReportsController extends Controller
      */
     public function store(ReportStoreRequest $request):RedirectResponse
     {
+        $user_authenticated = auth()->user();
         DB::beginTransaction();
         $now = Carbon::now();
         $validated = $request->validated();
 
         $record = new Report($validated);
-        $record->status = 'Active';
+        $record->uuid = \Str::uuid();
+
+        if(!$user_authenticated){
+            $record->status = 'Pending';
+            $record->email = $request->email;
+        }else{
+            $record->user_id = auth()->user()->id;
+            $record->status = 'Active';
+        }
+
 
         $lat = $validated['latitude'];
         $long= $validated['longitude'];
@@ -133,11 +145,15 @@ class ReportsController extends Controller
             $record->district_id = $result[0]->district_id;
             $record->neighborhood_id = $result[0]->neighborhood_id;
         }
-
         $record->expiration = Carbon::now()->addDays(config('app.renew_days_count'));
-        $record->user_id = Auth::user()->id;
         $record->attachments = json_encode([]);
-        $record->log= json_encode([$now->toISOString()=>['type'=>'created','user_id'=>auth()->user()->id]]);
+        $record->log= json_encode(
+            [
+                $now->toISOString()=>[
+                    'type'=>'created',
+                    'user_id'=>auth()->user()?auth()->user()->id:$request->email
+                ]
+            ]);
         $save_result = $record->save();
 
         $picture_storage = $this->storeFiles($request,$record);
@@ -147,8 +163,19 @@ class ReportsController extends Controller
         }
 
         if($save_result){
+
+            if(!$user_authenticated){
+                $signedRouteForPublishing = URL::signedRoute('reports.publishFromMail', ['uuid'=>$record->uuid]);
+                $signedRouteForEditing = Url::signedRoute('reports.editFromMail', ['uuid'=>$record->uuid]);
+                $signedRouteForDeleting = URL::signedRoute('reports.deleteFromMail', ['uuid'=>$record->uuid]);
+                Notification::route('mail', $record->email)
+                    ->notify(new  \App\Notifications\EmailConfirmationForReport($signedRouteForPublishing,$signedRouteForEditing, $signedRouteForDeleting));
+            }
             DB::commit();
-            return  redirect()->route('reports.index')->with('success', true)->with('message',__('Saved correctly'));
+            return  redirect()
+                    ->route(auth()->user()?'reports.index':'root')
+                    ->with('success', true)
+                    ->with('message',__('Saved correctly').(!$user_authenticated?' Ahora revisa tu correo, y sigue las instrucciones para publicar tu reporte':''));
         }else{
             DB::rollBack();
             return redirect()->back()->withInput()->with('success',false)->with('message',__('Error saving'));
@@ -174,8 +201,11 @@ class ReportsController extends Controller
         $validated = $request->validated();
 
         $record = $report;
+        $record->update($validated);
         $lat = $validated['latitude'];
         $long= $validated['longitude'];
+
+        $user_id = $report->user_id?$report->user_id:'not_registered';
 
         $query = DB::table('departments as dep')
             ->selectRaw('dep.name as department_name, dep.capital, dep.id as department_id, dis.name as district_name, dis.id as district_id, ciu.id as city_id, ciu.name as city_name, ba.id as neighborhood_id, ba.name as neighborhood_name')
@@ -199,14 +229,17 @@ class ReportsController extends Controller
             $record->district_id    = $result[0]->district_id;
             $record->neighborhood_id = $result[0]->neighborhood_id;
         }
-        $this->storeFiles($request,$record);
-        $current_log = json_decode($record->log);
-        $current_log[$now->toISOString()]=['type'=>'updated','user_id'=>auth()->user()->id];
+//        $this->storeFiles($request,$record);
+        $current_log = json_decode($record->log,true    );
+        $current_log[$now->toISOString()]=['type'=>'updated','user_id'=>$user_id];
         $record->log= json_encode($current_log);
 
         $save_result = $record->save();
+
         if($save_result){
-            return  redirect()->route('reports.index')->with('success', true)->with('message',__('Saved correctly'));
+            return  redirect()->route(auth()->user()?'reports.index':'root')
+                ->with('success', true)
+                ->with('message',__('Saved correctly'));
         }else{
             return redirect()->back()->withInput()->with('success',false)->with('message',__('Error saving'));
         }
@@ -215,9 +248,16 @@ class ReportsController extends Controller
     private function storeFiles(Request $request, Report $report): bool
     {
         $data = [];
+
         $allowedExtensions = explode(',',config('app.allowed_picture_extensions','jpg,png,gif,jpeg'));
+        $count = 0;
         foreach($request->pictures as $index=> $current_picture){
-           $path = $current_picture->store('report_uploads/'.$report->user_id.'/'.$report->id.'/originals');
+            $count++;
+            if($count>config('app.number_of_pictures',5)){
+                break;
+            }
+            $user_id = auth()->user()?$report->user_id:'not_registered';
+            $path = $current_picture->store('report_uploads/'.$user_id.'/'.$report->id.'/originals');
 
             // create image manager with desired driver
             $manager = new ImageManager(new Driver());
@@ -233,8 +273,8 @@ class ReportsController extends Controller
                 abort(400,'Extension de imagen no admitida');
             }
 
-            $image->save(sprintf(config('filesystems.disks.local.root').'/report_uploads/%s/%s/%s', $report->user_id, $report->id, $fileInfo['basename']));
-            $image_thumb->save(sprintf(config('filesystems.disks.local.root').'/report_uploads/%s/%s/thumb_%s', $report->user_id, $report->id, $fileInfo['basename']));
+            $image->save(sprintf(config('filesystems.disks.local.root').'/report_uploads/%s/%s/%s', $user_id, $report->id, $fileInfo['basename']));
+            $image_thumb->save(sprintf(config('filesystems.disks.local.root').'/report_uploads/%s/%s/thumb_%s', $user_id, $report->id, $fileInfo['basename']));
             $tmpProperties = [
                 'file_name' => $fileInfo['basename'],
                 'original_name'=>$current_picture->getClientOriginalName(),
@@ -270,28 +310,13 @@ class ReportsController extends Controller
      */
     public function destroy(Request $request, Report $report): RedirectResponse|JsonResponse
     {
-        $now = Carbon::now();
+
         $current_user_id = Auth::user()->id;
 
         if($report->user_id != $current_user_id && !Auth::user()->can(Permissions::MANAGE_DENOUNCES) ){
             abort(400);
         }
-        $current_log = json_decode($report->log,true);
-
-        $current_log[$now->toISOString()] = [
-            'type'=>'deleted',
-            'user_id'=>auth()->user()->id,
-            'comment'=>$request->comment??''
-
-        ];
-        $report->log = json_encode($current_log);
-        $report->save();
-        $attachments = json_decode($report->attachments);
-        foreach($attachments as $attachment){
-            Storage::delete('report_uploads/'.$report->user_id.'/'.$report->id.'/originals/'.$attachment->file_name);
-            Storage::delete('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachment->file_name);
-        }
-        $result= $report->delete();
+        $result = $this->doTheDestroy($report);
         if($request->wantsJson())
         {
             return response()->json(['success'=>$result]);
@@ -300,6 +325,27 @@ class ReportsController extends Controller
         {
             return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Erased'));
         }
+    }
+    private function doTheDestroy(Report $report):bool
+    {
+        $now = Carbon::now();
+        $current_log = json_decode($report->log,true);
+        $user_id = auth()->user()?auth()->user()->id:'not_registered';
+        $current_log[$now->toISOString()] = [
+            'type'=>'deleted',
+            'user_id'=>$user_id,
+            'comment'=>$request->comment??''
+
+        ];
+        $report->log = json_encode($current_log);
+        $report->save();
+        $attachments = json_decode($report->attachments);
+
+        foreach($attachments as $attachment){
+            Storage::delete('report_uploads/'.$user_id.'/'.$report->id.'/originals/'.$attachment->file_name);
+            Storage::delete('report_uploads/'.$user_id.'/'.$report->id.'/'.$attachment->file_name);
+        }
+        return $report->delete();
     }
 
     public function show(Request $request, Report $report): View
@@ -323,14 +369,14 @@ class ReportsController extends Controller
         if(!isset($attachments[$index])){
             abort(400);
         }
-
+        $user_id = $report->user_id??'not_registered';
         if($kind=='thumb')
         {
-            $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/thumb_'.$attachments[$index]->file_name);
+            $file = Storage::get('report_uploads/'.$user_id.'/'.$report->id.'/thumb_'.$attachments[$index]->file_name);
         }
         else
         {
-            $file = Storage::get('report_uploads/'.$report->user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
+            $file = Storage::get('report_uploads/'.$user_id.'/'.$report->id.'/'.$attachments[$index]->file_name);
         }
         return Response::make($file, 200)->header("Content-Type", $attachments[$index]->mime);
     }
@@ -357,5 +403,28 @@ class ReportsController extends Controller
         }else{
             return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Renewed'));
         }
+    }
+
+    public function publishFromMail(Request $request, $uuid): RedirectResponse
+    {
+        $report = Report::where('uuid','=',$uuid)->firstOrFail();
+        $report->status = 'Active';
+        $report->save();
+        return redirect()->route('root')->with(['success'=>true,'message'=>__('Report published')]);
+    }
+
+    public function editFromMail(Request $request, $uuid): View
+    {
+        $record = Report::where('uuid',$uuid)->firstOrFail();
+        return view('reports.form')
+            ->with('record', $record)
+            ->with('kinds',AnimalKind::get());
+    }
+
+    public function deleteFromMail(Request $request, $uuid): RedirectResponse
+    {
+        $record = Report::where('uuid',$uuid)->firstOrFail();
+        $this->doTheDestroy($record);
+        return redirect()->route('root')->with(['success'=>true,'message'=>__('Report deleted')]);
     }
 }

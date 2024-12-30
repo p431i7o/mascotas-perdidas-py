@@ -45,7 +45,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             // 'phone' => $input['phone'],
             // 'address'=> $input['address'],
-            'city'=>$input['city'],
+//            'city'=>$input['city'],
             'password' => Hash::make($input['password']),
         ]);
     }

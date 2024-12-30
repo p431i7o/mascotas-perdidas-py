@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Laravel\Fortify\Features;
@@ -127,10 +128,10 @@ if(Features::enabled(Features::resetPasswords())){
 
 Route::get('/report/new', [ReportsController::class, 'create'])->name('reports.create');
 Route::post('/report/save', [ReportsController::class, 'store'])->name('reports.store');
-Route::get('/report/{report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
+Route::get('/report/{uuid}/publish', [ReportsController::class, 'publishFromMail'])->middleware('signed')->name('reports.publishFromMail');
+Route::get('/report/{uuid}/edit', [ReportsController::class, 'editFromMail'])->middleware('signed')->name('reports.editFromMail');
+Route::get('/report/{uuid}/delete', [ReportsController::class, 'deleteFromMail'])->middleware('signed')->name('reports.deleteFromMail');
 Route::put('/report/{report}/update', [ReportsController::class, 'update'])->name('reports.update');
-Route::delete('/report/{report}/delete',[ReportsController::class, 'destroy'])->name('reports.delete');
-Route::post('/report/{report}/renovate',[ReportsController::class,'renovate'])->name('reports.renovate');
 
 //Estas rutas de aca en adelante requiren que la cuenta este verificada
 // Esto genera las rutas de login y verificacion
@@ -141,7 +142,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/my-profile',[HomeController::class, 'updateProfile']);
 
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
+    Route::get('/report/{report}/edit', [ReportsController::class, 'edit'])->name('reports.edit');
 
+    Route::delete('/report/{report}/delete',[ReportsController::class, 'destroy'])->name('reports.delete');
+    Route::post('/report/{report}/renovate',[ReportsController::class,'renovate'])->name('reports.renovate');
 
     Route::get('/report/{report}/denounce',[ReportDenounceController::class,'store'])->name('report.denounce');
 
@@ -166,3 +170,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/report/{report}/image/{index}/show/{kind?}',[ReportsController::class,'showImage'])->name('report.image.show');
 Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
+Route::get('/test',function (){
+    $signedRouteForPublishing = URL::signedRoute('reports.publishFromMail', ['uuid'=>\Str::uuid()]);
+    $signedRouteForEditing = Url::signedRoute('reports.editFromMail', ['uuid'=>\Str::uuid()]);
+    Notification::route('mail', 'pablito.federico@gmail.com')->notify(new  \App\Notifications\EmailConfirmationForReport($signedRouteForPublishing,$signedRouteForEditing));
+});

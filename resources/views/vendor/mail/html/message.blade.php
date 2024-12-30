@@ -17,6 +17,14 @@
 </x-mail::subcopy>
 </x-slot:subcopy>
 @endisset
+{{-- Another Subcopy --}}
+@isset($anothersubcopy)
+
+<x-mail::anothersubcopy>
+{{ $anothersubcopy }}
+</x-mail::anothersubcopy>
+
+@endisset
 
 {{-- Footer --}}
 <x-slot:footer>
