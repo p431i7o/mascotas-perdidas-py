@@ -164,7 +164,9 @@
             coordinates['lng']  = {{ $report->longitude }};
             coordinates['lat'] = {{ $report->latitude }};
             mapaLocal = new MapaLocal(coordinates, 15, 'marker');
+
             var marker = setMarkerToLocation(coordinates, {{ $report->id }}, "{{ $report->name ?? __($report->type) }}", 12, false, false);
+
             marker.on('click', clickZoom);
 
         });

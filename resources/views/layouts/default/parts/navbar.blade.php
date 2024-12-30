@@ -83,7 +83,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="javascript:;" data-bs-toggle="dropdown" aria-expanded="false">[{{ Auth::user()->email }}]</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Mi perfil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('profile') }}">Mi perfil</a></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}" id="logout_form">
                                 @csrf
