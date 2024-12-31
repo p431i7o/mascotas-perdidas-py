@@ -1,11 +1,12 @@
 @extends('layouts.default.default')
 
 @section('content')
-@include('layouts.default.parts.messages')
+
  <div class="container mt-5">
     <h1 class="display-4">Mi perfil</h1>
 
     <form action="{{ route('profile') }}" method="POST">
+        @include('layouts.default.parts.messages')
         @csrf
         <div class="form-group">
             <div class="col-md-3"><label>Email</label></div>
