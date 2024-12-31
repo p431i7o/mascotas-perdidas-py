@@ -31,6 +31,9 @@
                 <button class="w-100 btn btn-lg btn-primary mb-5" type="submit">{{ __('Sign in') }}</button>
 
                 <a href="{{route('password.request')}}">{{ __("Forgot your password?") }}</a>
+                <br/>
+                <br/>
+                No posee cuenta? <a href="{{route('register')}}">Puede registrarse aquí</a>
 
             </form>
         </div>
