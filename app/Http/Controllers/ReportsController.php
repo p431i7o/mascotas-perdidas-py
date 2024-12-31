@@ -34,7 +34,7 @@ class ReportsController extends Controller
         if($request->wantsJson())
         {
             $query = Report::where('user_id',auth()->user()->id)
-                ->select(DB::raw('reports.*, departments.name as department_name, cities.name as city_name, districts.name as district_name, neighborhoods.name as neighborhood_name, now() as ct, case when now()>reports.expiration then "yes" else "no" end as expired'))
+                ->select(DB::raw('reports.id,reports.type,reports.expiration,reports.attachments,reports.name, reports.status, departments.name as department_name, cities.name as city_name, districts.name as district_name, neighborhoods.name as neighborhood_name, now() as ct, case when now()>reports.expiration then "yes" else "no" end as expired'))
                 ->leftJoin('departments','departments.id','reports.department_id')
                 ->leftJoin('cities','cities.id','reports.city_id')
                 ->leftJoin('districts','districts.id','reports.district_id')
@@ -63,7 +63,7 @@ class ReportsController extends Controller
 
             foreach ($data_result_set as $indice => $fila)
             {
-                // $data_result_set[$indice]->roles = User::find($fila->id)->getRoleNames()->map(function($item,$key){return __($item);});
+                $data_result_set[$indice]->link = route('reports.show', [$fila]);
             }
 
             return response()->json([
@@ -71,7 +71,6 @@ class ReportsController extends Controller
                 'recordsFiltered'   => $count,
                 'recordsTotal'      => $count,
                 'success'           => true,
-                'params'            => $_GET,
                 'draw'              => (int)$request->draw
             ]);
         }
