@@ -8,7 +8,10 @@
     @include('layouts.default.parts.messages')
     <div class="container my-5">
         <div class="p-5 text-center bg-body-tertiary rounded-3">
+            @include('layouts.default.parts.logo')
             <h1 class="text-body-emphasis">Mascotas Perdidas PY</h1>
+
+
             <p class="col-lg-8 mx-auto fs-5 text-muted">
                 ¿Qué desea reportar?
             </p>
@@ -34,10 +37,10 @@
 
             <div class="row mb-2">
                 @foreach ($reports as $reportRecord)
-                    <div class="col-md-6">
-                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col-md-6" >
+                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative" style="min-height: 200px;">
                             <div class="col p-4 d-flex flex-column position-static">
-                                <strong class="d-inline-block mb-2 text-primary-emphasis">{{ $reportRecord->type }}</strong>
+                                <strong class="d-inline-block mb-2 text-primary">{{ $reportRecord->type }}</strong>
                                 <h3 class="mb-0">{{ $reportRecord->name }}</h3>
                                 <div class="mb-1 text-body-secondary">{{ $reportRecord->date->diffForHumans() }}</div>
                                 <p class="card-text mb-auto">{{ Str::of($reportRecord->description)->limit(50,'...',true) }}</p>
@@ -112,7 +115,11 @@
             mapaLocal = new MapaLocal(coordinates, 6, 'marker');
 
             @foreach ($reports as $index=>  $record)
-                setMarkerToLocation({'lng':{{$record->longitude}},'lat':{{$record->latitude}} },{{ $record->id }}, "{{$record->name?($record->name.' ('.__($record->type).')'):__($record->type)}}",(DEFAULT_MAX_ZOOM_MAP-DEFAULT_MIN_ZOOM_MAP)/2,false,false)
+                setMarkerToLocation({
+                    'lng':{{$record->longitude}},
+                    'lat':{{$record->latitude}} },
+                {{ $record->id }},
+                "<a href=\"{{route('reports.show',$record->id)}}\" target='_blank'>{{$record->name?($record->name.' ('.__($record->type).')'):__($record->type)}}</a>",(DEFAULT_MAX_ZOOM_MAP-DEFAULT_MIN_ZOOM_MAP)/2,false,false)
                 .on('click',clickZoom);
             @endforeach
 
