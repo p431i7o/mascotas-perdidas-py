@@ -1,6 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Barra de navegación de Mascotas Perdidas PY">
     <div class="container-fluid">
-        <a class="navbar-brand" href="<?= route('root') ?>">Mascotas Perdidas PY</a>
+        <a class="navbar-brand" href="<?= route('root') ?>">
+            @if(Route::current()->getName() != 'root' && Route::current()->getName() != 'about')
+                @include('layouts.default.parts.logo',['size' => '40'])
+            @endif
+            Mascotas Perdidas PY
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#theNavbar" aria-controls="theNavbar" aria-expanded="false" aria-label="Cambiar navegación">
             <span class="navbar-toggler-icon"></span>
         </button>

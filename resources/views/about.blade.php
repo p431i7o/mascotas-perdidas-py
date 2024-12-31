@@ -3,7 +3,7 @@
 @section('content')
     <div class="jumbotron">
         <div class="container">
-            <h1 class="display-2">Mascotas Perdidas Py </h1>
+            <h1 class="display-2 mt-5">Mascotas Perdidas Py @include('layouts.default.parts.logo',['size' => '150'])</h1>
             <h2>¿Qué es y para que sirve?</h2>
             <p>Antes que nada hola!, soy p431i7o, creador del sitio</p>
 

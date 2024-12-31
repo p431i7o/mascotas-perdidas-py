@@ -8,16 +8,7 @@
         </div>
     </div>
     <div class="container">
-        @if (session('success'))
-            <div class="row">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('message') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            </div>
-        @endif
+        @include('layouts.default.parts.messages')
 
         <table id="theTable" class="table table-striped table-bordered" style="width:100%">
             <thead>
@@ -29,6 +20,7 @@
                     <th>Expira</th>
                     <th>Estado</th>
                     <th>Ubicación</th>
+                    <th>Enlace</th>
                     {{-- <th>Departamento</th> --}}
                     {{-- <th>Distrito</th>
                     <th>Ciudad</th> --}}
@@ -141,6 +133,13 @@
                     width: '18%',
                     render:function(data,type,row){
                         return `${row.department_name} - ${row.city_name} (${row.district_name})`;
+                    }
+                },
+                {
+                    data: 'link',
+                    width: '15%',
+                    render: function(data, type, row) {
+                        return '<a href="' + data + '" target="_blank"> Ir al reporte</a>';
                     }
                 },
                 {
