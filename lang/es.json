@@ -496,5 +496,14 @@
     "Active":"Activo",
     "Status":"Estado",
     "The :attribute must be at least :length characters.":"El campo :attribute debe tener al menos :length caracteres",
-    "Insufficient quantity of images":"Cantidad insuficiente de imágenes"
+    "Insufficient quantity of images":"Cantidad insuficiente de imágenes",
+    "The :attribute must be at least :length characters and contain at least one uppercase character.":"El campo :attribute debe tener al menos :length caracteres y contener al menos una letra mayúscula",
+    "The :attribute must be at least :length characters and contain at least one number.":"El campo :attribute debe tener al menos :length caracteres y contener al menos un número",
+    "The :attribute must be at least :length characters and contain at least one symbol.":"El campo :attribute debe tener al menos :length caracteres y contener al menos un símbolo",
+    "The :attribute must be at least :length characters and contain at least one special character.":"El campo :attribute debe tener al menos :length caracteres y contener al menos un carácter especial",
+    "The :attribute must be at least :length characters and contain at least one uppercase character and one number.":"El campo :attribute debe tener al menos :length caracteres y contener al menos una letra mayúscula y un número",
+    "The :attribute must be at least :length characters and contain at least one uppercase character and one special character.":"El campo :attribute debe tener al menos :length caracteres y contener al menos una letra mayúscula y un carácter especial",
+    "The :attribute must be at least :length characters and contain at least one uppercase character, one number, and one special character.":"El campo :attribute debe tener al menos :length caracteres y contener al menos una letra mayúscula, un número y un carácter especial",
+    "The :attribute must be at least :length characters and contain at least one special character and one number.":"El campo :attribute debe tener al menos :length caracteres y contener al menos un carácter especial y un número"
+
 }
