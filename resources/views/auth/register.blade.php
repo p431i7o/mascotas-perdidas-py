@@ -5,15 +5,26 @@
         <h4 class="display-3 text-center">Registro</h4>
     </div>
 </div>
+@include('layouts.default.parts.messages')
 <div class="container">
+
     <div class="row text-center">
         <div class="">
             <form id="register-form" method="POST" action="{{route('register')}}" class="form-signin needs-validation accordion">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li style="text-align: left;">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 @csrf
 
-                @if (session('status'))
-                    <div class="alert alert-info">{{session('status')}}</div>
-                @endif
+{{--                @if (session('status'))--}}
+{{--                    <div class="alert alert-info">{{session('status')}}</div>--}}
+{{--                @endif--}}
                 <div class="form-label-group">
                     <input type="text" class="form-control" id="floatingInput" placeholder="Nombre completo" value="{{old('name')}}" name="name" maxlength="255">
                     <label for="floatingInput">{{ __("Full name") }}</label>
@@ -49,7 +60,7 @@
 
                 <div class="form-check mb-3">
                     <label>
-                        <input type="checkbox" class="form-check-input" name="accept_term_conditions" >Acepto <a href="{{ route('legal') }}">Los terminos y condiciones</a>
+                        <input type="checkbox" class="form-check-input" name="accept_term_conditions" >Acepto <a target="_blank" href="{{ route('legal') }}">Los terminos y condiciones</a>
                     </label>
                 </div>
                 <button class="g-recaptcha btn btn-lg btn-primary btn-block"
@@ -57,16 +68,6 @@
                 data-callback='onSubmit'
                 data-action='submit'
                 type="submit">Registrarme!</button>
-
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
             </form>
         </div>
         </div>
