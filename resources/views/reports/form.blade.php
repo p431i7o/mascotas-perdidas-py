@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <div class="row text-center">
-        <h4 class="display-3 text-center">@if(empty($record->id)) {{__("New Report")}} @else {{__("Edit Report")}} @endif</h4>
+        <h4 class="display-3 text-center mt-5">@if(empty($record->id)) {{__("New Report")}} @else {{__("Edit Report")}} @endif</h4>
     </div>
 </div>
 @include('layouts.default.parts.messages')
@@ -84,15 +84,21 @@
                                 Procure dejar la mayor cantidad de información como para que el reencuentro sea más fácil
                             </small>
                         </div>
-
+                        <div class="form-group mt-2">
+                            <label for="address" class="col-sm-12 col-form-label">
+                                <strong>{{__("Address")}} <small>*</small></strong>
+                            </label>
+                            <input type="text" required value="{{ old('address',$record->address) }}" class="form-control" name="address" id="address" aria-describedby="helpId" placeholder="Calle principal, numero, intersección más cercana">
+                        </div>
                         <div class="form-group">
                             <div class="d-grid gap-2">
                                 <button type="button" class="btn btn-primary btn-lg btn-block mt-5 mb-1" onclick="send_marker()">
                                     Ubicar punto en el mapa
                                 </button>
+
                             </div>
                             <div id="map-container" class="hidden"></div>
-                            <div class="row">
+                            <div class="row d-none">
                                 <div class="col-6">
                                     <label for="latitude"><small>Latitud</small></label>
                                     <input type="text" value="{{ old('latitude',$record->latitude) }}" class="form-control col-12" name="latitude" id="latitude" aria-describedby="latitudHelpId" placeholder="Latitud">
@@ -104,17 +110,12 @@
                             </div>
                         </div>
 
-                        <div class="form-group mt-2">
-                          <label for="address" class="col-sm-12 col-form-label">
-                              <strong>{{__("Address")}} <small>*</small></strong>
-                          </label>
-                          <input type="text" required value="{{ old('address',$record->address) }}" class="form-control" name="address" id="address" aria-describedby="helpId" placeholder="{{__("Address")}} Calle principal, numero, intersección más cercana">
-                        </div>
+
                         @if(!$record->id)
-                        <div class="form-group mt-2">
+                        <div class="form-group mt-4">
                           <label for="pictures[0]">
-                              <strong>Imágenes del animal</strong>
-                              <small id="helpId">(Al menos una imagen es requerida)</small>
+                              <strong>Imágenes del animal *</strong>
+                              <small id="helpId">(Al menos una foto es requerida)</small>
                           </label>
                             @for($i = 0; $i < config('app.number_of_pictures'); $i++)
                                 <div class="mb-3">
