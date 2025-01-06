@@ -38,23 +38,22 @@
             <div class="row mb-2">
                 @foreach ($reports as $reportRecord)
                     <div class="col-md-6" >
-                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative" style="min-height: 200px;">
-                            <div class="col p-4 d-flex flex-column position-static">
+                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 h-lg-250 position-relative p-2" style="min-height: 200px;">
+                            <div class="col-lg-8 col-sm-12 col-md-6 d-flex flex-column position-static">
                                 <strong class="d-inline-block mb-2 text-primary">{{ $reportRecord->type }}</strong>
-                                <h3 class="mb-0">{{ $reportRecord->name }}</h3>
-                                <div class="mb-1 text-body-secondary">{{ $reportRecord->date->diffForHumans() }}</div>
-                                <p class="card-text mb-auto">{{ Str::of($reportRecord->description)->limit(50,'...',true) }}</p>
-                                <a href="{{ route('reports.show',$reportRecord->id) }}" class="icon-link gap-1 icon-link-hover stretched-link">
+                                <h3 class="mb-0">{{ $reportRecord->name??'--' }}</h3>
+                                <div data-bs-placement="top" data-bs-toggle="tooltip" data-bs-title="{{ $reportRecord->date->format("d/m/Y") }}"   class="mb-1 text-body-secondary">{{ $reportRecord->date->diffForHumans() }}</div>
+                                <p class="card-text mb-auto">{{ Str::of($reportRecord->description)->limit(200,'...',true) }}</p>
+                                <a href="{{ route('reports.show',$reportRecord->id) }}" class="">
                                     Ampliar reporte
-                                    <svg class="bi"><use xlink:href="#chevron-right"/></svg>
+                                    <i class="fa-solid fa-circle-chevron-right"></i>
                                 </a>
                             </div>
-                            <div class="col-auto d-none d-lg-block">
+                            <div class="col-lg-4 col-sm-12 col-md-6">
                                 @foreach(json_decode($reportRecord->attachments) as $index=>$attachment)
-                                    <img width="200" class="bd-placeholder-img" src="{{ route('report.image.show', [$reportRecord->id, $index,'thumb']) }}" />
+                                    <img class="bd-placeholder-img w-100" src="{{ route('report.image.show', [$reportRecord->id, $index,'thumb']) }}" />
                                     @break
                                 @endforeach
-                                {{--                            <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>--}}
                             </div>
                         </div>
                     </div>
