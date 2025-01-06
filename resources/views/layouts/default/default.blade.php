@@ -2,6 +2,7 @@
 <html class="h-100">
 <head>
     <meta charset="utf-8">
+    <link rel="icon" href="{{Vite::asset('resources/img/favicon.png')}}">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Mascotas Perdidas PY - Encuentra y Reporta Mascotas Extraviadas en Paraguay</title>
     <meta name="description" content="Reporta y encuentra mascotas perdidas en Paraguay. Sube fotos, ubicación y detalles para ayudar a reunir familias con sus animales.">
@@ -75,6 +76,12 @@
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
+</script>
+<script type="module">
+    $(document).ready(function() {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })
 </script>
 </body>
 
