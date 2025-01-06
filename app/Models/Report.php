@@ -57,7 +57,7 @@ class Report extends Model
     }
 
     public function Author(){
-        return $this->hasOne('User','id','user_id');
+        return $this->hasOne(User::class,'id','user_id');
     }
 
     public function Approved_by(){
