@@ -8,6 +8,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class MessageController extends Controller
 {
@@ -75,7 +76,7 @@ class MessageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         //@todo sanity checks
         $report = Report::find($request->report_id);
@@ -83,21 +84,31 @@ class MessageController extends Controller
         $message =   $request->message ;
         $parent_id = null;
 
-        $firstMessage = Message::where('from_user_id',$user_id)->where('to_user_id',$report->user_id)->where('report_id',$report->id)->orderBy('id','asc');
-        if($firstMessage->count() > 0){
-            $parent_id = $firstMessage->first()->id;
+        Notification::route('mail', $report->email)
+            ->notify(new  \App\Notifications\ContactFromReportNotification($message,auth()->user()->name,$report,auth()->user()));
+
+        if($report->user_id)
+        {
+            $firstMessage = Message::where('from_user_id',$user_id)
+                ->where('to_user_id',$report->user_id)
+                ->where('report_id',$report->id)
+                ->orderBy('id','asc');
+            if($firstMessage->count() > 0){
+                $parent_id = $firstMessage->first()->id;
+            }
+
+            Message::create([
+                'parent_id'=>$parent_id,
+                'from_user_id'=>$user_id,
+                'to_user_id'=>$report->user_id,
+                'message'=>$message,
+                'status'=>'Sent',
+                'report_id'=>$report->id
+            ]);
         }
-
-        Message::create([
-            'parent_id'=>$parent_id,
-            'from_user_id'=>$user_id,
-            'to_user_id'=>$report->user_id,
-            'message'=>$message,
-            'status'=>'Sent',
-            'report_id'=>$report->id
-        ]);
-
-        return back()->with('message','Enviado correctamente');
+        return back()
+                ->with('success',true)
+                ->with('message','Enviado correctamente');
     }
 
     public function respondMessage(Request $request, Message $message){
