@@ -170,6 +170,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/report/{report}/image/{index}/show/{kind?}',[ReportsController::class,'showImage'])->name('report.image.show');
 Route::get('/report/{report}/show',[ReportsController::class,'show'])->name('reports.show');
+Route::get('/report/{report}/show/pdf',[ReportsController::class,'showPdf'])->name('reports.show.pdf');
 Route::get('/test',function (){
     $signedRouteForPublishing = URL::signedRoute('reports.publishFromMail', ['uuid'=>\Str::uuid()]);
     $signedRouteForEditing = Url::signedRoute('reports.editFromMail', ['uuid'=>\Str::uuid()]);

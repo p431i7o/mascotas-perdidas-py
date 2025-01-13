@@ -13,11 +13,17 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Actions\Fortify\ResetUserPassword;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     public function root(Request $request): \Illuminate\Contracts\View\View
     {
+        $cities_reports = City::select(DB::raw('count(reports.id) as reports_count'),'cities.name')
+            ->join('reports','reports.city_id','=','cities.id')
+            ->groupBy('cities.name')
+            ->orderBy('reports_count','desc')
+            ->get();
         $reports = Report::with(['Department','City','District','Neighborhood'])
                 ->orderBy('created_at','desc')
                 ->where('status','active')
@@ -32,7 +38,8 @@ class HomeController extends Controller
             ->with('reportCount',$count)
             ->with('currentPage',$page)
             ->with('limit',$limit)
-            ->with('start',$start);
+            ->with('start',$start)
+            ->with('cities_reports',$cities_reports);
 
     }
 

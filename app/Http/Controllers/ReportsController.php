@@ -21,6 +21,14 @@ use App\Repositories\Permissions;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Http;
+use Intervention\Image\Laravel\Facades\Image;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
+
 
 class ReportsController extends Controller
 {
@@ -425,5 +433,39 @@ class ReportsController extends Controller
         $record = Report::where('uuid',$uuid)->firstOrFail();
         $this->doTheDestroy($record);
         return redirect()->route('root')->with(['success'=>true,'message'=>__('Report deleted')]);
+    }
+
+    public function showPdf(Request $request, Report $report): \Illuminate\Http\Response
+    {
+        if($report->expiration < Carbon::now()){
+            abort(404);
+        }
+        $attachments = [];
+        foreach (json_decode($report->attachments) as $index => $value){
+            $image =Image::read(Http::get(route('report.image.show', [$report->id, $index], true))->body());
+            $image->resize(null,500);
+            $attachments[] = $image;
+
+        }
+        //$attachments[] = $this->generateQRCode($report);
+        $pdf = Pdf::loadView('reports.pdf', ['report' => $report,'attachments'=>$attachments,'qr'=>$this->generateQRCode($report)]);
+        return $pdf->stream('reporte.pdf');
+        //return $pdf->download('reporte.pdf');
+    }
+
+    private function generateQRCode(Report $report): string
+    {
+        $texto = url(route('reports.show', $report->id),true);
+
+        // Configurar el renderizador
+        $renderer = new ImageRenderer(
+            new RendererStyle(400),          // Tamaño: 400x400 px
+            new SvgImageBackEnd()            // Formato: SVG
+        );
+
+        // Generar el QR
+        $writer = new Writer($renderer);
+        $qrCode = $writer->writeString($texto);
+        return $qrCode;
     }
 }

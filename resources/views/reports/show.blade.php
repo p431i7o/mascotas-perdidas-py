@@ -106,6 +106,7 @@
                id="b">
                 <i class="fa-brands fa-x-twitter"></i> (ex twitter)
             </a>
+            <a href="{{route('reports.show.pdf', $report)}}" class="btn btn-primary btn-sm"><i class="fa-solid fa-file-pdf"></i> Imprimir Cartel</a>
         </div>
         @auth
             @if(Auth::user()->id != $report->user_id)

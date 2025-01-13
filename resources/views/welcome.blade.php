@@ -12,8 +12,8 @@
             <h1 class="text-body-emphasis">Mascotas Perdidas PY</h1>
 
 
-            <p class="col-lg-8 mx-auto fs-5 text-muted">
-                ¿Qué desea reportar?
+            <p class="col-lg-8 mx-auto fs-5 text-muted mb-5 mt-5">
+                <h3>¿Qué desea reportar?</h3>
             </p>
             <div class="d-inline-flex gap-2 mb-5">
                 <a class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" href="{{route('reports.create',['type'=>'Lost'])}}">
@@ -30,6 +30,13 @@
     @if($reports->count() > 0)
         <div class="container">
             <h1 class="display-4">&Uacute;ltimos Reportes:</h1>
+            <div class="row">
+                @foreach($cities_reports as $city_report)
+                    <div class="col-2">
+                        <a href="{{route('search',['search'=>("Ciudad: ".$city_report->name)])}}" class="link-primary">{{$city_report->name}} [{{$city_report->reports_count}}]</a>
+                    </div>
+                @endforeach
+            </div>
             <div class="row mb-5 mt-5">
                 <div id="map-container"></div>
             </div>
@@ -100,7 +107,7 @@
     var DEFAULT_LNG = -57.623807;
     var DEFAULT_LAT = -23.299114;
 </script>
-<script  id="loadMap" data_load_map=marker type="text/javascript" charset="utf-8">
+
 </script>
 @endpush
 

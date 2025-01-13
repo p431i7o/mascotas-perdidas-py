@@ -134,9 +134,15 @@ return [
         App\Providers\FortifyServiceProvider::class,
 
         //Spatie permission
-        Spatie\Permission\PermissionServiceProvider::class
+        Spatie\Permission\PermissionServiceProvider::class,
+        //dompdf
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ])->toArray(),
+//    'aliases' => [
+//        'PDF' => Barryvdh\DomPDF\Facade::class,
+//        'Session' => Illuminate\Support\Facades\Session::class
+//    ],
     'mail_support'=>env('MAIL_SUPPORT','-completar-'),
     'captcha_public'=>env('CAPTCHA_PUBLIC','--'),
     'captcha_secret'=>env('CAPTCHA_SECRET','--'),
