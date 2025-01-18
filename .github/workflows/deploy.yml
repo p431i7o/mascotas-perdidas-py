@@ -24,6 +24,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
             cd /var/www/mascotasperdidaspy.org &&
+            git reset --hard HEAD &&
+            git clean -fd &&
             git pull origin main &&
             composer install --no-interaction --prefer-dist --optimize-autoloader &&
             npm install &&
@@ -51,6 +53,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEV_SERVER_USER }}@${{ secrets.DEV_SERVER_HOST }} "
             cd /var/www/dev.mascotasperdidaspy.org &&
+            git reset --hard HEAD &&
+            git clean -fd &&
             git pull origin development &&
             composer install --no-interaction --prefer-dist --optimize-autoloader &&
             npm install &&
