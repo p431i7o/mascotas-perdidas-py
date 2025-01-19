@@ -28,6 +28,7 @@ jobs:
             git clean -fd &&
             git pull origin main &&
             composer install --no-interaction --prefer-dist --optimize-autoloader &&
+            php artisan optimize:clear &&
             npm install &&
             npm run build &&
             php artisan migrate --force &&
@@ -57,6 +58,7 @@ jobs:
             git clean -fd &&
             git pull origin development &&
             composer install --no-interaction --prefer-dist --optimize-autoloader &&
+            php artisan optimize:clear &&
             npm install &&
             npm run build &&
             php artisan migrate --force &&
