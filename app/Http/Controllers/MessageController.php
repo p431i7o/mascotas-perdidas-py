@@ -20,13 +20,13 @@ class MessageController extends Controller
     public function index(Request $request)
     {
         if($request->wantsJson()){
-            $query = Message::where(function($query){
+            $query = Message::with(['from','to'])->where(function($query){
                 $query->where('to_user_id',auth()->user()->id)
                     ->orWhere('from_user_id',auth()->user()->id);
             })
                 //where('to_user_id',auth()->user()->id)
-                ->where('parent_id',null)
-                ->with(['From','To']);
+            ->where('parent_id',null);
+
             if (!empty($request->search['value'])) {
                 $query->where('message', 'ilike', '%' . $request->search['value'] . '%');
             }
@@ -116,6 +116,7 @@ class MessageController extends Controller
         $user_id = Auth::user()->id;
 
         Message::create([
+            'parent_id' => $message->id,
             'from_user_id'=>$user_id,
             'to_user_id'=>$message->to_user_id,
             'message'=>$request->message,
