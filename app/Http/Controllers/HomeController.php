@@ -63,7 +63,8 @@ class HomeController extends Controller
         return view('about');
     }
 
-    public function search(Request $request){
+    public function search(Request $request): \Illuminate\Contracts\View\View
+    {
         $search = $request->input('search');
         $search_array = explode(' ',$search);
         $keywords = ['Ciudad:','Departamento:'];
@@ -73,19 +74,29 @@ class HomeController extends Controller
             ->where('reports.status','Active')
             ->join('cities','cities.id','reports.city_id')
             ->join('departments','departments.id','reports.department_id');
-        $query->where(function($query)use($keywords,$search,$search_array){
-            foreach($keywords  as $keyword){
-                if(str_contains($search, $keyword)){
-                    if($keyword=='Ciudad:'){
-                        foreach($search_array as $sa){
-                            if(!in_array($sa,$keywords)){
+
+        $query->where(function($query)use($keywords,$search,$search_array)
+        {
+            foreach($keywords  as $keyword)
+            {
+                if(str_contains($search, $keyword))
+                {
+                    if($keyword=='Ciudad:')
+                    {
+                        foreach($search_array as $sa)
+                        {
+                            if(!in_array($sa,$keywords))
+                            {
                                 $query->orWhere('cities.name','like','%'.$sa.'%');
                             }
                         }
                     }
-                    if($keyword=='Departamento:'){
-                        foreach($search_array as $sa){
-                            if(!in_array($sa,$keywords)){
+                    if($keyword=='Departamento:')
+                    {
+                        foreach($search_array as $sa)
+                        {
+                            if(!in_array($sa,$keywords))
+                            {
                                 $query->orWhere('departments.name','like','%'.$sa.'%');
                             }
                         }
@@ -100,19 +111,20 @@ class HomeController extends Controller
 
     public function autoComplete(Request $request): \Illuminate\Http\JsonResponse
     {
-
         $city = City::where('name','like','%'.$request->input('query').'%')
             ->select('id','name')
             ->get()
             ->map(
-                function($item){
+                function($item)
+                {
                     $item->name = 'Ciudad: '.$item->name;return $item;
                 });
         $department = Department::where('name','like','%'.$request->input('query').'%')
             ->select('id','name')
             ->get()
             ->map(
-                function($item){
+                function($item)
+                {
                     $item->name = 'Departamento: '.$item->name;return $item;
                 });
         // $neiborghood = Neighborhood::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Barrio: '.$item->name;return $item;});
@@ -135,7 +147,8 @@ class HomeController extends Controller
     {
         $user = User::find(Auth::user()->id);
         $user->update($request->validated());
-        if(!empty($request->input('password'))){
+        if(!empty($request->input('password')))
+        {
             (app(ResetUserPassword::class))->reset($user,$request->only(['password','password_confirmation']));
         }
         return redirect()->route('profile')

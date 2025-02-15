@@ -28,15 +28,12 @@ use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
+use Illuminate\Support\Facades\Cache;
 
 
 class ReportsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Request $request): View|JsonResponse
     {
         if($request->wantsJson())
@@ -47,6 +44,7 @@ class ReportsController extends Controller
                 ->leftJoin('cities','cities.id','reports.city_id')
                 ->leftJoin('districts','districts.id','reports.district_id')
                 ->leftJoin('neighborhoods','neighborhoods.id','reports.neighborhood_id');
+
             if (!empty($request->search['value']))
             {
                 $query->where('id', 'ilike', '%' . $request->search['value'] . '%');
@@ -86,9 +84,6 @@ class ReportsController extends Controller
         return view('reports.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request): View
     {
         $record = new Report();
@@ -103,11 +98,6 @@ class ReportsController extends Controller
             ->with('kinds',AnimalKind::get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     */
     public function store(ReportStoreRequest $request):RedirectResponse
     {
         $user_authenticated = auth()->user();
@@ -196,12 +186,6 @@ class ReportsController extends Controller
             ->with('kinds',AnimalKind::get());
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     */
     public function update(ReportUpdateRequest $request, Report $report): RedirectResponse
     {
         $now = Carbon::now();
@@ -243,11 +227,14 @@ class ReportsController extends Controller
 
         $save_result = $record->save();
 
-        if($save_result){
+        if($save_result)
+        {
             return  redirect()->route(auth()->user()?'reports.index':'root')
                 ->with('success', true)
                 ->with('message',__('Saved correctly'));
-        }else{
+        }
+        else
+        {
             return redirect()->back()->withInput()->with('success',false)->with('message',__('Error saving'));
         }
     }
@@ -258,9 +245,11 @@ class ReportsController extends Controller
 
         $allowedExtensions = explode(',',config('app.allowed_picture_extensions','jpg,png,gif,jpeg'));
         $count = 0;
-        foreach($request->pictures as $index=> $current_picture){
+        foreach($request->pictures as $index=> $current_picture)
+        {
             $count++;
-            if($count>config('app.number_of_pictures',5)){
+            if($count>config('app.number_of_pictures',5))
+            {
                 break;
             }
             $user_id = auth()->user()?$report->user_id:'not_registered';
@@ -276,7 +265,8 @@ class ReportsController extends Controller
             $fileInfo = pathinfo($path);
             $sha1_file = sha1_file($current_picture->getRealPath());
             $extension = $current_picture->getClientOriginalExtension();
-            if(!in_array($extension, $allowedExtensions)){
+            if(!in_array($extension, $allowedExtensions))
+            {
                 abort(400,'Extension de imagen no admitida');
             }
 
@@ -309,18 +299,12 @@ class ReportsController extends Controller
         return $report->save();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Report  $report
-     */
     public function destroy(Request $request, Report $report): RedirectResponse|JsonResponse
     {
 
         $current_user_id = Auth::user()->id;
-
-        if($report->user_id != $current_user_id && !Auth::user()->can(Permissions::MANAGE_DENOUNCES) ){
+        if($report->user_id != $current_user_id && !Auth::user()->can(Permissions::MANAGE_DENOUNCES) )
+        {
             abort(400);
         }
         $result = $this->doTheDestroy($report);
@@ -369,11 +353,13 @@ class ReportsController extends Controller
 
     public function showImage(Request $request, Report $report, $index, $kind=null): \Illuminate\Http\Response
     {
-        if($report->expiration < Carbon::now()){
+        if($report->expiration < Carbon::now())
+        {
             abort(404);
         }
         $attachments = json_decode($report->attachments);
-        if(!isset($attachments[$index])){
+        if(!isset($attachments[$index]))
+        {
             abort(400);
         }
         $user_id = $report->user_id??'not_registered';
@@ -392,7 +378,8 @@ class ReportsController extends Controller
     {
         $now = Carbon::now();
         $current_user_id = Auth::user()->id;
-        if($report->user_id != $current_user_id ){
+        if($report->user_id != $current_user_id )
+        {
             abort(400);
         }
         $current_log = json_decode($report->log,true);
@@ -405,9 +392,12 @@ class ReportsController extends Controller
         $report->expiration = Carbon::now()->addDays(config('app.renew_days_count'));
         $result = $report->save();
 
-        if($request->wantsJson()){
+        if($request->wantsJson())
+        {
             return response()->json(['success'=>$result]);
-        }else{
+        }
+        else
+        {
             return  redirect()->route('reports.index')->with('success', $result)->with('message',__('Renewed'));
         }
     }
@@ -437,20 +427,29 @@ class ReportsController extends Controller
 
     public function showPdf(Request $request, Report $report): \Illuminate\Http\Response
     {
-        if($report->expiration < Carbon::now()){
+        if($report->expiration < Carbon::now())
+        {
             abort(404);
         }
+        $cacheKey = "pdf_{$report->id}";
+
+        if (Cache::has($cacheKey))
+        {
+            return \response(base64_decode( Cache::get($cacheKey) ))->header('Content-Type', 'application/pdf');
+        }
         $attachments = [];
-        foreach (json_decode($report->attachments) as $index => $value){
+        foreach (json_decode($report->attachments) as $index => $value)
+        {
             $image =Image::read(Http::get(route('report.image.show', [$report->id, $index], true))->body());
             $image->resize(null,500);
             $attachments[] = $image;
-
         }
-        //$attachments[] = $this->generateQRCode($report);
+
         $pdf = Pdf::loadView('reports.pdf', ['report' => $report,'attachments'=>$attachments,'qr'=>$this->generateQRCode($report)]);
-        return $pdf->stream('reporte.pdf');
-        //return $pdf->download('reporte.pdf');
+        $content = $pdf->stream('reporte.pdf');
+        $encoded_content =  base64_encode($content);
+        Cache::put($cacheKey, $encoded_content, now()->addDays(7));
+        return $content;
     }
 
     private function generateQRCode(Report $report): string
