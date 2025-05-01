@@ -22,11 +22,13 @@ class Message extends Model
         'report_id'
     ];
 
-    public function To(){
+    public function to(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
         return $this->hasOne(User::class,'id','to_user_id')->select(['id','name','email']);
     }
 
-    public function From(){
-        return $this->hasOne(User::class,'id','to_user_id')->select(['id','name','email']);
+    public function from(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(User::class,'id','from_user_id')->select(['id','name','email']);
     }
 }

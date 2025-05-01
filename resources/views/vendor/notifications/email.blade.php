@@ -28,6 +28,18 @@
 {{ $actionText }}
 </x-mail::button>
 @endisset
+{{-- Action Button --}}
+@isset($anotherActionText)
+<?php
+    $color = match ($level) {
+        'success', 'error' => $level,
+        default => 'primary',
+    };
+?>
+<x-mail::button :url="$anotherActionUrl" :color="$color">
+{{ $anotherActionText }}
+</x-mail::button>
+@endisset
 
 {{-- Outro Lines --}}
 @foreach ($outroLines as $line)
@@ -54,5 +66,18 @@
     ]
 ) <span class="break-all">[{{ $displayableActionUrl }}]({{ $actionUrl }})</span>
 </x-slot:subcopy>
+@endisset
+
+{{-- Another Subcopy --}}
+@isset($anotherActionText)
+<x-slot:anothersubcopy>
+@lang(
+    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
+    'into your web browser:',
+    [
+        'actionText' => $anotherActionText,
+    ]
+) <span class="break-all">[{{ str_replace(['mailto:', 'tel:'], '', $anotherActionUrl ?? '') }}]({{ $anotherActionUrl }})</span>
+</x-slot:anothersubcopy>
 @endisset
 </x-mail::message>

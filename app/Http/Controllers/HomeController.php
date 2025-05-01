@@ -13,50 +13,58 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Actions\Fortify\ResetUserPassword;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
-    public function root(Request $request)
+    public function root(Request $request): \Illuminate\Contracts\View\View
     {
+        $cities_reports = City::select(DB::raw('count(reports.id) as reports_count'),'cities.name')
+            ->join('reports','reports.city_id','=','cities.id')
+            ->groupBy('cities.name')
+            ->orderBy('reports_count','desc')
+            ->get();
         $reports = Report::with(['Department','City','District','Neighborhood'])
+                ->orderBy('created_at','desc')
                 ->where('status','active')
                 ->where('expiration','>',Carbon::now());
         $count = $reports->count();
-        $start = 0;
-        $limit = 8;
-
+        $limit = 25;
         $page = ($request->page??1);
-
-
         $start = $limit * $page - $limit;
 
-
-
         return view('welcome')
-            ->with('reportes', $reports->limit($limit)->offset($start)->get())
+            ->with('reports', $reports->limit($limit)->offset($start)->get())
             ->with('reportCount',$count)
             ->with('currentPage',$page)
             ->with('limit',$limit)
-            ->with('start',$start);
+            ->with('start',$start)
+            ->with('cities_reports',$cities_reports);
 
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\Contracts\View\View
     {
         return view('users.home');
     }
 
-    public function help()
+    public function help(): \Illuminate\Contracts\View\View
     {
         return view('help');
     }
 
-    public function legal()
+    public function legal(): \Illuminate\Contracts\View\View
     {
         return view('legal');
     }
 
-    public function search(Request $request){
+    public function about(): \Illuminate\Contracts\View\View
+    {
+        return view('about');
+    }
+
+    public function search(Request $request): \Illuminate\Contracts\View\View
+    {
         $search = $request->input('search');
         $search_array = explode(' ',$search);
         $keywords = ['Ciudad:','Departamento:'];
@@ -66,19 +74,29 @@ class HomeController extends Controller
             ->where('reports.status','Active')
             ->join('cities','cities.id','reports.city_id')
             ->join('departments','departments.id','reports.department_id');
-        $query->where(function($query)use($keywords,$search,$search_array){
-            foreach($keywords  as $keyword){
-                if(strpos($search,$keyword)!== false){
-                    if($keyword=='Ciudad:'){
-                        foreach($search_array as $sa){
-                            if(!in_array($sa,$keywords)){
+
+        $query->where(function($query)use($keywords,$search,$search_array)
+        {
+            foreach($keywords  as $keyword)
+            {
+                if(str_contains($search, $keyword))
+                {
+                    if($keyword=='Ciudad:')
+                    {
+                        foreach($search_array as $sa)
+                        {
+                            if(!in_array($sa,$keywords))
+                            {
                                 $query->orWhere('cities.name','like','%'.$sa.'%');
                             }
                         }
                     }
-                    if($keyword=='Departamento:'){
-                        foreach($search_array as $sa){
-                            if(!in_array($sa,$keywords)){
+                    if($keyword=='Departamento:')
+                    {
+                        foreach($search_array as $sa)
+                        {
+                            if(!in_array($sa,$keywords))
+                            {
                                 $query->orWhere('departments.name','like','%'.$sa.'%');
                             }
                         }
@@ -91,31 +109,50 @@ class HomeController extends Controller
         return view('search.result')->with('results',$results);
     }
 
-    public function autoComplete(Request $request){
-
-        $city = City::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Ciudad: '.$item->name;return $item;});
-        $department = Department::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Departamento: '.$item->name;return $item;});
+    public function autoComplete(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $city = City::where('name','like','%'.$request->input('query').'%')
+            ->select('id','name')
+            ->get()
+            ->map(
+                function($item)
+                {
+                    $item->name = 'Ciudad: '.$item->name;return $item;
+                });
+        $department = Department::where('name','like','%'.$request->input('query').'%')
+            ->select('id','name')
+            ->get()
+            ->map(
+                function($item)
+                {
+                    $item->name = 'Departamento: '.$item->name;return $item;
+                });
         // $neiborghood = Neighborhood::where('name','like','%'.$request->input('query').'%')->select('id','name')->get()->map(function($item){$item->name = 'Barrio: '.$item->name;return $item;});
 
         $merge = $city->merge($department);//->merge($neiborghood);
         return response()->json([
             "query"=> $request->input('query'),
-            "suggestions"=>$merge->pluck('name'),// ['Bahamas', 'Bahrain', 'Bangladesh', 'Barbados'],
+            "suggestions"=>$merge->pluck('name'),
             "data"=> $merge
         ]);
     }
 
-    public function profile(Request $request){
-        return view('profile')->with('user',Auth::user());
+    public function profile(Request $request): \Illuminate\Contracts\View\View
+    {
+        return view('profile')
+            ->with('user',Auth::user());
     }
 
-    public function updateProfile(UpdateProfileRequest $request){
+    public function updateProfile(UpdateProfileRequest $request): \Illuminate\Http\RedirectResponse
+    {
         $user = User::find(Auth::user()->id);
         $user->update($request->validated());
-        if(!empty($request->input('password'))){
+        if(!empty($request->input('password')))
+        {
             (app(ResetUserPassword::class))->reset($user,$request->only(['password','password_confirmation']));
         }
-        return redirect()->route('profile')->with('message','Datos guardados correctamente!');
-
+        return redirect()->route('profile')
+            ->with('success',true)
+            ->with('message','Datos guardados correctamente!');
     }
 }

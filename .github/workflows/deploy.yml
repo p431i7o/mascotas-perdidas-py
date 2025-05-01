@@ -1,0 +1,67 @@
+name: Deploy to Production and Development
+
+on:
+  push:
+    branches:
+      - main        # Despliegue en producción
+      - development # Despliegue en desarrollo
+
+jobs:
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar conexión SSH Producción
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+
+      - name: Desplegar en Producción
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
+            cd /var/www/mascotasperdidaspy.org &&
+            git reset --hard HEAD &&
+            git clean -fd &&
+            git pull origin main &&
+            composer install --no-interaction --prefer-dist --optimize-autoloader &&
+            php artisan optimize:clear &&
+            npm install &&
+            npm run build &&
+            php artisan migrate --force &&
+            php artisan cache:clear &&
+            php artisan config:cache &&
+            php artisan route:cache
+          "
+
+  deploy-development:
+    if: github.ref == 'refs/heads/development'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar conexión SSH Desarrollo
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.DEV_SERVER_SSH_KEY }}
+
+      - name: Desplegar en Desarrollo
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEV_SERVER_USER }}@${{ secrets.DEV_SERVER_HOST }} "
+            cd /var/www/dev.mascotasperdidaspy.org &&
+            git reset --hard HEAD &&
+            git clean -fd &&
+            git pull origin development &&
+            composer install --no-interaction --prefer-dist --optimize-autoloader &&
+            php artisan optimize:clear &&
+            npm install &&
+            npm run build &&
+            php artisan migrate --force &&
+            php artisan cache:clear &&
+            php artisan config:cache
+          "

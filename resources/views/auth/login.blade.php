@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.default.default')
 @section('content')
 <div class="container">
     <div class="row text-center">
@@ -6,32 +6,37 @@
     </div>
 </div>
 <div class="container">
-    <div class="row">
-        <form method="POST" action="{{route('login')}}" class="form-signin needs-validation accordion">
-            @csrf
-            {{-- <img class="mb-4" src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> --}}
+    <div class="row text-center">
+        <div class="">
+            <form method="POST" action="{{route('login')}}" class="form-signin needs-validation accordion">
+                @csrf
+                @if (session('status'))
+                    <div class="alert alert-info">{{session('status')}}</div>
+                @endif
+                <div class="form-label-group">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{old('email')}}" name="email">
+                    <label for="floatingInput">{{ __("Email address") }}</label>
+                </div>
+                <div class="form-label-group">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+                    <i class="bi bi-eye-slash" id="togglePassword"></i>
+                    <label for="floatingPassword">{{ __("Password") }}</label>
+                </div>
 
-            @if (session('status'))
-                <div class="alert alert-info">{{session('status')}}</div>
-            @endif
-            <div class="form-label-group">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{old('email')}}" name="email">
-                <label for="floatingInput">{{ __("Email address") }}</label>
-            </div>
-            <div class="form-label-group">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
-                <label for="floatingPassword">{{ __("Password") }}</label>
-            </div>
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" value="1" name="remember"> {{ __("Remember me") }}
+                    </label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary mb-5" type="submit">{{ __('Sign in') }}</button>
 
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="1" name="remember"> {{ __("Remember me") }}
-                </label>
-            </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">{{ __('Sign in') }}</button>
-            <a href="{{route('password.request')}}">{{ __("Forgot your password?") }}</a>
-            <p class="mt-5 mb-3 text-muted">&copy; {{ date("Y") }}</p>
-        </form>
+                <a href="{{route('password.request')}}">{{ __("Forgot your password?") }}</a>
+                <br/>
+                <br/>
+                No posee cuenta? <a href="{{route('register')}}">Puede registrarse aquí</a>
+
+            </form>
+        </div>
     </div>
 </div>
 
@@ -41,6 +46,15 @@
          document.getElementById("demo-form").submit();
        }
      </script>
+<script type="module">
+    $(document).ready(function() {
+        $('#togglePassword').on('click', function() {
+            $(this).toggleClass('bi-eye bi-eye-slash');
+            $(this).parent().find("input").attr('type') === 'password' ? $(this).parent().find("input").attr('type','text') : $(this).parent().find("input").attr('type','password');
+        });
+    });
+
+</script>
 @endsection
 
 @push('styles')
@@ -111,6 +125,14 @@
       padding-bottom: .25rem;
       font-size: 12px;
       color: #777;
+    }
+
+    .form-label-group  > i{
+        position: absolute;
+        padding: 0.75rem;
+        top: 0;
+        right: 10px;
+        cursor: pointer;
     }
 
     /* Fallback for Edge

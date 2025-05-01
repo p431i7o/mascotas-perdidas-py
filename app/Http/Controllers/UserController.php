@@ -3,48 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Repositories\PermissionInterface;
 use Illuminate\Http\Request;
 use App\Repositories\Permissions;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 use Spatie\Permission\Models\Permission;
-// use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Password;
 
-// use Spatie\Permission\Contracts\Role;
+use Illuminate\Support\Facades\Password;
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
+
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse|View
     {
-        if($request->wantsJson()){
+        if($request->wantsJson())
+        {
             $query = User::select('id','name','email','city','address','phone','email_verified_at','active','created_at');
-            if (!empty($request->search['value'])) {
+            if (!empty($request->search['value']))
+            {
                 $query->where('id', 'like', '%' . $request->search['value'] . '%');
                 $query->orWhere('name', 'like', '%' . $request->search['value'] . '%');
                 $query->orWhere('email', 'like', '%' . $request->search['value'] . '%');
             }
 
             $count = $query->count();
-            if (isset($request->order)) {
-                foreach ($request->order as $order) {
+            if (isset($request->order))
+            {
+                foreach ($request->order as $order)
+                {
                     $query->orderBy(DB::raw($order['column']+1), $order['dir']);
                 }
-            } else {
+            }
+            else
+            {
                 $query->orderBy('id', 'asc');
             }
 
             $query->limit($request->length)->offset($request->start);
             $data_result_set = $query->get();
-            // dd(User::find(1)->getAllPermissions
-            foreach ($data_result_set as $indice => $fila) {
+
+            foreach ($data_result_set as $indice => $fila)
+            {
                 $data_result_set[$indice]->permissions = User::find($fila->id)->getAllPermissions()
                     ->map(function($item,$key){
                         return [
@@ -66,90 +70,40 @@ class UserController extends Controller
         return view('users.index')->with('permissions',Permission::select('name','id')->get() );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function destroy(User $user): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $User
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $User)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $User
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $User)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $User
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $User)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $User
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+        if(!Auth::user()->can(PermissionInterface::MANAGE_USERS))
+        {
             abort(401,'No permitido');
         }
 
-        if($user->id != 1){
+        if($user->id != 1)
+        {
             return response()->json(['success'=>$user->delete()]);
-        }else{
+        }
+        else
+        {
             return response()->json(['success'=>false]);
         }
     }
 
-    public function updateRole(Request $request, User $user){
-        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+    public function updateRole(Request $request, User $user): JsonResponse
+    {
+        if(!Auth::user()->can(PermissionInterface::MANAGE_USERS))
+        {
             abort(401,'No permitido');
         }
 
-        if($request->action == 'asign'){
+        if($request->action == 'asign')
+        {
             $user->assignRole($request->role);
-        }else if($request->action == 'remove'){
+        }
+        else if($request->action == 'remove')
+        {
             // A admin no se le quita nah
-            if($user->id != 1){
+            if($user->id != 1)
+            {
                 $user->removeRole($request->role);
             }
         }
@@ -157,16 +111,22 @@ class UserController extends Controller
         return response()->json(['success'=>true],200);
     }
 
-    public function updatePermission(Request $request, User $user){
-        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+    public function updatePermission(Request $request, User $user): JsonResponse
+    {
+        if(!Auth::user()->can(PermissionInterface::MANAGE_USERS))
+        {
             abort(401,'No permitido');
         }
 
-        if($request->action == 'asign'){
+        if($request->action == 'asign')
+        {
             $user->givePermissionTo($request->permission);
-        }else if($request->action == 'remove'){
+        }
+        else if($request->action == 'remove')
+        {
             // A admin no se le quita nah
-            if($user->id != 1){
+            if($user->id != 1)
+            {
                 $user->revokePermissionTo($request->permission);
             }
         }
@@ -174,20 +134,23 @@ class UserController extends Controller
         return response()->json(['success'=>true],200);
     }
 
-    public function sendVerifyMail(Request $request, User $user){
-        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+    public function sendVerifyMail(Request $request, User $user): JsonResponse
+    {
+        if(!Auth::user()->can(PermissionInterface::MANAGE_USERS))
+        {
             abort(401,'No permitido');
         }
         event(new Registered($user));
         return response()->json(['success'=>true],200);
     }
 
-    public function sendResetPasswordMail(Request $request, User $user){
-        if(!Auth::user()->can(Permissions::MANAGE_USERS)){
+    public function sendResetPasswordMail(Request $request, User $user): JsonResponse
+    {
+        if(!Auth::user()->can(PermissionInterface::MANAGE_USERS))
+        {
             abort(401,'No permitido');
         }
-        // dd($user);
-        // event(new PasswordReset($user));
+
         Password::sendResetLink(['email'=>$user->email]);
         return response()->json(['success'=>true],200);
     }

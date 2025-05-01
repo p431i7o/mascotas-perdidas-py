@@ -14,43 +14,43 @@ use Carbon\Carbon;
 
 class ModerationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+
+    public function index(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\View\View
     {
         if(!Auth::user()->can(Permissions::MODERATE_REPORTS)){
             abort(401,'No permitido');
         }
-        if($request->wantsJson()){
+
+        if($request->wantsJson())
+        {
             $query  = Report::where('status','Pending')
                 ->select(DB::raw('reports.*, departments.name as department_name, cities.name as city_name, districts.name as district_name, neighborhoods.name as neighborhood_name '))
                 ->leftJoin('departments','departments.id','reports.department_id')
                 ->leftJoin('cities','cities.id','reports.city_id')
                 ->leftJoin('districts','districts.id','reports.district_id')
                 ->leftJoin('neighborhoods','neighborhoods.id','reports.neighborhood_id');
-            if (!empty($request->search['value'])) {
+
+            if (!empty($request->search['value']))
+            {
                 $query->where('id', 'ilike', '%' . $request->search['value'] . '%');
                 $query->orWhere('type', 'ilike', '%' . $request->search['value'] . '%');
             }
 
             $count = $query->count();
-            if (isset($request->order)) {
-                foreach ($request->order as $order) {
+            if (isset($request->order))
+            {
+                foreach ($request->order as $order)
+                {
                     $query->orderBy(DB::raw($order['column']+1), $order['dir']);
                 }
-            } else {
+            }
+            else
+            {
                 $query->orderBy('id', 'asc');
             }
 
             $query->limit($request->length)->offset($request->start);
             $data_result_set = $query->get();
-
-            foreach ($data_result_set as $indice => $fila) {
-                // $data_result_set[$indice]->roles = User::find($fila->id)->getRoleNames()->map(function($item,$key){return __($item);});
-            }
 
             return response()->json([
                 'data' => $data_result_set,
@@ -61,14 +61,18 @@ class ModerationController extends Controller
                 'draw' => (int)$request->draw
             ]);
 
-        }else{
+        }
+        else
+        {
             return view('moderation.index');
         }
 
     }
 
-    public function approve(Request $request){
-        if(!Auth::user()->can(Permissions::MODERATE_REPORTS)){
+    public function approve(Request $request): \Illuminate\Http\JsonResponse
+    {
+        if(!Auth::user()->can(Permissions::MODERATE_REPORTS))
+        {
             abort(401,'No permitido');
         }
         $report = Report::find($request->id);
@@ -83,8 +87,10 @@ class ModerationController extends Controller
         ]);
     }
 
-    public function reject(Request $request){
-        if(!Auth::user()->can(Permissions::MODERATE_REPORTS)){
+    public function reject(Request $request): \Illuminate\Http\JsonResponse
+    {
+        if(!Auth::user()->can(Permissions::MODERATE_REPORTS))
+        {
             abort(401,'No permitido');
         }
         $report = Report::find($request->id);
@@ -93,24 +99,19 @@ class ModerationController extends Controller
         $report->status = 'Rejected';
         $report->observations = $request->reason;
 
-
-        // $result =$report->save();
         return response()->json([
             'success'=>$report->save()
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(ReportUpdateRequest $request, Report $report)
+    public function update(ReportUpdateRequest $request, Report $report): \Illuminate\Http\JsonResponse
     {
-        if(!Auth::user()->can(Permissions::MODERATE_REPORTS)){
+        if(!Auth::user()->can(Permissions::MODERATE_REPORTS))
+        {
             abort(401,'No permitido');
         }
+        return response()->json([
+            'success'=>true
+        ]);
     }
 }

@@ -11,7 +11,7 @@ class ReportUpdateRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,9 +21,9 @@ class ReportUpdateRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
-        return [
+        $rules = [
             'id'=>['required','exists:reports,id'],
             'type'=>['required','in:Lost,Found'],
             'animal_kind_id'=>['required','exists:animal_kinds,id'],
@@ -34,6 +34,10 @@ class ReportUpdateRequest extends FormRequest
             'longitude'=>['required','decimal:3,17'],
             'address'=>['string','max:200']
         ];
+//        if(!auth()->user()){
+//            $rules['email'] = ['required','email'];
+//        }
+        return $rules;
     }
 
     /**
@@ -41,17 +45,17 @@ class ReportUpdateRequest extends FormRequest
      *
      * @return array
      */
-    public function attributes()
+    public function attributes(): array
     {
         return [
-            'type' => 'tipo',
+            'type' => 'tipo de reporte',
             'animal_kind_id'=>'tipo de animal',
             'date'=>'fecha',
             'name'=>'nombre',
             'description'=>'descripcion',
             'latitude'=>'latitud',
             'longitude'=>'longitud',
-            'address'=>'direccion'
+            'address'=>'dirección'
         ];
     }
 }

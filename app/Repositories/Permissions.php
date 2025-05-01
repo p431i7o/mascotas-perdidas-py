@@ -26,12 +26,8 @@ interface PermissionInterface
 
 class Permissions implements PermissionInterface
 {
-    /**
-     * get all permissions
-     *
-     * @return array
-     */
-    public static function all()
+
+    public static function all(): array
     {
         $reflection = new \ReflectionClass(__CLASS__);
         return array_values($reflection->getConstants());

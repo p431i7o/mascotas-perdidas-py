@@ -30,22 +30,24 @@ class CreateNewUser implements CreatesNewUsers
                 'max:300',
                 Rule::unique(User::class),
             ],
-            'city'=>['required','string','max:250'],
-            // 'phone'=>['required','string','max:20'],
+//            'city'=>['required','string','max:250'],
+//            'phone'=>['required','string','max:20'],
             'accept_term_conditions'=>['accepted'],
             'password' => $this->passwordRules(),
         ],[],[
+            'name'=>'Nombre',
+            'email'=>'Correo electrónico',
             'accept_term_conditions'=>'Terminos y condiciones',
             'password'=>'Contraseña',
-            'city'=>"Ciudad"
+//            'city'=>"Ciudad"
         ])->validate();
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            // 'phone' => $input['phone'],
-            // 'address'=> $input['address'],
-            'city'=>$input['city'],
+//             'phone' => $input['phone'],
+//             'address'=> $input['address'],
+//            'city'=>$input['city'],
             'password' => Hash::make($input['password']),
         ]);
     }

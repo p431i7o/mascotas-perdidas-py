@@ -1,12 +1,16 @@
+/.phpunit.cache
 /node_modules
 /public/build
 /public/hot
 /public/storage
 /storage/*.key
+/storage/pail
 /vendor
 .env
 .env.backup
 .env.production
+.env.development.example
+.phpactor.json
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -15,5 +19,7 @@ npm-debug.log
 yarn-error.log
 /.fleet
 /.idea
+/.nova
 /.vscode
+/.zed
 storage/debugbar/

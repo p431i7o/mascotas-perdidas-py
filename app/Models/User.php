@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App;
-use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,17 +11,17 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-
 class User extends Authenticatable  implements MustVerifyEmail
 
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable,SoftDeletes;
     use HasRoles;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -35,7 +34,7 @@ class User extends Authenticatable  implements MustVerifyEmail
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -43,13 +42,17 @@ class User extends Authenticatable  implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 
     public function sendEmailVerificationNotification()
     {

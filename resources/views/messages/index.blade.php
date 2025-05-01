@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.default.default')
 @section('content')
 <div class="container">
     <div class="row text-center">
@@ -40,9 +40,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="conversation_modal_title">--</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="conversation_modal_body">
 
@@ -53,21 +51,19 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="btn_message_respond" data-message-id="" onclick="messageResponsex(this)">Responder</button>
         <button type="button" class="btn btn-danger" id="btn_delete_conversation" data-message-id="" onclick="deleteMessage(this)">Borrar mensaje</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar Ventana</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar Ventana</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modalResponse" tabindex="-1" role="dialog" aria-labelledby="modalResponseTitle" aria-hidden="true">
+<div class="modal" id="modalResponse" tabindex="-1" role="dialog" aria-labelledby="modal_response_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modal_response_title">Responder último mensaje</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="modal_reponse_body">
             <form method="POST" enctype="application/x-www-form-urlencoded"  id="form_response">
@@ -79,11 +75,12 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" onclick="sendMessage()">Enviar mensaje</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar Ventana</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar Ventana</button>
         </div>
       </div>
     </div>
   </div>
+
 @endsection
 
 @push('scripts')
@@ -123,6 +120,9 @@
                 {
                     data: 'from',
                     render:function(data,type,row){
+                        if(data==null){
+                            return '--';
+                        }
                         return data.name + ' ['+row.from.email+']';
                     }
                 },{
@@ -190,7 +190,6 @@
         });
 
         function view(row){
-            console.log('ver mas');
             // $('#conversation_modal_body').html(row.message);
             $('#conversation_modal_title').html("De: "+row.from.name+", "+row.from.email );
             // $('#conversationModal').modal('show');

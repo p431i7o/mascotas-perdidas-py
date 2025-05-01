@@ -9,13 +9,21 @@
     --bs-btn-font-size: .75rem;
 }
 
-@import "~datatables.net-responsive-bs4/css/responsive.bootstrap4.css";
+@import "~datatables.net-responsive-bs5/css/responsive.bootstrap5.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 
 $btn-padding-x-xs:  .20rem !default;
 $btn-padding-y-xs:  .12rem !default;
 $input-btn-line-height-xs: 1.1 !default;
 
+@mixin button-size($padding-y, $padding-x, $font-size, $border-radius) {
+    --#{$prefix}btn-padding-y: #{$padding-y};
+    --#{$prefix}btn-padding-x: #{$padding-x};
+    @include rfs($font-size, --#{$prefix}btn-font-size);
+    --#{$prefix}btn-border-radius: #{$border-radius};
+}
+
 .btn.btn-xs {
    // line-height: ensure proper height of button next to small input
-   @include button-size($btn-padding-y-xs, $btn-padding-x-xs, $font-size-sm, $input-btn-line-height-xs, $btn-border-radius-sm);
+   @include button-size($btn-padding-y-xs, $btn-padding-x-xs, $font-size-sm, /*$input-btn-line-height-xs,*/ $btn-border-radius-sm);
 }

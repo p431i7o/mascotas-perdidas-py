@@ -16,8 +16,8 @@ class AnimalKindSeeder extends Seeder
      */
     public function run()
     {
-        AnimalKind::insert(
-            [
+        if(AnimalKind::count() <= 0){
+            AnimalKind::insert([
                 [
                     'name'=>'Canino',
                     'example'=>'Perro',
@@ -39,5 +39,7 @@ class AnimalKindSeeder extends Seeder
                     'created_at'=>Carbon::now()
                 ],
             ]);
+        }
+
     }
 }

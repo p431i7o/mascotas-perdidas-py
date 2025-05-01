@@ -25,7 +25,7 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'city'=>['required','string','max:250'],
+//            'city'=>['required','string','max:250'],
             // 'phone'=>['required','string','max:20']
         ];
     }
@@ -39,7 +39,7 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             'name' => 'nombre',
-            'city' => 'ciudad',
+//            'city' => 'ciudad',
             'phone'=> 'telefono'
         ];
     }
